@@ -26,5 +26,13 @@ namespace eSaludCareUsers.Controllers
 
             return View();
         }
+
+        public ActionResult Registro()
+        {
+            ViewBag.Message = "Registro de usuarios";
+
+            return View();
+
+        }
     }
 }

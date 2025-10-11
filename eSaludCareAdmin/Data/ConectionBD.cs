@@ -9,14 +9,15 @@ namespace eSaludCareAdmin.Data
 {
     public class ConectionBD
     {
-        private static string StrConect = ConfigurationManager.ConnectionStrings["BDpsql"].ConnectionString;
+        public static string StrConect = ConfigurationManager.ConnectionStrings["BDpsql"].ToString();
 
-        public static NpgsqlConnection ObtenerConexion()
+        /*ublic static NpgsqlConnection ObtenerConexion()
         {
             var conexion = new NpgsqlConnection(StrConect);
             conexion.Open();
             return conexion;
 
         }
+        */
     }
 }   

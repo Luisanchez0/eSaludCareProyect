@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
 using System.Linq;
-using System.Reflection.Emit;
-using System.Web;
-using eSaludCareAdmin.Models;
+using System.Text;
+using System.Threading.Tasks;
+using CapaEntidad;
+using System.Data;
+using System.Configuration;
 using Npgsql;
 
-namespace eSaludCareAdmin.Data
+namespace CapaDatos
 {
-    public class DT_Usuarios
+    public class CD_Usuarios
     {
+
         public List<Usuarios> listar()
         {
             List<Usuarios> lista = new List<Usuarios>();
@@ -18,16 +20,16 @@ namespace eSaludCareAdmin.Data
             try
             {
 
-                using(SqlConnection con = new SqlConnection(ConectionBD.StrConect))
+                using (NpgsqlConnection con = new NpgsqlConnection(ConectionBD.StrConect))
                 {
-                    string Query = "SELECT id_usuario, nombre, apellido, correo, contrasena, telefono, rol, fecha_registro FROM usuarios";
-                    SqlCommand cmd = new SqlCommand(Query, con);
+                    string Query = "SELECT id_usuario, nombre, apellido, correo, contrasena, telefono, fecha_registro FROM usuarios";
+                    NpgsqlCommand cmd = new NpgsqlCommand(Query, con);
 
                     cmd.CommandType = System.Data.CommandType.Text;
                     con.Open();
-                
-                
-                    using (SqlDataReader dr = cmd.ExecuteReader())
+
+
+                    using (NpgsqlDataReader dr = cmd.ExecuteReader())
                     {
                         while (dr.Read())
                         {
@@ -40,12 +42,11 @@ namespace eSaludCareAdmin.Data
                                     Correo = dr["correo"].ToString(),
                                     Contrasena = dr["contrasena"].ToString(),
                                     Telefono = dr["telefono"].ToString(),
-                                    Rol = dr["rol"].ToString(),
                                     FechaRegistro = Convert.ToDateTime(dr["fecha_registro"])
                                 }
                             );
                         }
-                    } 
+                    }
                 }
 
             }
@@ -55,5 +56,6 @@ namespace eSaludCareAdmin.Data
             }
             return lista;
         }
+
     }
 }

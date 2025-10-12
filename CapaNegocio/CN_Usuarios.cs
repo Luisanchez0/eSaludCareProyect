@@ -11,9 +11,10 @@ namespace CapaNegocio
     public class CN_Usuarios
     {
         private CD_Usuarios objUsuarios = new CD_Usuarios();
-        public List<Usuarios> Listar()
+    
+        public Usuarios Login(string correo, string contraseña)
         {
-            return objUsuarios.listar();
+            return objUsuarios.Login(correo, contraseña);
         }
     }
 }

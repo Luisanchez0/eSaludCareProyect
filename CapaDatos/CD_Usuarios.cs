@@ -13,48 +13,46 @@ namespace CapaDatos
     public class CD_Usuarios
     {
 
-        public List<Usuarios> listar()
+        public Usuarios Login(string correo, string contraseña)
         {
-            List<Usuarios> lista = new List<Usuarios>();
+            Usuarios usuario = null;
 
-            try
-            {
-
-                using (NpgsqlConnection con = new NpgsqlConnection(ConectionBD.StrConect))
+                using (var con = new NpgsqlConnection(ConectionBD.StrConect))
                 {
-                    string Query = "SELECT id_usuario, nombre, apellido, correo, contrasena, telefono, fecha_registro FROM usuarios";
-                    NpgsqlCommand cmd = new NpgsqlCommand(Query, con);
-
-                    cmd.CommandType = System.Data.CommandType.Text;
                     con.Open();
+                    var Query = @"SELECT id_usuario, nombre, apellido, correo, telefono, rol, fecha_registro 
+                            FROM usuarios 
+                            WHERE correo = @correo AND contrasena = @contrasena AND esta_activo = true";
 
-
-                    using (NpgsqlDataReader dr = cmd.ExecuteReader())
+                using (var cmd = new NpgsqlCommand(Query, con))
                     {
-                        while (dr.Read())
+                        cmd.Parameters.AddWithValue("@correo", correo);
+                        cmd.Parameters.AddWithValue("@contrasena", contraseña);
+
+                        using (var reader = cmd.ExecuteReader())
                         {
-                            lista.Add(
-                                new Usuarios()
+                            if (reader.Read())
+                            {
+                            usuario = new Usuarios()
                                 {
-                                    IdUsuario = Convert.ToInt32(dr["id_usuario"]),
-                                    Nombre = dr["nombre"].ToString(),
-                                    Apellido = dr["apellido"].ToString(),
-                                    Correo = dr["correo"].ToString(),
-                                    Contrasena = dr["contrasena"].ToString(),
-                                    Telefono = dr["telefono"].ToString(),
-                                    FechaRegistro = Convert.ToDateTime(dr["fecha_registro"])
-                                }
-                            );
+                                    IdUsuario = Convert.ToInt32(reader["id_usuario"]),
+                                    Nombre = reader["nombre"].ToString(),
+                                    Apellido = reader["apellido"].ToString(),
+                                    Correo = reader["correo"].ToString(),
+                                    Telefono = reader["telefono"].ToString(),
+                                    Rol = reader["rol"].ToString(),
+                                    FechaRegistro = Convert.ToDateTime(reader["fecha_registro"])
+
+                            };
+                            }
                         }
                     }
                 }
 
-            }
-            catch (Exception)
-            {
-                lista = new List<Usuarios>();
-            }
-            return lista;
+            return usuario;
+
+
+
         }
 
     }

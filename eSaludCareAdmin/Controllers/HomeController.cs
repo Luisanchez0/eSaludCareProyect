@@ -18,14 +18,5 @@ namespace eSaludCareAdmin.Controllers
         {
             return View();
         }
-
-        public JsonResult usuariosListados()
-        {
-            List<CapaEntidad.Usuarios> olista = new List<CapaEntidad.Usuarios>();
-            olista = new CapaNegocio.CN_Usuarios().Listar();
-
-            return Json(olista,JsonRequestBehavior.AllowGet);
-
-        }
     }
 }

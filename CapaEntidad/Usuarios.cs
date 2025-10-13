@@ -8,41 +8,28 @@ namespace CapaEntidad
 {
     public class Usuarios
     {
-     /*
+        /*
 
-        -- TABLA: USUARIOS
-    id_usuario SERIAL PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
-    apellido VARCHAR(100) NOT NULL,
-    correo VARCHAR(150) UNIQUE NOT NULL,
-    contrasena VARCHAR(255) NOT NULL,
-    telefono VARCHAR(20),
-    rol VARCHAR(20) CHECK(rol IN ('paciente', 'medico', 'admin')) NOT NULL,
-    fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-*/
-        public int IdUsuario { get; set; }
-        public string Nombre { get; set; }
-        public string Apellido { get; set; }
-        public string Correo { get; set; }
-        public string Contrasena { get; set; }
-        public string Telefono { get; set; }
-        public string Rol { get; set; }
+           -- TABLA: USUARIOS
+       id_usuario SERIAL PRIMARY KEY,
+       nombre VARCHAR(100) NOT NULL,
+       apellido VARCHAR(100) NOT NULL,
+       correo VARCHAR(150) UNIQUE NOT NULL,
+       contrasena VARCHAR(255) NOT NULL,
+       telefono VARCHAR(20),
+       rol VARCHAR(20) CHECK(rol IN ('paciente', 'medico', 'admin')) NOT NULL,
+       fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+   */
 
-        public bool EstaActivo { get; set; }
-        public DateTime FechaRegistro { get; set; } 
+        public int id_usuario { get; set; }
+        public string nombre { get; set; }
+        public string apellido { get; set; }
+        public string correo { get; set; }
+        public string contrasena { get; set; }
+        public string telefono { get; set; }
+        public string rol { get; set; }
+        public bool activo { get; set; }
+        public DateTime fecha_actualizacion { get; set; }
+        public string token { get; set; }
     }
-
-    public class LoginRequest { 
-        
-        public string Correo { get; set; }
-        public string Contrasena { get; set; }
     }
-
-    public class LoginResponse
-    {
-        public bool Success { get; set; }
-        public string Message { get; set; }
-        public string Token { get; set; }
-        public Usuarios Usuario { get; set; }
-    }
-}

@@ -91,11 +91,11 @@ ALTER TABLE usuarios
 ADD COLUMN esta_activo BOOLEAN DEFAULT TRUE,
 ADD COLUMN fecha_actualizacion TIMESTAMP DEFAULT CURRENT_TIMESTAMP;
 
+
 -- CREAR ÍNDICES PARA MEJOR RENDIMIENTO
 CREATE INDEX idx_usuarios_correo ON usuarios(correo);
 CREATE INDEX idx_usuarios_rol ON usuarios(rol);
 CREATE INDEX idx_tokens_sesion_token ON tokens_sesion(token);
 CREATE INDEX idx_citas_fecha ON citas(fecha_cita);
-
 
 

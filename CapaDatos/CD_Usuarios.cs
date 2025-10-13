@@ -12,48 +12,60 @@ namespace CapaDatos
 {
     public class CD_Usuarios
     {
+        private ConectionBD conexion = new ConectionBD();
 
-        public Usuarios Login(string correo, string contraseña)
+        public Usuarios ValidarUser(string correo, string contrasena)
         {
-            Usuarios usuario = null;
+            using (var con = conexion.Conectar())
+            {
+                con.Open();
+                string query = @"SELECT id_usuario, nombre, apellido, correo, telefono, rol, TRUE as activo
+                                 FROM usuarios
+                                 WHERE correo=@correo AND contrasena=@contrasena";
 
-                using (var con = new NpgsqlConnection(ConectionBD.StrConect))
+                using (var cmd = new NpgsqlCommand(query, con))
                 {
-                    con.Open();
-                    var Query = @"SELECT id_usuario, nombre, apellido, correo, telefono, rol, fecha_registro 
-                            FROM usuarios 
-                            WHERE correo = @correo AND contrasena = @contrasena AND esta_activo = true";
-
-                using (var cmd = new NpgsqlCommand(Query, con))
+                    cmd.Parameters.AddWithValue("correo", correo);
+                    cmd.Parameters.AddWithValue("contrasena", contrasena);
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        cmd.Parameters.AddWithValue("@correo", correo);
-                        cmd.Parameters.AddWithValue("@contrasena", contraseña);
-
-                        using (var reader = cmd.ExecuteReader())
+                        if (reader.Read())
                         {
-                            if (reader.Read())
+                            return new Usuarios
                             {
-                            usuario = new Usuarios()
-                                {
-                                    IdUsuario = Convert.ToInt32(reader["id_usuario"]),
-                                    Nombre = reader["nombre"].ToString(),
-                                    Apellido = reader["apellido"].ToString(),
-                                    Correo = reader["correo"].ToString(),
-                                    Telefono = reader["telefono"].ToString(),
-                                    Rol = reader["rol"].ToString(),
-                                    FechaRegistro = Convert.ToDateTime(reader["fecha_registro"])
-
+                                id_usuario = reader.GetInt32(0),
+                                nombre = reader.GetString(1),
+                                apellido = reader.GetString(2),
+                                correo = reader.GetString(3),
+                                telefono = reader.IsDBNull(4) ? null : reader.GetString(4),
+                                rol = reader.GetString(5),
+                                activo = reader.GetBoolean(6),
+                                fecha_actualizacion = reader.GetDateTime(7)
                             };
-                            }
                         }
                     }
                 }
 
-            return usuario;
-
-
-
+            }
+            return null;
         }
+
+        public void GuardarToken(int id_usuario, string token)
+        {
+            using (var con = conexion.Conectar())
+            {
+                con.Open();
+                string query = @"INSERT INTO tokens_sesion (id_usuario, token, fecha_expiracion)
+                                 VALUES (@id, @token, NOW() + INTERVAL '1 hour')";
+                using (var cmd = new NpgsqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("token", token);
+                    cmd.Parameters.AddWithValue("id_usuario", id_usuario);
+                    cmd.ExecuteNonQuery();
+                }
+            }
+        }
+
 
     }
 }

@@ -12,6 +12,10 @@ namespace CapaDatos
     {
         public static string StrConect = ConfigurationManager.ConnectionStrings["BDpsql"].ConnectionString;
 
+        public NpgsqlConnection Conectar()
+        {
+            return new NpgsqlConnection(StrConect);
+        }
 
     }
 }

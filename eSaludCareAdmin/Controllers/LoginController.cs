@@ -13,14 +13,20 @@ using System.Security.Claims;
 using System.Text;
 using System.Web.Http.Results;
 
+
+
 namespace eSaludCareAdmin.Controllers
 {
+    [RoutePrefix("api/v1")]
     public class LoginController : ApiController
     {
         [HttpPost]
-        [Route("api/v1/login")]
+        [Route("login")]
         public IHttpActionResult Login([FromBody] Usuarios usuario)
         {
+            if (usuario == null)
+                return BadRequest("El cuerpo de la solicitud está vacío o mal formado.");
+
             CN_Usuarios cnUsuarios = new CN_Usuarios();
             var user = cnUsuarios.Login(usuario.correo, usuario.contrasena);
             if (user == null)
@@ -56,5 +62,5 @@ namespace eSaludCareAdmin.Controllers
             });
 
         }
-        }
     }
+}

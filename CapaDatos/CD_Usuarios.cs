@@ -19,10 +19,9 @@ namespace CapaDatos
             using (var con = conexion.Conectar())
             {
                 con.Open();
-                string query = @"SELECT id_usuario, nombre, apellido, correo, telefono, rol, TRUE as activo
-                                 FROM usuarios
-                                 WHERE correo=@correo AND contrasena=@contrasena";
-
+                string query = @"SELECT id_usuario, nombre, apellido, correo, telefono, rol, esta_activo, fecha_actualizacion
+                                FROM usuarios
+                                WHERE correo=@correo AND contrasena=@contrasena AND esta_activo = TRUE";
                 using (var cmd = new NpgsqlCommand(query, con))
                 {
                     cmd.Parameters.AddWithValue("correo", correo);
@@ -56,7 +55,7 @@ namespace CapaDatos
             {
                 con.Open();
                 string query = @"INSERT INTO tokens_sesion (id_usuario, token, fecha_expiracion)
-                                 VALUES (@id, @token, NOW() + INTERVAL '1 hour')";
+                                 VALUES (@id_usuario, @token, NOW() + INTERVAL '1 hour')";
                 using (var cmd = new NpgsqlCommand(query, con))
                 {
                     cmd.Parameters.AddWithValue("token", token);

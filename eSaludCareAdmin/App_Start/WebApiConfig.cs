@@ -1,32 +1,23 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Http;
+﻿using System.Web.Http;
 
 namespace eSaludCareAdmin.App_Start
 {
     public static class WebApiConfig
     {
-
         public static void Register(HttpConfiguration config)
         {
-            // Habilitar el uso de atributos de ruta
+            // Habilita las rutas con atributos
             config.MapHttpAttributeRoutes();
 
-            // Ruta por defecto para api/v1/{controller}/{id}
+            // Ruta por defecto opcional (no la necesitas si usas [RoutePrefix])
             config.Routes.MapHttpRoute(
-                name: "ApiV1",
-                routeTemplate: "api/v1/{controller}/{id}",
+                name: "DefaultApi",
+                routeTemplate: "api/{controller}/{action}/{id}",
                 defaults: new { id = RouteParameter.Optional }
             );
 
-            // Ruta específica para login
-            config.Routes.MapHttpRoute(
-                name: "LoginRoute",
-                routeTemplate: "api/v1/login",
-                defaults: new { controller = "Login" }
-            );
+            var formatters = config.Formatters;
+            formatters.Remove(formatters.XmlFormatter);
         }
     }
 }

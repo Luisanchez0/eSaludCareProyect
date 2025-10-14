@@ -32,4 +32,4 @@ namespace CapaEntidad
         public DateTime fecha_actualizacion { get; set; }
         public string token { get; set; }
     }
-    }
+}

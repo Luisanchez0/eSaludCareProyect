@@ -5,7 +5,6 @@ using Microsoft.Owin.Security.DataHandler.Encoder;
 using Microsoft.Owin.Security.Jwt;
 using Owin;
 using System.Data;
-using System.IdentityModel.Tokens;
 using System.Text;
 
 [assembly: OwinStartup(typeof(eSaludCareAdmin.Startup))]

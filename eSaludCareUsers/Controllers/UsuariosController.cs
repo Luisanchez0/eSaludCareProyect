@@ -1,4 +1,4 @@
-﻿/*using eSaludCareUsers.Models;
+﻿using eSaludCareUsers.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,9 +21,9 @@ namespace eSaludCareUsers.Controllers
             var pacientes = _context.Pacientes
                 .Select(p => new PerfilUsuario
                 {
-                    Id = p.Id,
-                    Nombre = p.Nombres + " " + p.Apellido,
-                    Telefono = p.Telefono,
+                    Id = p.id_paciente,
+                    Nombre = p.nombres + " " + p.apellidos,
+                    Telefono = p.telefono,
                     Rol = "Paciente"
                 }).ToList();
 
@@ -43,4 +43,3 @@ namespace eSaludCareUsers.Controllers
     }
 }
 
-*/

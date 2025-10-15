@@ -32,4 +32,19 @@ namespace CapaEntidad
         public DateTime fecha_actualizacion { get; set; }
         public string token { get; set; }
     }
+
+    public class UsuarioEntidad
+    {
+        public int IdUsuario { get; set; }
+        public string Nombre { get; set; }
+        public string Apellido { get; set; }
+        public string Correo { get; set; }
+        public string Contrasena { get; set; }
+        public string Telefono { get; set; }
+        public string Rol { get; set; } = "paciente";
+        public DateTime FechaRegistro { get; set; } = DateTime.Now;
+    }
+
+
+
 }

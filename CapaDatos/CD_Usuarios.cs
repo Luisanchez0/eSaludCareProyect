@@ -64,7 +64,33 @@ namespace CapaDatos
                 }
             }
         }
+        //registro de usuarios
+        public bool InsertarUsuario(UsuarioEntidad usuario)
+        {
+            using (var con = conexion.Conectar())
+            {
+                con.Open();
+                string query = @"INSERT INTO usuarios (nombre, apellido, correo, contrasena, telefono, rol, fecha_registro, esta_activo)
+                                 VALUES (@nombre, @apellido, @correo, @contrasena, @telefono, @rol, @fecha_registro, TRUE)";
+
+                using (var cmd = new NpgsqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("nombre", usuario.Nombre);
+                    cmd.Parameters.AddWithValue("apellido", usuario.Apellido);
+                    cmd.Parameters.AddWithValue("correo", usuario.Correo);
+                    cmd.Parameters.AddWithValue("contrasena", usuario.Contrasena);
+                    cmd.Parameters.AddWithValue("telefono", usuario.Telefono ?? (object)DBNull.Value);
+                    cmd.Parameters.AddWithValue("rol", usuario.Rol);
+                    cmd.Parameters.AddWithValue("fecha_registro", usuario.FechaRegistro);
+
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+            }
 
 
+
+
+
+        }
     }
 }

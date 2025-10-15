@@ -6,6 +6,7 @@ using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Mvc;
+using eSaludCareUsers.Data;
 
 
 namespace eSaludCareUsers.Controllers
@@ -30,9 +31,9 @@ namespace eSaludCareUsers.Controllers
             var medicos = _context.Medicos
                 .Select(m => new PerfilUsuario
                 {
-                    Id = m.Id,
-                    Nombre = m.Nombre,
-                    Telefono = m.Telefono,
+                    Id = m.id_medico,
+                    Nombre = m.nombres + " " + m.apellidos,
+                    Telefono = m.telefono,
                     Rol = "Medico"
                 }).ToList();
 

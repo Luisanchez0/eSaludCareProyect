@@ -6402,22 +6402,27 @@ section,
     padding-top: 60px;
     padding-bottom: 60px;
     /* Add your styles here */
+}
 
-.btn-getstarted{
-   color: var(--contrast-color);
+
+
+.btn-getstarted {
+    order: 2;
+    margin: 0 15px 0 0;
+    padding: 6px 20px;
+    color: var(--accent-color);
+    text-decoration: none;
+    transition: 0.3s;
+}
+
+
+
+.btn-getstarted, .btn-getstarted:focus {
+    color: var(--contrast-color);
     background: var(--accent-color);
     font-size: 14px;
     padding: 8px 26px;
     margin: 0;
     border-radius: 4px;
     transition: 0.3s;
-    }
-}   
-
-
-
-    .btn-getstarted:hover,
-    .btn-getstarted:focus:hover {
-        color: var(--contrast-color);
-        background: color-mix(in srgb, var(--accent-color), transparent 15%);
-    }
+}

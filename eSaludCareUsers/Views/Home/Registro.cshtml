@@ -1,51 +1,93 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Registro";
 }
 <main class="main">
     <section id="hero" class="hero section">
         <div class="container">
             <div class="row align-items-center">
-                <form class="row g-3" action=".php" method="post" autocomplete="off">
-                    <h3 class="department-name">Registrate</h3>
+                <form id="formRegistro" class="row g-3" autocomplete="off">
+                    <h3 class="department-name">Regístrate</h3>
 
                     <div class="col-md-6">
                         <label for="nombres"><span class="text-danger">* </span>Nombres</label>
-                        <input type="text" name="nombres" id="nombres" class="form-control" requireda>
+                        <input type="text" name="nombres" id="nombres" class="form-control" required>
                     </div>
                     <div class="col-md-6">
                         <label for="apellidos"><span class="text-danger">* </span>Apellidos</label>
-                        <input type="text" name="apellidos" id="apellidos" class="form-control" requireda>
+                        <input type="text" name="apellidos" id="apellidos" class="form-control" required>
                     </div>
                     <div class="col-md-6">
-                        <label for="email"><span class="text-danger">* </span>Correo Electronico</label>
-                        <input type="email" name="email" id="email" class="form-control" requireda>
+                        <label for="email"><span class="text-danger">* </span>Correo Electrónico</label>
+                        <input type="email" name="email" id="email" class="form-control" required>
                     </div>
                     <div class="col-md-6">
-                        <label for="telefono"><span class="text-danger">* </span>Telefono</label>
-                        <input type="tel" name="telefono" id="telefono" class="form-control" requireda>
+                        <label for="telefono"><span class="text-danger">* </span>Teléfono</label>
+                        <input type="tel" name="telefono" id="telefono" class="form-control" required>
                     </div>
                     <div class="col-md-6">
                         <label for="password"><span class="text-danger">* </span>Contraseña</label>
-                        <input type="password" name="password" id="password" class="form-control" requireda>
+                        <input type="password" name="password" id="password" class="form-control" required>
                     </div>
                     <div class="col-md-6">
                         <label for="repassword"><span class="text-danger">* </span>Repetir Contraseña</label>
-                        <input type="password" name="repassword" id="repassword" class="form-control" requireda>
+                        <input type="password" name="repassword" id="repassword" class="form-control" required>
                     </div>
 
-                    <i><b>Nota:</b> Los campos con asteriscos son obligarios</i>
+                    <i><b>Nota:</b> Los campos con asteriscos son obligatorios</i>
 
                     <div class="col-12">
-                        <button class="btn-getstarted" >Registrar</button>
+                        <button id="btnRegistrar" type="submit" class="btn btn-getstarted">Registrar</button>
                     </div>
-
-
                 </form>
-
-
             </div>
         </div>
     </section>
-
 </main>
+
+<script>
+    document.getElementById("formRegistro").addEventListener("submit", async function (e) {
+        e.preventDefault();
+
+        const nombres = document.getElementById("nombres").value.trim();
+        const apellidos = document.getElementById("apellidos").value.trim();
+        const email = document.getElementById("email").value.trim();
+        const telefono = document.getElementById("telefono").value.trim();
+        const password = document.getElementById("password").value;
+        const repassword = document.getElementById("repassword").value;
+
+        if (password !== repassword) {
+            alert("Las contraseñas no coinciden");
+            return;
+        }
+
+        const data = {
+            Nombre: nombres,
+            Apellido: apellidos,
+            Correo: email,
+            Contrasena: password,
+            Telefono: telefono
+        };
+
+        try {
+            const response = await fetch('/api/v1/registro', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
+
+            const result = await response.json().catch(() => null);
+
+            if (response.ok) {
+                alert(result?.mensaje || "Usuario registrado correctamente.");
+                document.getElementById("formRegistro").reset();
+            } else {
+                alert("Error: " + (result?.mensaje || "No se pudo registrar el usuario"));
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert("Ocurrió un error al registrar el usuario.");
+        }
+    });
+</script>

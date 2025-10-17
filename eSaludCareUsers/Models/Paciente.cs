@@ -1,16 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Web;
 
 namespace eSaludCareUsers.Models
 {
+    [Table("pacientes", Schema = "public")]
     public class Paciente
     {
-        public int id_paciente { get; set; }
-        public string nombres { get; set; }
-        public string apellidos { get; set; }
-        public string telefono { get; set; }
+
+        [Key]
+        [ForeignKey("Usuario")]
+        public int id_usuario { get; set; }
+
+        public DateTime? fecha_nacimiento { get; set; }
+        public string genero { get; set; }
+        public string direccion { get; set; }
+
+        public virtual Usuario Usuario { get; set; }
+
 
     }
 }

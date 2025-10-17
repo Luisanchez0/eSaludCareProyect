@@ -19,11 +19,11 @@ namespace eSaludCareUsers.Controllers
             var medicos = _context.Medicos
                 .Select(m => new
                 {
-                    Id = m.id_medico,
-                    Nombre = m.nombres + " " + m.apellidos,
+                    Id = m.id_usuario,
+                    Nombre = m.Usuario.nombre + " " + m.Usuario.apellido,
                     Especialidad = m.especialidad,
-                    Telefono = m.telefono,
-                    Correo = m.correo
+                    Telefono = m.Usuario.telefono,
+                    Correo = m.Usuario.correo
                 })
                 .ToList();
 

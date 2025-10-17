@@ -7,19 +7,19 @@ using System.Web;
 
 namespace eSaludCareUsers.Models
 {
-    [Table("medicos", Schema = "public")]
-
-    public class Medico
+    public class TokenSesion
     {
         [Key]
-        [ForeignKey("Usuario")] 
+        public int id_token { get; set; }
+
+        [ForeignKey("Usuario")]
         public int id_usuario { get; set; }
 
-        public string especialidad { get; set; }
-        public string numero_cedula { get; set; }
+        public string token { get; set; }
+        public DateTime fecha_creacion { get; set; }
+        public DateTime? fecha_expiracion { get; set; }
 
         public virtual Usuario Usuario { get; set; }
-
 
     }
 }

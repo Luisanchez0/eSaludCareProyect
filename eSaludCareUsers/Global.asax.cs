@@ -19,6 +19,8 @@ namespace eSaludCareUsers
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
+
+            System.Data.Entity.DbConfiguration.SetConfiguration(new eSaludCareUsers.Data.NpgsqlConfiguration());
         }
     }
 }

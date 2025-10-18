@@ -34,34 +34,69 @@ namespace CapaDatos
             }
         }
 
-        // Obtener citas por paciente
-/*        public List<CitaMedica> ListarPorPaciente(int idPaciente)
-        {
-            List<Cita> lista = new List<CitaMedica>();
-            using (SqlConnection cn = new SqlConnection(conexion))
-            {
-                string query = "SELECT * FROM Citas WHERE IdPaciente = @IdPaciente";
-                SqlCommand cmd = new SqlCommand(query, cn);
-                cmd.Parameters.AddWithValue("@IdPaciente", idPaciente);
-                cn.Open();
 
-                SqlDataReader dr = cmd.ExecuteReader();
-                while (dr.Read())
+        public List<CitaMedica> ListarCitas(int idMedico, DateTime fecha)
+        {
+            List<CitaMedica> lista = new List<CitaMedica>();
+
+            using (var con = conexion.Conectar())
+            {
+                con.Open();
+                string query = @"
+                    SELECT fecha_cita
+                    FROM citas
+                    WHERE id_medico = @idMedico
+                      AND DATE(fecha_cita) = @fecha";
+
+                using (var cmd = new NpgsqlCommand(query, con))
                 {
-                    lista.Add(new Cita
+                    cmd.Parameters.AddWithValue("idMedico", idMedico);
+                    cmd.Parameters.AddWithValue("fecha", fecha.Date);
+
+                    using (var reader = cmd.ExecuteReader())
                     {
-                        IdCita = Convert.ToInt32(dr["IdCita"]),
-                        IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
-                        IdMedico = Convert.ToInt32(dr["IdMedico"]),
-                        FechaCita = Convert.ToDateTime(dr["FechaCita"]),
-                        HoraCita = dr["HoraCita"].ToString(),
-                        Motivo = dr["Motivo"].ToString(),
-                        Estado = dr["Estado"].ToString()
-                    });
+                        while (reader.Read())
+                        {
+                            lista.Add(new CitaMedica
+                            {
+                                FechaCita = reader.GetDateTime(0)
+                            });
+                        }
+                    }
                 }
             }
+
             return lista;
         }
-*/
+
+        // Obtener citas por paciente
+        /*        public List<CitaMedica> ListarPorPaciente(int idPaciente)
+                {
+                    List<Cita> lista = new List<CitaMedica>();
+                    using (SqlConnection cn = new SqlConnection(conexion))
+                    {
+                        string query = "SELECT * FROM Citas WHERE IdPaciente = @IdPaciente";
+                        SqlCommand cmd = new SqlCommand(query, cn);
+                        cmd.Parameters.AddWithValue("@IdPaciente", idPaciente);
+                        cn.Open();
+
+                        SqlDataReader dr = cmd.ExecuteReader();
+                        while (dr.Read())
+                        {
+                            lista.Add(new Cita
+                            {
+                                IdCita = Convert.ToInt32(dr["IdCita"]),
+                                IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
+                                IdMedico = Convert.ToInt32(dr["IdMedico"]),
+                                FechaCita = Convert.ToDateTime(dr["FechaCita"]),
+                                HoraCita = dr["HoraCita"].ToString(),
+                                Motivo = dr["Motivo"].ToString(),
+                                Estado = dr["Estado"].ToString()
+                            });
+                        }
+                    }
+                    return lista;
+                }
+        */
     }
 }

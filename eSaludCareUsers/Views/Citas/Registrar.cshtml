@@ -16,6 +16,22 @@
                         </select>
                     </div>
 
+                    <div>
+                        <label for="horaCita">Hora de la cita:</label>
+                        <select id="horaCita" name="HoraCita" required>
+                            <option value="">-- Selecciona un horario --</option>
+                            <option value="08:00">08:00</option>
+                            <option value="08:30">08:30</option>
+                            <option value="09:00">09:00</option>
+                            <option value="09:30">09:30</option>
+                            <option value="10:00">10:00</option>
+                            <option value="10:30">10:30</option>
+
+                            <!-- Agrega todos los horarios que necesites -->
+                        </select>
+                    </div>
+
+
 
                 </form>
             </div>
@@ -25,7 +41,6 @@
 
 @section Scripts {
     <script>
-        // Función para cargar los médicos
         async function cargarMedicos() {
             try {
                 const response = await fetch('@Url.Action("obtenerMedicos", "Citas")');
@@ -37,7 +52,7 @@
                 if (data.estado) {
                     data.elemento.forEach(medico => {
                         const option = document.createElement('option');
-                        option.value = medico.IdMedico; // coincide con tu clase Medico
+                        option.value = medico.IdMedico; // Este será el valor que se enviará al backend
                         option.textContent = `${medico.Nombre} ${medico.Apellido} - ${medico.Especialidad}`;
                         select.appendChild(option);
                     });
@@ -51,7 +66,6 @@
             }
         }
 
-        // Ejecutar al cargar la página
         document.addEventListener('DOMContentLoaded', cargarMedicos);
     </script>
 }

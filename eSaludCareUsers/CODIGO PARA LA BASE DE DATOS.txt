@@ -98,4 +98,16 @@ CREATE INDEX idx_usuarios_rol ON usuarios(rol);
 CREATE INDEX idx_tokens_sesion_token ON tokens_sesion(token);
 CREATE INDEX idx_citas_fecha ON citas(fecha_cita);
 
+// MODIFICAR LA TABLA CITAS PARA SEPARAR FECHA Y HORA
+
+
+ALTER TABLE citas
+DROP COLUMN fecha_cita;
+
+ALTER TABLE citas
+ADD COLUMN fecha DATE;
+
+ALTER TABLE citas
+ADD COLUMN hora TIME;
+
 

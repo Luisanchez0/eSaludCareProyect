@@ -13,4 +13,5 @@ namespace CapaEntidad
         public string Apellido { get; set; }
         public string Especialidad { get; set; }
     }
+
 }

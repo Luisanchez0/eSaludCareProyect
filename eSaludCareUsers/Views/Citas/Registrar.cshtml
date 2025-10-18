@@ -1,0 +1,73 @@
+﻿@{
+    ViewBag.Title = "Registrar Cita Médica";
+}
+
+<main class="main">
+    <section id="hero" class="hero section">
+        <div class="container">
+            <div class="row align-items-center">
+                <form id="formRegistro" class="row g-3" autocomplete="off">
+                    <h3 class="department-name">Agendar Cita</h3>
+
+                    <div>
+                        <label for="idMedico">Médico:</label>
+                        <select id="idMedico" name="IdMedico" required>
+                            <option value="">-- Cargando médicos... --</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label for="horaCita">Hora de la cita:</label>
+                        <select id="horaCita" name="HoraCita" required>
+                            <option value="">-- Selecciona un horario --</option>
+                            <option value="08:00">08:00</option>
+                            <option value="08:30">08:30</option>
+                            <option value="09:00">09:00</option>
+                            <option value="09:30">09:30</option>
+                            <option value="10:00">10:00</option>
+                            <option value="10:30">10:30</option>
+
+                            <!-- Agrega todos los horarios que necesites -->
+                        </select>
+                    </div>
+
+
+
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    <script>
+        async function cargarMedicos() {
+            try {
+                const response = await fetch('@Url.Action("obtenerMedicos", "Citas")');
+                const data = await response.json();
+
+                const select = document.getElementById('idMedico');
+                select.innerHTML = '<option value="">-- Selecciona un médico --</option>';
+
+                if (data.estado) {
+                    data.elemento.forEach(medico => {
+                        const option = document.createElement('option');
+                        option.value = medico.IdMedico; // Este será el valor que se enviará al backend
+                        option.textContent = `${medico.Nombre} ${medico.Apellido} - ${medico.Especialidad}`;
+                        select.appendChild(option);
+                    });
+                } else {
+                    select.innerHTML = '<option value="">No se encontraron médicos</option>';
+                }
+
+            } catch (error) {
+                console.error('Error al cargar médicos:', error);
+                document.getElementById('idMedico').innerHTML = '<option value="">Error al cargar médicos</option>';
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', cargarMedicos);
+    </script>
+}
+
+

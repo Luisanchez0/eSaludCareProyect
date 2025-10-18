@@ -89,6 +89,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CitaMedica.cs" />
+    <Compile Include="Medico.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UsuarioMapper.cs" />
     <Compile Include="Usuarios.cs" />

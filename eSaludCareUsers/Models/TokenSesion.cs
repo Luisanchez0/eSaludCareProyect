@@ -19,7 +19,7 @@ namespace eSaludCareUsers.Models
         public DateTime fecha_creacion { get; set; }
         public DateTime? fecha_expiracion { get; set; }
 
-        public virtual Usuario Usuario { get; set; }
+        public virtual UsuarioEntidad Usuario { get; set; }
 
     }
 }

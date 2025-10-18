@@ -18,5 +18,11 @@ namespace eSaludCareAdmin.Controllers
         {
             return View();
         }
+        public ActionResult CerrarSesion()
+        {
+            Session.Clear(); // Borra todos los datos de sesión
+            return RedirectToAction("Index", "Home"); // Redirige al inicio
+        }
+
     }
 }

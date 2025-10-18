@@ -19,7 +19,7 @@ namespace eSaludCareUsers.Models
         public string genero { get; set; }
         public string direccion { get; set; }
 
-        public virtual Usuario Usuario { get; set; }
+        public virtual UsuarioEntidad Usuario { get; set; }
 
 
     }

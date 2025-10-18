@@ -10,7 +10,7 @@ namespace eSaludCareUsers.Models
     [Table("usuarios", Schema = "public")]
 
 
-    public class Usuario
+    public class UsuarioEntidad
     {
         [Key]
         public int id_usuario { get; set; }

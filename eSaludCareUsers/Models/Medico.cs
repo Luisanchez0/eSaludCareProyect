@@ -18,7 +18,7 @@ namespace eSaludCareUsers.Models
         public string especialidad { get; set; }
         public string numero_cedula { get; set; }
 
-        public virtual Usuario Usuario { get; set; }
+        public virtual UsuarioEntidad Usuario { get; set; }
 
 
     }

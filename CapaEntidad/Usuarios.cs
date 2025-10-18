@@ -31,6 +31,7 @@ namespace CapaEntidad
         public bool activo { get; set; }
         public DateTime fecha_actualizacion { get; set; }
         public string token { get; set; }
+        public DateTime fecha_registro { get; set; }
     }
 
     public class UsuarioEntidad
@@ -43,6 +44,16 @@ namespace CapaEntidad
         public string Telefono { get; set; }
         public string Rol { get; set; } = "paciente";
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
+    }
+
+
+    public class PerfilesUser
+    {
+        public int Id { get; set; }
+        public string Nombre { get; set; }
+        public string Telefono { get; set; }
+        public string Correo { get; set; }
+        public string Rol { get; set; }
     }
 
 

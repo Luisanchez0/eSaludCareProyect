@@ -87,10 +87,100 @@ namespace CapaDatos
                 }
             }
 
+        }
+        public List<Usuarios> ObtenerUsuarios()
+        {
+            List<Usuarios> lista = new List<Usuarios>();
 
+            try
+            {
+                using (var conexion = new NpgsqlConnection("Host = localhost; Port = 5432; Username = postgres; Password = 102538; Database = clinica_db"))
+                {
+                    conexion.Open();
+                    using (var comando = new NpgsqlCommand("SELECT * FROM usuarios", conexion))
+                    {
+                        using (var reader = comando.ExecuteReader())
+                        {
+                            while (reader.Read())
+                            {
+                                lista.Add(new Usuarios
+                                {
+                                    id_usuario = Convert.ToInt32(reader["id_usuario"]),
+                                    nombre = reader["nombre"].ToString(),
+                                    correo = reader["correo"].ToString(),
+                                    contrasena = reader["contrasena"].ToString(),
+                                    rol = reader["rol"].ToString()
+                                });
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Puedes loguear el error si quieres
+                // Pero no necesitas devolver aquí, porque el return está abajo
+            }
 
+            return lista; // ✅ Este return está fuera del try-catch y siempre se ejecuta
+        }
+        public bool EliminarUsuario(int id)
+        {
+            bool resultado = false;
 
+            try
+            {
+                using (var conexion = new NpgsqlConnection("Host = localhost; Port = 5432; Username = postgres; Password = 102538; Database = clinica_db"))
+                {
+                    conexion.Open();
+                    using (var comando = new NpgsqlCommand("DELETE FROM usuarios WHERE id_usuario = @id", conexion))
+                    {
+                        comando.Parameters.AddWithValue("@id", id);
+                        int filasAfectadas = comando.ExecuteNonQuery();
+                        resultado = filasAfectadas > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Puedes loguear el error si quieres
+                resultado = false;
+            }
 
+            return resultado; // ✅ Este return siempre se ejecuta
+        }
+
+        public bool ActualizarUsuario(Usuarios usuario)
+        {
+            bool resultado = false;
+
+            try
+            {
+                using (var conexion = new NpgsqlConnection("Host = localhost; Port = 5432; Username = postgres; Password = 102538; Database = clinica_db"))
+                {
+                    conexion.Open();
+                    using (var comando = new NpgsqlCommand(@"
+                UPDATE usuarios 
+                SET nombre = @nombre, correo = @correo, contrasena = @contrasena, rol = @rol 
+                WHERE id_usuario = @id", conexion))
+                    {
+                        comando.Parameters.AddWithValue("@id", usuario.id_usuario);
+                        comando.Parameters.AddWithValue("@nombre", usuario.nombre);
+                        comando.Parameters.AddWithValue("@correo", usuario.correo);
+                        comando.Parameters.AddWithValue("@contrasena", usuario.contrasena);
+                        comando.Parameters.AddWithValue("@rol", usuario.rol);
+
+                        int filasAfectadas = comando.ExecuteNonQuery();
+                        resultado = filasAfectadas > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                resultado = false;
+            }
+
+            return resultado;
         }
     }
 }

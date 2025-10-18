@@ -1,0 +1,67 @@
+﻿using CapaEntidad;
+using Npgsql;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace CapaDatos
+{
+    public class CD_Citas
+    {
+        private ConectionBD conexion = new ConectionBD();
+
+
+        public bool RegistrarCita(CitaMedica cita)
+        {
+            using (var con = conexion.Conectar())
+            {
+                con.Open();
+                string query = @"INSERT INTO citas (id_paciente, id_medico, fecha_cita, estado, motivo, fecha_registro)
+                                 VALUES (@id_paciente, @id_medico, @fecha_cita, @estado, @motivo, @fecha_registro)";
+                using (var cmd = new NpgsqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("id_paciente", cita.IdPaciente);
+                    cmd.Parameters.AddWithValue("id_medico", cita.IdMedico);
+                    cmd.Parameters.AddWithValue("fecha_cita", cita.FechaCita);
+                    cmd.Parameters.AddWithValue("estado", cita.Estado);
+                    cmd.Parameters.AddWithValue("motivo", cita.Motivo);
+                    cmd.Parameters.AddWithValue("fecha_registro", DateTime.Now);
+                    
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+            }
+        }
+
+        // Obtener citas por paciente
+/*        public List<CitaMedica> ListarPorPaciente(int idPaciente)
+        {
+            List<Cita> lista = new List<CitaMedica>();
+            using (SqlConnection cn = new SqlConnection(conexion))
+            {
+                string query = "SELECT * FROM Citas WHERE IdPaciente = @IdPaciente";
+                SqlCommand cmd = new SqlCommand(query, cn);
+                cmd.Parameters.AddWithValue("@IdPaciente", idPaciente);
+                cn.Open();
+
+                SqlDataReader dr = cmd.ExecuteReader();
+                while (dr.Read())
+                {
+                    lista.Add(new Cita
+                    {
+                        IdCita = Convert.ToInt32(dr["IdCita"]),
+                        IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
+                        IdMedico = Convert.ToInt32(dr["IdMedico"]),
+                        FechaCita = Convert.ToDateTime(dr["FechaCita"]),
+                        HoraCita = dr["HoraCita"].ToString(),
+                        Motivo = dr["Motivo"].ToString(),
+                        Estado = dr["Estado"].ToString()
+                    });
+                }
+            }
+            return lista;
+        }
+*/
+    }
+}

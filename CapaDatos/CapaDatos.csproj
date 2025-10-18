@@ -90,6 +90,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CD_Citas.cs" />
+    <Compile Include="CD_Medicos.cs" />
     <Compile Include="CD_Usuarios.cs" />
     <Compile Include="ConectionBD.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

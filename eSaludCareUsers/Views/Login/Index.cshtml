@@ -1,0 +1,92 @@
+﻿@{
+    ViewBag.Title = "Inicia Sesión";
+}
+
+<main class="main">
+    <section id="hero" class="hero section">
+        <div class="container">
+            <h3 class="department-name">Inicia Sesión</h3>
+
+            <div class="row align-items-center">
+                <form id="formLogin" class="row g-3" autocomplete="off">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label for="email"><span class="text-danger">*</span> Correo Electrónico</label>
+                            <input type="email" name="email" id="email" class="form-control" required>
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="password"><span class="text-danger">*</span> Contraseña</label>
+                            <input type="password" name="password" id="password" class="form-control" required>
+                        </div>
+                    </div>
+
+                    <i><b>Nota:</b> Los campos con asteriscos son obligatorios</i>
+
+                    <div class="col-12 mt-3">
+                        <button id="btnLogin" type="submit" class="btn btn-getstarted">Iniciar Sesión</button>
+                    </div>
+                    <div class="col-12 mt-2">
+                        <a href="#">¿Olvidaste tu contraseña?</a>
+                    </div>
+
+                    <hr>
+
+                    <div class="col-12">
+                        ¿Nuevo usuario? <a href="@Url.Action("Registro", "Home")">Regístrate Aquí</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#formLogin").on("submit", function (e) {
+                e.preventDefault();
+
+                const datos = {
+                    correo: $("#email").val(),
+                    contrasena: $("#password").val()
+                };
+
+                $.ajax({
+                    url: "/api/v1/login",
+                    type: "POST",
+                    data: JSON.stringify(datos),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        if (response.success) {
+                            // Guardar token y datos del usuario
+                            localStorage.setItem("token", response.token);
+                            localStorage.setItem("rol", response.role);
+                            localStorage.setItem("nombre", response.nombre);
+
+                            alert("Bienvenido, " + response.nombre);
+
+                            // Redirigir según el rol
+                            if (response.role === "admin") {
+                                window.location.href = "/Admin/Index";
+                            } else {
+                                window.location.href = "/Home/Index";
+                            }
+                        } else {
+                            alert("Usuario o contraseña incorrectos.");
+                        }
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 401) {
+                            alert("Credenciales incorrectas. Verifica tu correo y contraseña.");
+                        } else {
+                            alert("Error al iniciar sesión: " + xhr.responseText);
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+}

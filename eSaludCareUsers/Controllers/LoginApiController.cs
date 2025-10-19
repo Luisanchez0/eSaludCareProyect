@@ -15,7 +15,7 @@ using System.Web.Mvc;
 
 
 
-namespace eSaludCareAdmin.Controllers
+namespace eSaludCareUsers.Controllers
 {
     [System.Web.Http.RoutePrefix("api/v1")]
 

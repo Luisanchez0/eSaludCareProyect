@@ -40,7 +40,7 @@
                             <li><a href="404.html">404</a></li>
                         </ul>
                     </li>
-                   <!-- <li class="dropdown">
+                    <!-- <li class="dropdown">
                         <a href="#"><span>Dropdown</span> <i class="bi bi-chevron-down toggle-dropdown"></i></a>
                         <ul>
                             <li><a href="#">Dropdown 1</a></li>
@@ -64,8 +64,14 @@
                 <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
             </nav>
 
-            <a class="btn-getstarted" href="@Url.Action("Registro", "Home")";>Registrarse</a>
+            <div id="user-section">
+                <a id="btnLogin" class="btn-getstarted" href="@Url.Action("Index","Login")">Iniciar Sesión</a>
 
+                <div id="user-info" style="display:none;">
+                    <span id="user-name" class="text-black fw-bold"></span>
+                    <button id="btnLogout" class="btn-getstarted">Cerrar sesión</button>
+                </div>
+            </div>
         </div>
     </header>
 
@@ -79,6 +85,38 @@
 
 
     </main>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const token = localStorage.getItem("token");
+            const nombre = localStorage.getItem("nombre");
+
+            const loginBtn = document.getElementById("btnLogin");
+            const userInfo = document.getElementById("user-info");
+            const userName = document.getElementById("user-name");
+            const logoutBtn = document.getElementById("btnLogout");
+
+            if (token && nombre) {
+                // Usuario autenticado
+                loginBtn.style.display = "none";
+                userInfo.style.display = "inline-block";
+                userName.textContent = "👋 " + nombre;
+            } else {
+                // Usuario no autenticado
+                loginBtn.style.display = "inline-block";
+                userInfo.style.display = "none";
+            }
+
+            // Cerrar sesión
+            logoutBtn?.addEventListener("click", function () {
+                localStorage.removeItem("token");
+                localStorage.removeItem("rol");
+                localStorage.removeItem("nombre");
+                window.location.href = "/Home/Index";
+            });
+        });
+    </script>
     @*RenderBody()
         <li>@Html.ActionLink("Inicio", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
         <li>@Html.ActionLink("Acerca de", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
@@ -91,4 +129,6 @@
     @Scripts.Render("~/bundles/bootstrap")
     @RenderSection("scripts", required: false)
 </body>
+
+
 </html>

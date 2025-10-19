@@ -243,17 +243,19 @@
     <Compile Include="Controllers\LoginApiController.cs" />
     <Compile Include="Controllers\MedicosController.cs" />
     <Compile Include="Controllers\RegistroApiController.cs" />
+    <Compile Include="Controllers\UsuarioApiController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
     <Compile Include="Data\AppDbContext.cs" />
     <Compile Include="Data\NpgsqlConfiguration.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\LoginRequest.cs" />
     <Compile Include="Models\Medico.cs" />
     <Compile Include="Models\Paciente.cs" />
     <Compile Include="Models\PerfilUsuario.cs" />
     <Compile Include="Models\TokenSesion.cs" />
-    <Compile Include="Models\Usuario.cs" />
+    <Compile Include="Models\UsuarioEntidad.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Startup.cs" />

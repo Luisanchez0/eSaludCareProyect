@@ -57,10 +57,6 @@ namespace eSaludCareUsers.Controllers
             return Ok(perfiles);
         }
 
-
-
-
-
         [System.Web.Http.HttpGet]
         [System.Web.Http.Route("api/usuarios/testconexion")]
         public IHttpActionResult TestConexion()
@@ -70,6 +66,25 @@ namespace eSaludCareUsers.Controllers
                 throw new Exception("La cadena de conexión 'BDpsql' no fue encontrada.");
 
             return Ok("Cadena de conexión encontrada correctamente.");
+        }
+
+        [HttpPost]
+        [Route("login")]
+        public IHttpActionResult Login(LoginRequest request)
+        {
+            if (request == null || string.IsNullOrEmpty(request.Correo) || string.IsNullOrEmpty(request.Contrasena))
+                return BadRequest("Datos de login incompletos.");
+
+            var usuario = _context.Usuarios
+                .FirstOrDefault(u => u.correo == request.Correo && u.contrasena == request.Contrasena);
+
+            if (usuario == null)
+                return Unauthorized();
+
+            // Simulación de token (puedes reemplazar con JWT si lo deseas)
+            var token = Guid.NewGuid().ToString();
+
+            return Ok(new { token });
         }
 
 

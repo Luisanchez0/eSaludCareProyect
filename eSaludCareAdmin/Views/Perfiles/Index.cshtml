@@ -1,0 +1,45 @@
+﻿@model IEnumerable<CapaEntidad.PerfilesUser>
+@using System.Linq
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Listado de Perfiles</h2>
+
+@if (Model != null && Model.Any())
+{
+    <table class="table table-bordered">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var perfil in Model)
+            {
+                <tr>
+                    <td>@perfil.Nombre</td>
+                    <td>@perfil.Correo</td>
+                    <td>@perfil.Telefono</td>
+                    <td>@perfil.Rol</td>
+                    <td>
+                        <a href="/Perfiles/Editar/@perfil.Id" class="btn btn-sm btn-warning">Editar</a>
+                        <a href="/Perfiles/Eliminar/@perfil.Id" class="btn btn-sm btn-danger" onclick="return confirm('¿Estás segura de que quieres eliminar este perfil?');">Eliminar</a>
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <div class="alert alert-warning">
+        <strong>Atención:</strong> @ViewBag.Error
+    </div>
+}

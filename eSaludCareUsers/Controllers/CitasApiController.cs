@@ -18,6 +18,7 @@ namespace eSaludCareUsers.Controllers
 
         public IHttpActionResult Registrar([FromBody] CitaMedica nuevaCita)
         {
+            var userID = User.Identity.Name;//obtener id usuario desde el token
             if (nuevaCita == null)
                 return BadRequest("Datos de cita no válidos.");
 
@@ -25,7 +26,8 @@ namespace eSaludCareUsers.Controllers
 
             if (nuevaCita.IdPaciente <= 0 ||
                 nuevaCita.IdMedico <= 0 ||
-                nuevaCita.FechaCita == default(DateTime) ||
+                nuevaCita.Fecha == default(DateTime) ||
+                nuevaCita.Hora == default(TimeSpan) ||
                 string.IsNullOrEmpty(nuevaCita.Motivo))
             {
                 return BadRequest("Todos los campos obligatorios deben ser completados.");
@@ -44,6 +46,41 @@ namespace eSaludCareUsers.Controllers
                 return InternalServerError(ex);
             }
 
+        }
+
+
+        [HttpGet]
+        [Route("HorariosDisponibles")]
+        public IHttpActionResult HorariosDisponibles(int idMedico, DateTime fecha)
+        {
+            //definir horarios de atencion
+            var horariosAtencion = new List<string>();
+            {
+                int inicio = 9;
+                int fin = 17;
+                int intervalo = 30; // minutos
+                for (int hora = inicio; hora < fin; hora++)
+                {
+                    for (int min = 0; min < 60; min += intervalo)
+                    {
+                        horariosAtencion.Add($"{hora:D2}:{min:D2}");
+                    }
+
+                }
+
+                //obtener citas ya agendadas
+                var citasAgendadas = _citaNegocio.ListarCitas(idMedico, fecha)
+                    .Select(c => c.Hora.ToString(@"hh\:mm"))
+                    .ToList();
+
+                //filtrar horarios disponibles
+                var HorariosDisponibles = horariosAtencion.Except(citasAgendadas).ToList();
+
+                return Ok(new { 
+                    estado = true,
+                    horarios = HorariosDisponibles } );
+            }
+            ;
         }
     }
 }

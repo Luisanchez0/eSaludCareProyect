@@ -1,38 +1,46 @@
 ﻿@{
     ViewBag.Title = "Registrar Cita Médica";
+    //var pacienteId = User.Identity.GetUserId(); // ejemplo, ajusta según tu sistema de autenticación
 }
 
 <main class="main">
     <section id="hero" class="hero section">
         <div class="container">
             <div class="row align-items-center">
-                <form id="formRegistro" class="row g-3" autocomplete="off">
+                <form id="formCita" class="row g-3 bg-light p-4 rounded shadow-sm" autocomplete="off">
                     <h3 class="department-name">Agendar Cita</h3>
 
-                    <div>
-                        <label for="idMedico">Médico:</label>
-                        <select id="idMedico" name="IdMedico" required>
-                            <option value="">-- Cargando médicos... --</option>
+                    <input type="hidden" id="idPaciente" value="@pacienteId" />
+
+                    <div class="mb-3">
+                        <label for="idMedico" class="form-label">Doctor:</label>
+                        <select id="idMedico" name="IdMedico" class="form-select" required>
+                            <option value="">-- Selecciona un médico --</option>
                         </select>
                     </div>
 
-                    <div>
-                        <label for="horaCita">Hora de la cita:</label>
-                        <select id="horaCita" name="HoraCita" required>
-                            <option value="">-- Selecciona un horario --</option>
-                            <option value="08:00">08:00</option>
-                            <option value="08:30">08:30</option>
-                            <option value="09:00">09:00</option>
-                            <option value="09:30">09:30</option>
-                            <option value="10:00">10:00</option>
-                            <option value="10:30">10:30</option>
+                    <div class="mb-3">
+                        <label for="fecha" class="form-label">Fecha:</label>
+                        <input type="date" id="fecha" name="Fecha" class="form-control" required min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                    </div>
 
-                            <!-- Agrega todos los horarios que necesites -->
+                    <div class="mb-3">
+                        <label for="hora" class="form-label">Hora:</label>
+                        <select id="hora" name="Hora" class="form-select" required>
+                            <option value="">-- Selecciona la hora --</option>
                         </select>
                     </div>
 
+                    <div class="mb-3">
+                        <label for="motivo" class="form-label">Motivo / Nota:</label>
+                        <textarea id="motivo" name="Motivo" rows="2" class="form-control" placeholder="Escribe el motivo..." required></textarea>
+                    </div>
 
+                    <button type="submit" class="btn btn-info text-white w-100 fw-semibold">
+                        + Agendar Cita
+                    </button>
 
+                    <div id="mensaje" class="mt-3 text-center fw-bold"></div>
                 </form>
             </div>
         </div>
@@ -41,33 +49,85 @@
 
 @section Scripts {
     <script>
+        // Cargar médicos al cargar la página
         async function cargarMedicos() {
-            try {
-                const response = await fetch('@Url.Action("obtenerMedicos", "Citas")');
-                const data = await response.json();
+            const response = await fetch('@Url.Action("obtenerMedicos", "Citas")');
+            const data = await response.json();
+            const select = document.getElementById('idMedico');
+            select.innerHTML = '<option value="">-- Selecciona un médico --</option>';
 
-                const select = document.getElementById('idMedico');
-                select.innerHTML = '<option value="">-- Selecciona un médico --</option>';
-
-                if (data.estado) {
-                    data.elemento.forEach(medico => {
-                        const option = document.createElement('option');
-                        option.value = medico.IdMedico; // Este será el valor que se enviará al backend
-                        option.textContent = `${medico.Nombre} ${medico.Apellido} - ${medico.Especialidad}`;
-                        select.appendChild(option);
-                    });
-                } else {
-                    select.innerHTML = '<option value="">No se encontraron médicos</option>';
-                }
-
-            } catch (error) {
-                console.error('Error al cargar médicos:', error);
-                document.getElementById('idMedico').innerHTML = '<option value="">Error al cargar médicos</option>';
+            if (data.estado) {
+                data.elemento.forEach(medico => {
+                    const option = document.createElement('option');
+                    option.value = medico.IdMedico;
+                    option.textContent = `${medico.Nombre} ${medico.Apellido} - ${medico.Especialidad}`;
+                    select.appendChild(option);
+                });
             }
         }
 
         document.addEventListener('DOMContentLoaded', cargarMedicos);
+
+        // Cargar horas disponibles para el médico seleccionado y la fecha
+        async function cargarHorasDisponibles() {
+            const medicoId = document.getElementById('idMedico').value;
+            const fecha = document.getElementById('fecha').value;
+            if (!medicoId || !fecha) return;
+
+            const response = await fetch(`/api/v1/HorariosDisponibles?idMedico=${medicoId}&fecha=${fecha}`);
+            const data = await response.json();
+
+            const selectHora = document.getElementById('hora');
+            selectHora.innerHTML = '<option value="">-- Selecciona la hora --</option>';
+
+            if (data.estado && data.horarios.length > 0) {
+                data.horarios.forEach(h => {
+                    const option = document.createElement('option');
+                    option.value = h;
+                    option.textContent = h;
+                    selectHora.appendChild(option);
+                });
+            } else {
+                const option = document.createElement('option');
+                option.value = "";
+                option.textContent = "No hay horarios disponibles";
+                selectHora.appendChild(option);
+            }
+        }
+
+        document.getElementById('idMedico').addEventListener('change', cargarHorasDisponibles);
+        document.getElementById('fecha').addEventListener('change', cargarHorasDisponibles);
+
+        // Enviar cita
+        document.getElementById('formCita').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const cita = {
+                IdPaciente: parseInt(document.getElementById('idPaciente').value),
+                IdMedico: parseInt(document.getElementById('idMedico').value),
+                Fecha: document.getElementById('fecha').value,
+                Hora: document.getElementById('hora').value,
+                Motivo: document.getElementById('motivo').value
+            };
+
+            const response = await fetch('/api/v1/registrarCita', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(cita)
+            });
+
+            const data = await response.json();
+            const msg = document.getElementById('mensaje');
+
+            if (response.ok) {
+                msg.style.color = 'green';
+                msg.innerText = data.mensaje;
+                document.getElementById('formCita').reset();
+                document.getElementById('hora').innerHTML = '<option value="">-- Selecciona la hora --</option>';
+            } else {
+                msg.style.color = 'red';
+                msg.innerText = data.Message || data.mensaje;
+            }
+        });
     </script>
 }
-
-

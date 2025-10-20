@@ -1,4 +1,5 @@
 ﻿using CapaDatos;
+using CapaEntidad;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -13,6 +14,12 @@ namespace CapaNegocio
         public bool RegistrarCita(CapaEntidad.CitaMedica cita)
         {
             return _citaDatos.RegistrarCita(cita);
+        }
+
+        public List<CitaMedica> ListarCitas(int idMedico, DateTime fecha)
+        {
+
+            return _citaDatos.ListarCitas(idMedico, fecha);
         }
     }
 }

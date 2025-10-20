@@ -29,7 +29,17 @@ namespace CapaNegocio
 
         public Usuarios Login(string correo, string contrasena)
         {
-            return objCapaDato.ValidarUser(correo, contrasena);
+            var usuario = objCapaDato.ObtenerUsuarioPorCorreo(correo);
+
+            if (usuario == null)
+                return null;
+
+            bool contraseñaValid = BCrypt.Net.BCrypt.Verify(contrasena, usuario.contrasena);
+
+            if (contraseñaValid)
+                return usuario;
+            else
+                return null;
         }
 
         public void GuardarToken(int id_usuario, string token)

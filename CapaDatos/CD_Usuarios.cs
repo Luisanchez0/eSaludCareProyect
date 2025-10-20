@@ -49,6 +49,39 @@ namespace CapaDatos
             return null;
         }
 
+        public Usuarios ObtenerUsuarioPorCorreo(string correo)
+        {
+            using (var con = conexion.Conectar())
+            {
+                con.Open();
+                string query = "SELECT * FROM usuarios WHERE correo = @correo";
+                using (var cmd = new NpgsqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("@correo", correo);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new Usuarios
+                            {
+                                id_usuario = Convert.ToInt32(reader["id_usuario"]),
+                                nombre = reader["nombre"].ToString(),
+                                correo = reader["correo"].ToString(),
+                                contrasena = reader["contrasena"].ToString(),
+                                rol = reader["rol"].ToString()
+                            };
+                        }
+                    }
+                }
+                return null;
+
+                }
+            }
+        
+        
+
+
+
         public void GuardarToken(int id_usuario, string token)
         {
             using (var con = conexion.Conectar())

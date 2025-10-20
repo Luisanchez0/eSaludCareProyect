@@ -1,11 +1,13 @@
-﻿using eSaludCareUsers.Data;
-using CapaEntidad; 
+﻿using CapaEntidad; 
+using eSaludCareUsers.Data;
+using eSaludCareUsers.Models.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+
 
 
 
@@ -19,45 +21,46 @@ namespace eSaludCareUsers.Controllers
 
         [HttpGet]
         [Route("")]
-        public IHttpActionResult ObtenerUsuarios()
+        public IHttpActionResult ObtenerUsuarios(string rol, int idUsuario)
         {
-            var pacientes = _context.Pacientes
-                .Select(p => new PerfilUsuarioDTO
-                {
-                    Id = p.id_usuario,
-                    Nombre = p.Usuario.nombre + " " + p.Usuario.apellido,
-                    Telefono = p.Usuario.telefono,
-                    Correo = p.Usuario.correo,
-                    Rol = "paciente"
-                });
-            var medicos = _context.Medicos
-                .Select(m => new PerfilUsuarioDTO
-                {
-                    Id = m.id_usuario,
-                    Nombre = m.Usuario.nombre + " " + m.Usuario.apellido,
-                    Telefono = m.Usuario.telefono,
-                    Correo = m.Usuario.correo,
-                    Rol = "medico"
-                });
+            if (rol == "admin")
+            {
+                // Devuelve todos los usuarios
+                var perfiles = _context.Usuarios
+                    .Select(u => new PerfilUsuarioDTO
+                    {
+                        Id = u.id_usuario,
+                        Nombre = u.nombre + " " + u.apellido,
+                        Telefono = u.telefono,
+                        Correo = u.correo,
+                        Rol = u.rol
+                    })
+                    .ToList();
 
-            var admins = _context.Usuarios
-                .Where(u => u.rol == "admin")
-                .Select(u => new PerfilUsuarioDTO
-                {
-                    Id = u.id_usuario,
-                    Nombre = u.nombre + " " + u.apellido,
-                    Telefono = u.telefono,
-                    Correo = u.correo,
-                    Rol = "admin"
-                });
+                return Ok(perfiles);
+            }
 
-            var perfiles = pacientes
-                .Concat(medicos)
-                .Concat(admins)
-                .ToList();
+            if (rol == "medico")
+            {
+                // Devuelve solo los pacientes asignados al médico
+                var pacientes = _context.Pacientes
+                    .Where(p => p.IdMedico == idUsuario) // ← relación directa
+                    .Select(p => new PerfilUsuarioDTO
+                    {
+                        Id = p.id_usuario,
+                        Nombre = p.Usuario.nombre + " " + p.Usuario.apellido,
+                        Telefono = p.Usuario.telefono,
+                        Correo = p.Usuario.correo,
+                        Rol = "paciente"
+                    })
+                    .ToList();
 
-            return Ok(perfiles);
+                return Ok(pacientes);
+            }
+
+            return Unauthorized(); // otros roles no tienen acceso
         }
+
 
         [System.Web.Http.HttpGet]
         [System.Web.Http.Route("api/usuarios/testconexion")]
@@ -108,6 +111,33 @@ namespace eSaludCareUsers.Controllers
 
             return Ok(dto);
         }
+
+        [HttpPost]
+        [Route("")]
+        public IHttpActionResult CrearUsuario(Usuarios usuario)
+        {
+            if (usuario == null)
+                return BadRequest("Datos incompletos.");
+
+            if (string.IsNullOrEmpty(usuario.correo) || string.IsNullOrEmpty(usuario.contrasena))
+                return BadRequest("Correo y contraseña son obligatorios.");
+
+            var existe = _context.Usuarios.Any(u => u.correo == usuario.correo);
+            if (existe)
+                return Conflict();
+
+            usuario.fecha_registro = DateTime.Now;
+            usuario.fecha_actualizacion = DateTime.Now;
+            usuario.token = Guid.NewGuid().ToString();
+
+            var entidad = UsuarioAdapter.Convertir(usuario); // ← conversión segura
+            _context.Usuarios.Add(entidad);
+            _context.SaveChanges();
+
+            return Ok(new { mensaje = "Usuario creado correctamente", id = entidad.id_usuario });
+        }
+
+
 
 
 

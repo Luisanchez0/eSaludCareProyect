@@ -3,6 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+
 
 namespace CapaEntidad
 {
@@ -20,7 +24,8 @@ namespace CapaEntidad
        rol VARCHAR(20) CHECK(rol IN ('paciente', 'medico', 'admin')) NOT NULL,
        fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP
    */
-
+        [Key]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int id_usuario { get; set; }
         public string nombre { get; set; }
         public string apellido { get; set; }

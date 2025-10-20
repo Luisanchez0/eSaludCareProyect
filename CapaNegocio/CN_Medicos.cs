@@ -11,7 +11,7 @@ namespace CapaNegocio
     public class CN_Medicos
     {
         private CD_Medicos objetoCD = new CapaDatos.CD_Medicos();
-        public List<Medico> ListarMedicos()
+        public List<MedicoAsignado> ListarMedicos()
         {
             return objetoCD.ListarMedicos();
         }

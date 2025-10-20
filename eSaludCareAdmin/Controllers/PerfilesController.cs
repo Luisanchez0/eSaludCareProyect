@@ -23,10 +23,13 @@ namespace eSaludCareAdmin.Controllers
         [Route("")]
         public async Task<ActionResult> Index()
         {
+            var rol = Session["rol"]?.ToString();
+            var idUsuario = Convert.ToInt32(Session["id_usuario"]);
+
             using (var client = new HttpClient())
             {
                 client.BaseAddress = new Uri(baseUrl);
-                var response = await client.GetAsync("api/usuarios");
+                var response = await client.GetAsync($"api/usuarios?rol={rol}&idUsuario={idUsuario}");
 
                 if (!response.IsSuccessStatusCode)
                 {
@@ -37,10 +40,8 @@ namespace eSaludCareAdmin.Controllers
                 var json = await response.Content.ReadAsStringAsync();
                 System.Diagnostics.Debug.WriteLine("JSON recibido: " + json);
 
-                // ✅ Deserializa usando el DTO que coincide con el JSON
                 var usuarios = JsonConvert.DeserializeObject<List<UsuarioApiDTO>>(json);
 
-                // ✅ Mapea a PerfilUsuarioDTO para la vista
                 var perfiles = usuarios
                     .Where(u => u != null && u.Id > 0)
                     .Select(u => new PerfilUsuarioDTO
@@ -60,6 +61,7 @@ namespace eSaludCareAdmin.Controllers
 
                 return View(perfiles);
             }
+
 
         }
 
@@ -81,7 +83,7 @@ namespace eSaludCareAdmin.Controllers
 
                 var usuario = new Usuarios
                 {
-                    id_usuario = perfil.Id,
+                    
                     nombre = perfil.Nombre.Split(' ')[0],
                     apellido = perfil.Nombre.Split(' ').Length > 1 ? perfil.Nombre.Split(' ')[1] : "",
                     correo = perfil.Correo,

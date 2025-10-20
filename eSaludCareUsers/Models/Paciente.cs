@@ -18,8 +18,10 @@ namespace eSaludCareUsers.Models
         public DateTime? fecha_nacimiento { get; set; }
         public string genero { get; set; }
         public string direccion { get; set; }
+        public int IdMedico { get; set; }
 
         public virtual UsuarioEntidad Usuario { get; set; }
+        public virtual Medico MedicoAsignado { get; set; }
 
 
     }

@@ -12,9 +12,9 @@ namespace CapaDatos
 
         private ConectionBD conexion = new ConectionBD();
 
-        public List<Medico> ListarMedicos()
+        public List<MedicoAsignado> ListarMedicos()
         {
-            List<Medico> lista = new List<Medico>();
+            List<MedicoAsignado> lista = new List<MedicoAsignado>();
             try
             {
                 using (var con = conexion.Conectar())
@@ -29,7 +29,7 @@ namespace CapaDatos
                         {
                             while (dr.Read())
                             {
-                                var medico = new Medico
+                                var medico = new MedicoAsignado
                                 {
                                     IdMedico = dr.GetInt32(dr.GetOrdinal("id_medico")),
                                     Nombre = dr.GetString(dr.GetOrdinal("nombre")),

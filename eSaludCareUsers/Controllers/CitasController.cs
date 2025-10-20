@@ -38,7 +38,7 @@ namespace eSaludCareUsers.Controllers
 
             public JsonResult obtenerMedicos()
             {
-                List<Medico> oLista = new List<Medico>();
+                List<MedicoAsignado> oLista = new List<MedicoAsignado>();
                 oLista = new CN_Medicos().ListarMedicos();
 
                 return Json(new { elemento = oLista, estado = true } ,JsonRequestBehavior.AllowGet);

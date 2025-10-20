@@ -1,6 +1,11 @@
 ﻿@{
     ViewBag.Title = "Registrar Cita Médica";
-    //var pacienteId = User.Identity.GetUserId(); // ejemplo, ajusta según tu sistema de autenticación
+
+    // Si tienes autenticación con sesión:
+    var pacienteId = Session["IdPaciente"] != null ? Session["IdPaciente"].ToString() : "0";
+
+    // Si usas JWT:
+    var token = Session["JwtToken"] != null ? Session["JwtToken"].ToString() : "";
 }
 
 <main class="main">
@@ -8,7 +13,7 @@
         <div class="container">
             <div class="row align-items-center">
                 <form id="formCita" class="row g-3 bg-light p-4 rounded shadow-sm" autocomplete="off">
-                    <h3 class="department-name">Agendar Cita</h3>
+                    <h3 class="department-name mb-3">Agendar Cita</h3>
 
                     <input type="hidden" id="idPaciente" value="@pacienteId" />
 
@@ -21,7 +26,8 @@
 
                     <div class="mb-3">
                         <label for="fecha" class="form-label">Fecha:</label>
-                        <input type="date" id="fecha" name="Fecha" class="form-control" required min="@DateTime.Now.ToString("yyyy-MM-dd")" />
+                        <input type="date" id="fecha" name="Fecha" class="form-control"
+                               required min="@DateTime.Now.ToString("yyyy-MM-dd")" />
                     </div>
 
                     <div class="mb-3">
@@ -33,7 +39,8 @@
 
                     <div class="mb-3">
                         <label for="motivo" class="form-label">Motivo / Nota:</label>
-                        <textarea id="motivo" name="Motivo" rows="2" class="form-control" placeholder="Escribe el motivo..." required></textarea>
+                        <textarea id="motivo" name="Motivo" rows="2"
+                                  class="form-control" placeholder="Escribe el motivo..." required></textarea>
                     </div>
 
                     <button type="submit" class="btn btn-info text-white w-100 fw-semibold">
@@ -49,58 +56,73 @@
 
 @section Scripts {
     <script>
-        // Cargar médicos al cargar la página
-        async function cargarMedicos() {
-            const response = await fetch('@Url.Action("obtenerMedicos", "Citas")');
-            const data = await response.json();
-            const select = document.getElementById('idMedico');
-            select.innerHTML = '<option value="">-- Selecciona un médico --</option>';
+        const token = "@token";
 
-            if (data.estado) {
-                data.elemento.forEach(medico => {
-                    const option = document.createElement('option');
-                    option.value = medico.IdMedico;
-                    option.textContent = `${medico.Nombre} ${medico.Apellido} - ${medico.Especialidad}`;
-                    select.appendChild(option);
+        // 🔹 Cargar médicos
+        async function cargarMedicos() {
+            try {
+                const response = await fetch('@Url.Action("ObtenerMedicos", "Citas")', {
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
+                const data = await response.json();
+                const select = document.getElementById('idMedico');
+                select.innerHTML = '<option value="">-- Selecciona un médico --</option>';
+
+                if (data.estado) {
+                    data.elemento.forEach(medico => {
+                        const option = document.createElement('option');
+                        option.value = medico.IdMedico;
+                        option.textContent = `${medico.Nombre} ${medico.Apellido} - ${medico.Especialidad}`;
+                        select.appendChild(option);
+                    });
+                }
+            } catch (error) {
+                console.error('Error al cargar médicos:', error);
             }
         }
 
         document.addEventListener('DOMContentLoaded', cargarMedicos);
 
-        // Cargar horas disponibles para el médico seleccionado y la fecha
+        // 🔹 Cargar horas disponibles
         async function cargarHorasDisponibles() {
             const medicoId = document.getElementById('idMedico').value;
             const fecha = document.getElementById('fecha').value;
             if (!medicoId || !fecha) return;
 
-            const response = await fetch(`/api/v1/HorariosDisponibles?idMedico=${medicoId}&fecha=${fecha}`);
-            const data = await response.json();
-
-            const selectHora = document.getElementById('hora');
-            selectHora.innerHTML = '<option value="">-- Selecciona la hora --</option>';
-
-            if (data.estado && data.horarios.length > 0) {
-                data.horarios.forEach(h => {
-                    const option = document.createElement('option');
-                    option.value = h;
-                    option.textContent = h;
-                    selectHora.appendChild(option);
+            try {
+                const response = await fetch(`/api/v1/HorariosDisponibles?idMedico=${medicoId}&fecha=${fecha}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
                 });
-            } else {
-                const option = document.createElement('option');
-                option.value = "";
-                option.textContent = "No hay horarios disponibles";
-                selectHora.appendChild(option);
+                const data = await response.json();
+
+                const selectHora = document.getElementById('hora');
+                selectHora.innerHTML = '<option value="">-- Selecciona la hora --</option>';
+
+                if (data.estado && data.horarios.length > 0) {
+                    data.horarios.forEach(h => {
+                        const option = document.createElement('option');
+                        option.value = h;
+                        option.textContent = h;
+                        selectHora.appendChild(option);
+                    });
+                } else {
+                    const option = document.createElement('option');
+                    option.value = "";
+                    option.textContent = "No hay horarios disponibles";
+                    selectHora.appendChild(option);
+                }
+            } catch (error) {
+                console.error('Error al cargar horarios:', error);
             }
         }
 
         document.getElementById('idMedico').addEventListener('change', cargarHorasDisponibles);
         document.getElementById('fecha').addEventListener('change', cargarHorasDisponibles);
 
-        // Enviar cita
+        // 🔹 Registrar cita
         document.getElementById('formCita').addEventListener('submit', async (e) => {
             e.preventDefault();
+            const msg = document.getElementById('mensaje');
 
             const cita = {
                 IdPaciente: parseInt(document.getElementById('idPaciente').value),
@@ -110,23 +132,31 @@
                 Motivo: document.getElementById('motivo').value
             };
 
-            const response = await fetch('/api/v1/registrarCita', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(cita)
-            });
+            try {
+                const response = await fetch('/api/v1/registrarCita', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(cita)
+                });
 
-            const data = await response.json();
-            const msg = document.getElementById('mensaje');
+                const data = await response.json();
 
-            if (response.ok) {
-                msg.style.color = 'green';
-                msg.innerText = data.mensaje;
-                document.getElementById('formCita').reset();
-                document.getElementById('hora').innerHTML = '<option value="">-- Selecciona la hora --</option>';
-            } else {
+                if (response.ok) {
+                    msg.style.color = 'green';
+                    msg.innerText = data.mensaje || 'Cita registrada correctamente.';
+                    document.getElementById('formCita').reset();
+                    document.getElementById('hora').innerHTML = '<option value="">-- Selecciona la hora --</option>';
+                } else {
+                    msg.style.color = 'red';
+                    msg.innerText = data.message || data.mensaje || 'Error al registrar la cita.';
+                }
+            } catch (error) {
                 msg.style.color = 'red';
-                msg.innerText = data.Message || data.mensaje;
+                msg.innerText = 'Error al conectar con el servidor.';
+                console.error(error);
             }
         });
     </script>

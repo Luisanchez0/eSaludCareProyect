@@ -34,7 +34,7 @@
                         {
                             <a href="@Url.Action("Detalles", "Perfiles", new { id = perfil.Id })" class="btn btn-sm btn-info">Ver</a>
                         }
-                        <a href="@Url.Action("Editar", "Perfiles", new { id = perfil.Id })" class="btn btn-sm btn-warning">Editar</a>
+                        <a href="@Url.Action("Editar", "Perfiles", new { id = perfil.Id })" class="btn btn-warning">Editar</a>
                         <a href="@Url.Action("Eliminar", "Perfiles", new { id = perfil.Id })" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este perfil?');">Eliminar</a>
                         <a href="@Url.Action("CambiarRol", "Perfiles", new { id = perfil.Id })" class="btn btn-sm btn-secondary">Rol</a>
                         <a href="@Url.Action("ResetPassword", "Perfiles", new { id = perfil.Id })" class="btn btn-sm btn-dark">Reset</a>

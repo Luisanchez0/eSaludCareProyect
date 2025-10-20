@@ -11,7 +11,7 @@
 
 <h2>Editar Perfil</h2>
 
-@using (Html.BeginRouteForm("editar", FormMethod.Post))
+@using (Html.BeginForm("Editar", "Perfiles", FormMethod.Post))
 {
     @Html.HiddenFor(m => m.Id)
 

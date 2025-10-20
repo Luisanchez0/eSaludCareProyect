@@ -9,9 +9,6 @@ using System.Net.Http;
 using System.Web.Http;
 
 
-
-
-
 namespace eSaludCareUsers.Controllers
 {
     [RoutePrefix("api/usuarios")]
@@ -137,8 +134,29 @@ namespace eSaludCareUsers.Controllers
             return Ok(new { mensaje = "Usuario creado correctamente", id = entidad.id_usuario });
         }
 
+        [HttpPut]
+        [Route("{id}")]
+        public IHttpActionResult EditarUsuario(int id, Usuarios usuario)
+        {
+            if (usuario == null || id != usuario.id_usuario)
+                return BadRequest("Datos inválidos.");
 
+            var entidad = _context.Usuarios.Find(id);
+            if (entidad == null)
+                return NotFound();
 
+            // Actualiza los campos
+            entidad.nombre = usuario.nombre;
+            entidad.apellido = usuario.apellido;
+            entidad.correo = usuario.correo;
+            entidad.telefono = usuario.telefono;
+            entidad.rol = usuario.rol;
+            entidad.fecha_actualizacion = DateTime.Now;
+
+            _context.SaveChanges();
+
+            return Ok(new { mensaje = "Usuario actualizado correctamente", id = entidad.id_usuario });
+        }
 
 
     }

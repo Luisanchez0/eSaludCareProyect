@@ -35,6 +35,8 @@ namespace eSaludCareUsers.Models
 
         public DateTime fecha_registro { get; set; }
 
+        public DateTime fecha_actualizacion { get; set; }
+
         // Relaciones
         public virtual Paciente Paciente { get; set; }
         public virtual Medico Medico { get; set; }

@@ -15,7 +15,7 @@ using CapaNegocio;
 
 namespace eSaludCareAdmin.Controllers
 {
-    [RoutePrefix("usuarios")]
+    [RoutePrefix("Perfiles")]
     public class PerfilesController : Controller
     {
         private readonly string baseUrl = "https://localhost:44301/";
@@ -126,7 +126,7 @@ namespace eSaludCareAdmin.Controllers
             }
         }
 
-        [Route("editar/{id:int}")]
+        [Route("Editar/{id:int}")]
         public async Task<ActionResult> Editar(int id)
         {
             using (var client = new HttpClient())
@@ -144,7 +144,7 @@ namespace eSaludCareAdmin.Controllers
         }
 
         [HttpPost]
-        [Route("editar")]
+        [Route("Editar/{id:int}")]
         public async Task<ActionResult> Editar(PerfilUsuarioDTO perfil)
         {
             var token = await ObtenerTokenAsync();

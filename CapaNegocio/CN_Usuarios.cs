@@ -64,6 +64,11 @@ namespace CapaNegocio
             return objCapaDato.EliminarUsuario(id);
         }
 
+        public void GenerarHashDePrueba()
+        {
+            string hash = BCrypt.Net.BCrypt.HashPassword("admin123");
+            Console.WriteLine("Hash generado: " + hash);
+        }
 
     }
 

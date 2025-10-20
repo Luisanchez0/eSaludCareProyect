@@ -11,7 +11,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Web.Http;
 using System.Web.Http.Results;
-using System.Web.Mvc;
+
 
 
 
@@ -64,6 +64,16 @@ namespace eSaludCareAdmin.Controllers
             });
 
         }
+
+        [HttpGet]
+        [Route("api/test/hash")]
+        public IHttpActionResult GenerarHashDePrueba()
+        {
+            string hash = BCrypt.Net.BCrypt.HashPassword("admin123");
+            return Ok(new { hashGenerado = hash });
+        }
+
+
 
     }
 }

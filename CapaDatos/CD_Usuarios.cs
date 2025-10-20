@@ -78,10 +78,6 @@ namespace CapaDatos
                 }
             }
         
-        
-
-
-
         public void GuardarToken(int id_usuario, string token)
         {
             using (var con = conexion.Conectar())

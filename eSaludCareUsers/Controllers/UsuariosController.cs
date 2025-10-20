@@ -1,11 +1,13 @@
-﻿using eSaludCareUsers.Models;
+﻿using eSaludCareUsers.Data;
+using CapaEntidad; 
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
-using eSaludCareUsers.Data;
+
+
 
 
 namespace eSaludCareUsers.Controllers
@@ -20,7 +22,7 @@ namespace eSaludCareUsers.Controllers
         public IHttpActionResult ObtenerUsuarios()
         {
             var pacientes = _context.Pacientes
-                .Select(p => new PerfilUsuario
+                .Select(p => new PerfilUsuarioDTO
                 {
                     Id = p.id_usuario,
                     Nombre = p.Usuario.nombre + " " + p.Usuario.apellido,
@@ -29,7 +31,7 @@ namespace eSaludCareUsers.Controllers
                     Rol = "paciente"
                 });
             var medicos = _context.Medicos
-                .Select(m => new PerfilUsuario
+                .Select(m => new PerfilUsuarioDTO
                 {
                     Id = m.id_usuario,
                     Nombre = m.Usuario.nombre + " " + m.Usuario.apellido,
@@ -40,7 +42,7 @@ namespace eSaludCareUsers.Controllers
 
             var admins = _context.Usuarios
                 .Where(u => u.rol == "admin")
-                .Select(u => new PerfilUsuario
+                .Select(u => new PerfilUsuarioDTO
                 {
                     Id = u.id_usuario,
                     Nombre = u.nombre + " " + u.apellido,
@@ -86,6 +88,27 @@ namespace eSaludCareUsers.Controllers
 
             return Ok(new { token });
         }
+
+        [HttpGet]
+        [Route("{id}")]
+        public IHttpActionResult ObtenerPorId(int id)
+        {
+            var usuario = _context.Usuarios.Find(id);
+            if (usuario == null)
+                return NotFound();
+
+            var dto = new PerfilUsuarioDTO
+            {
+                Id = usuario.id_usuario,
+                Nombre = usuario.nombre + " " + usuario.apellido,
+                Correo = usuario.correo,
+                Telefono = usuario.telefono,
+                Rol = usuario.rol
+            };
+
+            return Ok(dto);
+        }
+
 
 
     }

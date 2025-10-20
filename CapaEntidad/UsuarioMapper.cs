@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace CapaEntidad
 {
     public static class UsuarioMapper
@@ -40,6 +41,22 @@ namespace CapaEntidad
                 token = ""
             };
         }
+
+        public static PerfilUsuarioDTO APerfilDTO(Usuarios u)
+        {
+            if (u == null) return null;
+
+            return new PerfilUsuarioDTO
+            {
+                Id = u.id_usuario,
+                Nombre = u.nombre + " " + u.apellido,
+                Correo = u.correo,
+                Telefono = u.telefono,
+                Rol = u.rol,
+                
+            };
+        }
+
 
     }
 }

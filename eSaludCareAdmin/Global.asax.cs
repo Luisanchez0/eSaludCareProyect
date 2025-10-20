@@ -24,6 +24,8 @@ namespace eSaludCareAdmin
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             //apis
+
+            RouteConfig.RegisterRoutes(RouteTable.Routes);
         }
     }
 }

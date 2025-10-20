@@ -1,0 +1,36 @@
+﻿@model CapaEntidad.PerfilUsuarioDTO
+@{
+    ViewBag.Title = "Cambiar Rol";
+    var roles = new List<SelectListItem>
+{
+        new SelectListItem { Text = "admin", Value = "admin" },
+        new SelectListItem { Text = "medico", Value = "medico" },
+        new SelectListItem { Text = "paciente", Value = "paciente" }
+    };
+}
+
+<h2>Cambiar Rol del Usuario</h2>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Nombre</th>
+        <td>@Model.Nombre</td>
+    </tr>
+    <tr>
+        <th>Correo</th>
+        <td>@Model.Correo</td>
+    </tr>
+</table>
+
+@using (Html.BeginForm("CambiarRol", "Perfiles", FormMethod.Post))
+{
+    @Html.HiddenFor(m => m.Id)
+
+    <div class="form-group">
+        <label>Nuevo Rol</label>
+        @Html.DropDownList("nuevoRol", roles, "Seleccione un rol", new { @class = "form-control" })
+    </div>
+
+    <button type="submit" class="btn btn-primary">Actualizar Rol</button>
+    <a href="@Url.Action("Index", "Perfiles")" class="btn btn-secondary">Cancelar</a>
+}

@@ -1,0 +1,27 @@
+﻿@model CapaEntidad.PerfilUsuarioDTO
+@{
+    ViewBag.Title = "Detalles del Perfil";
+}
+
+<h2>Detalles del Perfil</h2>
+
+<table class="table table-bordered">
+    <tr>
+        <th>Nombre</th>
+        <td>@Model.Nombre</td>
+    </tr>
+    <tr>
+        <th>Correo</th>
+        <td>@Model.Correo</td>
+    </tr>
+    <tr>
+        <th>Teléfono</th>
+        <td>@Model.Telefono</td>
+    </tr>
+    <tr>
+        <th>Rol</th>
+        <td>@Model.Rol</td>
+    </tr>
+</table>
+
+<a href="@Url.Action("Index", "Perfiles")" class="btn btn-secondary">Volver al listado</a>

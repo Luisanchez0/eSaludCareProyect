@@ -297,6 +297,12 @@
     <Content Include="Views\Home\Usuarios.cshtml" />
     <Content Include="Views\Login\index.cshtml" />
     <Content Include="Views\Perfiles\Index.cshtml" />
+    <Content Include="Views\Perfiles\Detalles.cshtml" />
+    <Content Include="Views\Perfiles\Editar.cshtml" />
+    <Content Include="Views\Perfiles\Eliminar.cshtml" />
+    <Content Include="Views\Perfiles\CambiarRol.cshtml" />
+    <Content Include="Views\Perfiles\ResetPassword.cshtml" />
+    <Content Include="Views\Perfiles\Crear.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

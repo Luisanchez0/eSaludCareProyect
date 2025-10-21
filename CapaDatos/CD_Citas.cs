@@ -19,18 +19,32 @@ namespace CapaDatos
             {
                 con.Open();
 
+                //verificar eistencia de paciente
+                using (var cmdVerificarPaciente = new NpgsqlCommand("SELECT COUNT(*) FROM pacientes WHERE id_paciente = @id_paciente", con))
+                {
+                    cmdVerificarPaciente.Parameters.AddWithValue("id_paciente", cita.IdPaciente);
+                    var existePaciente = (long)cmdVerificarPaciente.ExecuteScalar() > 0;
+
+
+                    if (!existePaciente)
+                    {
+                        throw new Exception("El paciente no existe.");
+                    }
+
+                }
+
                 string query = @"INSERT INTO citas (id_paciente, id_medico, fecha, hora, estado, motivo, fecha_registro)
                  VALUES (@id_paciente, @id_medico, @fecha, @hora, @estado, @motivo, @fecha_registro)";
                 using (var cmd = new NpgsqlCommand(query, con))
                 {
-                    cmd.Parameters.AddWithValue("id_paciente", cita.IdPaciente);
-                    cmd.Parameters.AddWithValue("id_medico", cita.IdMedico);
                     cmd.Parameters.AddWithValue("fecha", cita.Fecha);
                     cmd.Parameters.AddWithValue("hora", cita.Hora);
-                    cmd.Parameters.AddWithValue("estado", cita.Estado);
-                    cmd.Parameters.AddWithValue("motivo", cita.Motivo);
-                    cmd.Parameters.AddWithValue("fecha_registro", DateTime.Now);
-                    
+                    cmd.Parameters.AddWithValue("id_paciente", cita.IdPaciente);
+                    cmd.Parameters.AddWithValue("id_medico", cita.IdMedico);
+                    cmd.Parameters.AddWithValue("estado", cita.Estado ?? "pendiente");
+                    cmd.Parameters.AddWithValue("motivo", cita.Motivo ?? "");
+                    cmd.Parameters.AddWithValue("@fecha_registro", DateTime.Now);
+
                     return cmd.ExecuteNonQuery() > 0;
                 }
             }

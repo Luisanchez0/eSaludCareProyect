@@ -99,23 +99,58 @@ namespace CapaDatos
             using (var con = conexion.Conectar())
             {
                 con.Open();
-                string query = @"INSERT INTO usuarios (nombre, apellido, correo, contrasena, telefono, rol, fecha_registro, esta_activo)
-                                 VALUES (@nombre, @apellido, @correo, @contrasena, @telefono, @rol, @fecha_registro, TRUE)";
 
-                using (var cmd = new NpgsqlCommand(query, con))
+                // Iniciar una transacción para asegurar la atomicidad de las operaciones
+                using (var transaction = con.BeginTransaction())
                 {
-                    cmd.Parameters.AddWithValue("nombre", usuario.Nombre);
-                    cmd.Parameters.AddWithValue("apellido", usuario.Apellido);
-                    cmd.Parameters.AddWithValue("correo", usuario.Correo);
-                    cmd.Parameters.AddWithValue("contrasena", usuario.Contrasena);
-                    cmd.Parameters.AddWithValue("telefono", usuario.Telefono ?? (object)DBNull.Value);
-                    cmd.Parameters.AddWithValue("rol", usuario.Rol);
-                    cmd.Parameters.AddWithValue("fecha_registro", usuario.FechaRegistro);
+                    try
+                    {
+                        string query = @"INSERT INTO usuarios (nombre, apellido, correo, contrasena, telefono, rol, fecha_registro, esta_activo)
+                                 VALUES (@nombre, @apellido, @correo, @contrasena, @telefono, @rol, @fecha_registro, TRUE)
+                                 RETURNING id_usuario;"; // Asumiendo que la tabla tiene una columna id_usuario
 
-                    return cmd.ExecuteNonQuery() > 0;
+                        int idUsuario;
+
+                        using (var cmd = new NpgsqlCommand(query, con, transaction))
+                        {
+                            cmd.Parameters.AddWithValue("nombre", usuario.Nombre);
+                            cmd.Parameters.AddWithValue("apellido", usuario.Apellido);
+                            cmd.Parameters.AddWithValue("correo", usuario.Correo);
+                            cmd.Parameters.AddWithValue("contrasena", usuario.Contrasena);
+                            cmd.Parameters.AddWithValue("telefono", usuario.Telefono ?? (object)DBNull.Value);
+                            cmd.Parameters.AddWithValue("rol", usuario.Rol);
+                            cmd.Parameters.AddWithValue("fecha_registro", usuario.FechaRegistro);
+
+                            // Ejecutar y obtener el ID del usuario insertado
+                            idUsuario = Convert.ToInt32(cmd.ExecuteScalar());
+                        }
+
+                        // Verificar si es paciente y realizar inserción adicional
+                        if (usuario.Rol.ToLower() == "paciente")
+                        {
+                            string query2 = @"INSERT INTO pacientes (id_usuario)
+                                    VALUES (@idUsuario)";
+
+                            using (var cmd2 = new NpgsqlCommand(query2, con, transaction))
+                            {
+                                cmd2.Parameters.AddWithValue(@"idUsuario", idUsuario);
+                                cmd2.ExecuteNonQuery();
+                            }
+                        }
+
+                        // Confirmar la transacción
+                        transaction.Commit();
+                        return true;
+                    }
+                    catch (Exception ex)
+                    {
+                        // Revertir la transacción en caso de error
+                        transaction.Rollback();
+                        // Considerar loggear el error: _logger.LogError(ex, "Error al insertar usuario");
+                        return false;
+                    }
                 }
             }
-
         }
         public List<Usuarios> ObtenerUsuarios()
         {

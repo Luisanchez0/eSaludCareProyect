@@ -18,7 +18,7 @@ namespace CapaEntidad
         observaciones TEXT,
         fecha_registro TIMESTAMP DEFAULT CURRENT_TIMESTAMP*/
 
-
+        public int IdCita { get; set; }
         public int IdPaciente { get; set; }
         public int IdMedico { get; set; }
         public DateTime Fecha { get; set; }
@@ -26,6 +26,6 @@ namespace CapaEntidad
 
         public string Estado { get; set; } // "Pendiente", "Confirmada", "Cancelada"
         public string Motivo { get; set; }
-        public string FechaRegistro { get; set; }
+        public DateTime FechaRegistro { get; set; }
     }
 }

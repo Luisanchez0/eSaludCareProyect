@@ -6426,3 +6426,12 @@ section,
     border-radius: 4px;
     transition: 0.3s;
 }
+
+
+
+.user-welcome {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-right: 15px;
+}

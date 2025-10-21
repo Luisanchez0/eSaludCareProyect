@@ -47,11 +47,15 @@ namespace CapaNegocio
             objCapaDato.GuardarToken(id_usuario, token);
         }
 
+        //registro de usuarios
         public bool RegistrarUsuario(UsuarioEntidad usuario)
         {
             usuario.Contrasena = BCrypt.Net.BCrypt.HashPassword(usuario.Contrasena);
             return objCapaDato.InsertarUsuario(usuario);
         }
+
+
+
 
         public bool ActualizarUsuario(UsuarioEntidad usuario)
         {

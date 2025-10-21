@@ -1,11 +1,5 @@
 ﻿@{
     ViewBag.Title = "Registrar Cita Médica";
-
-    // Si tienes autenticación con sesión:
-    var pacienteId = Session["IdPaciente"] != null ? Session["IdPaciente"].ToString() : "0";
-
-    // Si usas JWT:
-    var token = Session["JwtToken"] != null ? Session["JwtToken"].ToString() : "";
 }
 
 <main class="main">
@@ -15,7 +9,8 @@
                 <form id="formCita" class="row g-3 bg-light p-4 rounded shadow-sm" autocomplete="off">
                     <h3 class="department-name mb-3">Agendar Cita</h3>
 
-                    <input type="hidden" id="idPaciente" value="@pacienteId" />
+                    <!-- IdPaciente oculto -->
+                    <input type="hidden" id="idPaciente" />
 
                     <div class="mb-3">
                         <label for="idMedico" class="form-label">Doctor:</label>
@@ -43,7 +38,7 @@
                                   class="form-control" placeholder="Escribe el motivo..." required></textarea>
                     </div>
 
-                    <button type="submit" class="btn btn-info text-white w-100 fw-semibold">
+                    <button type="submit" class="btn-getstarted">
                         + Agendar Cita
                     </button>
 
@@ -56,108 +51,149 @@
 
 @section Scripts {
     <script>
-        const token = "@token";
-
-        // 🔹 Cargar médicos
-        async function cargarMedicos() {
-            try {
-                const response = await fetch('@Url.Action("ObtenerMedicos", "Citas")', {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const data = await response.json();
-                const select = document.getElementById('idMedico');
-                select.innerHTML = '<option value="">-- Selecciona un médico --</option>';
-
-                if (data.estado) {
-                    data.elemento.forEach(medico => {
-                        const option = document.createElement('option');
-                        option.value = medico.IdMedico;
-                        option.textContent = `${medico.Nombre} ${medico.Apellido} - ${medico.Especialidad}`;
-                        select.appendChild(option);
-                    });
-                }
-            } catch (error) {
-                console.error('Error al cargar médicos:', error);
-            }
+        // Función para leer el payload del JWT
+        function parseJwt(token) {
+            if (!token) return null;
+            const base64Url = token.split('.')[1];
+            const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+            const jsonPayload = decodeURIComponent(atob(base64).split('').map(c =>
+                '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+            ).join(''));
+            return JSON.parse(jsonPayload);
         }
 
-        document.addEventListener('DOMContentLoaded', cargarMedicos);
+        document.addEventListener("DOMContentLoaded", function () {
+            const token = localStorage.getItem("token");
+            if (!token) {
+                alert("Debes iniciar sesión para agendar una cita.");
+                window.location.href = "/Login/Index";
+                return;
+            }
 
-        // 🔹 Cargar horas disponibles
-        async function cargarHorasDisponibles() {
-            const medicoId = document.getElementById('idMedico').value;
-            const fecha = document.getElementById('fecha').value;
-            if (!medicoId || !fecha) return;
+            // 🔹 Obtener idUsuario del JWT
+            const payload = parseJwt(token);
+            const idUsuario = payload?.unique_name;
 
-            try {
-                const response = await fetch(`/api/v1/HorariosDisponibles?idMedico=${medicoId}&fecha=${fecha}`, {
-                    headers: { 'Authorization': `Bearer ${token}` }
-                });
-                const data = await response.json();
+            // 🔹 Obtener idPaciente desde backend
+            async function obtenerIdPaciente(idUsuario) {
+                try {
+                    const response = await fetch(`/api/v1/obtenerIdPaciente?idUsuario=${idUsuario}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await response.json();
+                    if (data.idPaciente) {  // 🔹 aquí ahora la respuesta tiene idPaciente directamente
+                        document.getElementById("idPaciente").value = data.idPaciente;
+                    } else {
+                        alert("No se encontró el paciente asociado al usuario.");
+                    }
+                } catch (error) {
+                    console.error("Error al obtener el ID del paciente:", error);
+                }
+            }
 
-                const selectHora = document.getElementById('hora');
-                selectHora.innerHTML = '<option value="">-- Selecciona la hora --</option>';
+            obtenerIdPaciente(idUsuario);
 
-                if (data.estado && data.horarios.length > 0) {
-                    data.horarios.forEach(h => {
+            // 🔹 Cargar médicos
+            async function cargarMedicos() {
+                try {
+                    const response = await fetch('@Url.Action("ObtenerMedicos", "Citas")', {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await response.json();
+                    const select = document.getElementById('idMedico');
+                    select.innerHTML = '<option value="">-- Selecciona un médico --</option>';
+
+                    if (data.estado) {
+                        data.elemento.forEach(medico => {
+                            const option = document.createElement('option');
+                            option.value = medico.IdMedico;
+                            option.textContent = `${medico.Nombre} ${medico.Apellido} - ${medico.Especialidad}`;
+                            select.appendChild(option);
+                        });
+                    }
+                } catch (error) {
+                    console.error('Error al cargar médicos:', error);
+                }
+            }
+
+            cargarMedicos();
+
+            // 🔹 Cargar horas disponibles
+            async function cargarHorasDisponibles() {
+                const medicoId = document.getElementById('idMedico').value;
+                const fecha = document.getElementById('fecha').value;
+                if (!medicoId || !fecha) return;
+
+                try {
+                    const response = await fetch(`/api/v1/HorariosDisponibles?idMedico=${medicoId}&fecha=${fecha}`, {
+                        headers: { 'Authorization': `Bearer ${token}` }
+                    });
+                    const data = await response.json();
+
+                    const selectHora = document.getElementById('hora');
+                    selectHora.innerHTML = '<option value="">-- Selecciona la hora --</option>';
+
+                    if (data.estado && data.horarios.length > 0) {
+                        data.horarios.forEach(h => {
+                            const option = document.createElement('option');
+                            option.value = h;
+                            option.textContent = h;
+                            selectHora.appendChild(option);
+                        });
+                    } else {
                         const option = document.createElement('option');
-                        option.value = h;
-                        option.textContent = h;
+                        option.value = "";
+                        option.textContent = "No hay horarios disponibles";
                         selectHora.appendChild(option);
+                    }
+                } catch (error) {
+                    console.error('Error al cargar horarios:', error);
+                }
+            }
+
+            document.getElementById('idMedico').addEventListener('change', cargarHorasDisponibles);
+            document.getElementById('fecha').addEventListener('change', cargarHorasDisponibles);
+
+            // 🔹 Registrar cita
+            document.getElementById('formCita').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const msg = document.getElementById('mensaje');
+
+                const cita = {
+                    IdPaciente: parseInt(document.getElementById('idPaciente').value),
+                    IdMedico: parseInt(document.getElementById('idMedico').value),
+                    Fecha: document.getElementById('fecha').value,
+                    Hora: document.getElementById('hora').value,
+                    Motivo: document.getElementById('motivo').value
+                };
+
+                try {
+                    const response = await fetch('/api/v1/registrarCita', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${token}`
+                        },
+                        body: JSON.stringify(cita)
                     });
-                } else {
-                    const option = document.createElement('option');
-                    option.value = "";
-                    option.textContent = "No hay horarios disponibles";
-                    selectHora.appendChild(option);
-                }
-            } catch (error) {
-                console.error('Error al cargar horarios:', error);
-            }
-        }
 
-        document.getElementById('idMedico').addEventListener('change', cargarHorasDisponibles);
-        document.getElementById('fecha').addEventListener('change', cargarHorasDisponibles);
+                    const data = await response.json();
 
-        // 🔹 Registrar cita
-        document.getElementById('formCita').addEventListener('submit', async (e) => {
-            e.preventDefault();
-            const msg = document.getElementById('mensaje');
-
-            const cita = {
-                IdPaciente: parseInt(document.getElementById('idPaciente').value),
-                IdMedico: parseInt(document.getElementById('idMedico').value),
-                Fecha: document.getElementById('fecha').value,
-                Hora: document.getElementById('hora').value,
-                Motivo: document.getElementById('motivo').value
-            };
-
-            try {
-                const response = await fetch('/api/v1/registrarCita', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${token}`
-                    },
-                    body: JSON.stringify(cita)
-                });
-
-                const data = await response.json();
-
-                if (response.ok) {
-                    msg.style.color = 'green';
-                    msg.innerText = data.mensaje || 'Cita registrada correctamente.';
-                    document.getElementById('formCita').reset();
-                    document.getElementById('hora').innerHTML = '<option value="">-- Selecciona la hora --</option>';
-                } else {
+                    if (response.ok) {
+                        msg.style.color = 'green';
+                        msg.innerText = data.mensaje || 'Cita registrada correctamente.';
+                        document.getElementById('formCita').reset();
+                        document.getElementById('hora').innerHTML = '<option value="">-- Selecciona la hora --</option>';
+                    } else {
+                        msg.style.color = 'red';
+                        msg.innerText = data.message || data.mensaje || 'Error al registrar la cita.';
+                    }
+                } catch (error) {
                     msg.style.color = 'red';
-                    msg.innerText = data.message || data.mensaje || 'Error al registrar la cita.';
+                    msg.innerText = 'Error al conectar con el servidor.';
+                    console.error(error);
                 }
-            } catch (error) {
-                msg.style.color = 'red';
-                msg.innerText = 'Error al conectar con el servidor.';
-                console.error(error);
-            }
+            });
         });
     </script>
 }

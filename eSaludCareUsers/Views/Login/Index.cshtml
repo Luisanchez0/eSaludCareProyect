@@ -66,6 +66,12 @@
                             localStorage.setItem("rol", response.role);
                             localStorage.setItem("nombre", response.nombre);
 
+                            // Si es paciente, guardar Id del paciente (extraído del token si se necesita)
+                            // Supongamos que el IdPaciente viene en response.idPaciente
+                            if (response.role === "paciente") {
+                                localStorage.setItem("pacienteId", response.idPaciente || response.tokenUsuario || "0");
+                            }
+
                             alert("Bienvenido, " + response.nombre);
 
                             // Redirigir según el rol

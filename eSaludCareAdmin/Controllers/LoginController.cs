@@ -45,6 +45,7 @@ namespace eSaludCareAdmin.Controllers
                     Session["Rol"] = resultado.role;
                     Session["Correo"] = correo;
                     Session["Nombre"] = resultado.nombre;
+                    Session["id_usuario"] = resultado.id_usuario;
 
                     return RedirectToAction("Index", "Home");
                 }

@@ -19,7 +19,8 @@ namespace eSaludCareUsers.Models.Helpers
                 contrasena = u.contrasena,
                 telefono = u.telefono,
                 rol = u.rol,
-                fecha_registro = u.fecha_registro
+                fecha_registro = u.fecha_registro,
+                fecha_actualizacion = u.fecha_actualizacion
             };
         }
 

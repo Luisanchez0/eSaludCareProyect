@@ -77,17 +77,19 @@ namespace eSaludCareUsers.Controllers
             if (request == null || string.IsNullOrEmpty(request.Correo) || string.IsNullOrEmpty(request.Contrasena))
                 return BadRequest("Datos de login incompletos.");
 
-            var usuario = _context.Usuarios
-                .FirstOrDefault(u => u.correo == request.Correo && u.contrasena == request.Contrasena);
-
-            if (usuario == null)
+            var usuario = _context.Usuarios.FirstOrDefault(u => u.correo == request.Correo);
+            if (usuario == null || !BCrypt.Net.BCrypt.Verify(request.Contrasena, usuario.contrasena))
                 return Unauthorized();
-
-            // Simulación de token (puedes reemplazar con JWT si lo deseas)
-            var token = Guid.NewGuid().ToString();
-
-            return Ok(new { token });
+            
+            return Ok(new
+            {
+                token = Guid.NewGuid().ToString(), // o JWT si lo implementas después
+                id_usuario = usuario.id_usuario,
+                rol = usuario.rol,
+                nombre = usuario.nombre
+            });
         }
+
 
         [HttpGet]
         [Route("{id}")]
@@ -123,16 +125,20 @@ namespace eSaludCareUsers.Controllers
             if (existe)
                 return Conflict();
 
+           
+            usuario.contrasena = BCrypt.Net.BCrypt.HashPassword(usuario.contrasena);
+
             usuario.fecha_registro = DateTime.Now;
             usuario.fecha_actualizacion = DateTime.Now;
             usuario.token = Guid.NewGuid().ToString();
 
-            var entidad = UsuarioAdapter.Convertir(usuario); // ← conversión segura
+            var entidad = UsuarioAdapter.Convertir(usuario); 
             _context.Usuarios.Add(entidad);
             _context.SaveChanges();
 
             return Ok(new { mensaje = "Usuario creado correctamente", id = entidad.id_usuario });
         }
+
 
         [HttpPut]
         [Route("{id}")]
@@ -156,6 +162,58 @@ namespace eSaludCareUsers.Controllers
             _context.SaveChanges();
 
             return Ok(new { mensaje = "Usuario actualizado correctamente", id = entidad.id_usuario });
+        }
+
+        [HttpDelete]
+        [Route("usuarios/{id}")]
+        public IHttpActionResult EliminarUsuario(int id)
+        {
+            var usuario = _context.Usuarios.Find(id);
+            if (usuario == null)
+                return NotFound();
+
+            _context.Usuarios.Remove(usuario);
+            _context.SaveChanges();
+
+            return Ok(new { mensaje = "Usuario eliminado correctamente", id });
+        }
+
+        [HttpPut]
+        [Route("usuarios/cambiar-rol/{id}")]
+        public IHttpActionResult CambiarRol(int id, [FromBody] dynamic payload)
+        {
+            string nuevoRol = payload?.rol;
+            if (string.IsNullOrEmpty(nuevoRol))
+                return BadRequest("Rol inválido.");
+
+            var usuario = _context.Usuarios.Find(id);
+            if (usuario == null)
+                return NotFound();
+
+            usuario.rol = nuevoRol;
+            usuario.fecha_actualizacion = DateTime.Now;
+            _context.SaveChanges();
+
+            return Ok(new { mensaje = "Rol actualizado correctamente", id });
+        }
+
+        [HttpPut]
+        [Route("usuarios/reset-password/{id}")]
+        public IHttpActionResult ResetPassword(int id, [FromBody] dynamic payload)
+        {
+            string nuevaContrasena = payload?.contrasena;
+            if (string.IsNullOrEmpty(nuevaContrasena))
+                return BadRequest("Contraseña inválida.");
+
+            var usuario = _context.Usuarios.Find(id);
+            if (usuario == null)
+                return NotFound();
+
+            usuario.contrasena = nuevaContrasena;
+            usuario.fecha_actualizacion = DateTime.Now;
+            _context.SaveChanges();
+
+            return Ok(new { mensaje = "Contraseña actualizada correctamente", id });
         }
 
 

@@ -125,14 +125,14 @@ namespace eSaludCareUsers.Controllers
             if (existe)
                 return Conflict();
 
-            // 🔐 Hashear la contraseña antes de guardar
+           
             usuario.contrasena = BCrypt.Net.BCrypt.HashPassword(usuario.contrasena);
 
             usuario.fecha_registro = DateTime.Now;
             usuario.fecha_actualizacion = DateTime.Now;
             usuario.token = Guid.NewGuid().ToString();
 
-            var entidad = UsuarioAdapter.Convertir(usuario); // ← conversión segura
+            var entidad = UsuarioAdapter.Convertir(usuario); 
             _context.Usuarios.Add(entidad);
             _context.SaveChanges();
 

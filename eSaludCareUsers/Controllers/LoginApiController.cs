@@ -59,6 +59,7 @@ namespace eSaludCareUsers.Controllers
 
                 success = true,
                 token = jwt,
+                id_usuario = user.id_usuario,
                 role = user.rol,
                 nombre = user.nombre
             });

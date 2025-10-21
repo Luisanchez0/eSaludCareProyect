@@ -13,6 +13,13 @@ namespace CapaNegocio
         private CD_Citas _citaDatos = new CD_Citas();
         public bool RegistrarCita(CapaEntidad.CitaMedica cita)
         {
+            if (cita.IdPaciente <= 0 || cita.IdMedico <= 0)
+                throw new ArgumentException("El paciente y el médico son obligatorios.");
+            if (cita.Fecha == default(DateTime))
+                throw new ArgumentException("La fecha de la cita es obligatoria.");
+
+            cita.Estado = cita.Estado ?? "pendiente";
+            //cita.FechaRegistro = DateTime.Now;
             return _citaDatos.RegistrarCita(cita);
         }
 

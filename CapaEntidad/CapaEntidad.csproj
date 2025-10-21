@@ -96,7 +96,7 @@
     <Compile Include="CitaMedica.cs" />
     <Compile Include="LoginRequest.cs" />
     <Compile Include="MedicoAsignado.cs" />
-    <Compile Include="PacienteConsultaDTO.cs" />
+    <Compile Include="Paciente.cs" />
     <Compile Include="PerfilUsuarioDTO.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UsuarioApiDTO.cs" />

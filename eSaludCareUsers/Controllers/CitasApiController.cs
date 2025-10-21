@@ -1,11 +1,15 @@
 ﻿using CapaEntidad;
 using CapaNegocio;
+using Npgsql;
 using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+
 
 namespace eSaludCareUsers.Controllers
 {
@@ -14,8 +18,29 @@ namespace eSaludCareUsers.Controllers
     {
         private readonly CN_Citas _citaNegocio = new CN_Citas();
         [HttpPost]
-        [Route("regitrarCita")]
+        [Route("registrarCita")]
 
+        public IHttpActionResult RegistrarCita([FromBody] CitaMedica nuevaCita)
+        {
+            try
+            {
+                if (nuevaCita == null)
+                    return BadRequest("Datos de cita no válidos.");
+
+                bool resultado = _citaNegocio.RegistrarCita(nuevaCita);
+                if (resultado)
+                    return Ok(new { mensaje = "Cita registrada correctamente." });
+                else
+                    return BadRequest("No se pudo registrar la cita.");
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+
+        /*
         public IHttpActionResult Registrar([FromBody] CitaMedica nuevaCita)
         {
             var userID = User.Identity.Name;//obtener id usuario desde el token
@@ -47,6 +72,7 @@ namespace eSaludCareUsers.Controllers
             }
 
         }
+        */
 
 
         [HttpGet]
@@ -82,5 +108,29 @@ namespace eSaludCareUsers.Controllers
             }
             ;
         }
+
+
+        [HttpGet]
+        [Route("obtenerIdPaciente")]
+        public IHttpActionResult ObtenerPacientePorUsuario(int idUsuario)
+        {
+            using (var con = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["BDpsql"].ToString()))
+            {
+                con.Open();
+                string query = "SELECT id_paciente FROM pacientes WHERE id_usuario = @idUsuario";
+
+                using (var cmd = new NpgsqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("idUsuario", idUsuario);
+
+                    object result = cmd.ExecuteScalar();
+                    if (result != null)
+                        return Ok(new { idPaciente = Convert.ToInt32(result) });
+                    else
+                        return NotFound();
+                }
+            }
+        }
+
     }
 }

@@ -16,6 +16,11 @@ namespace eSaludCareAdmin.Controllers
             return View();
         }
 
+        public ActionResult Index2()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<ActionResult> Index(string correo, string contrasena)
 

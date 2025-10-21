@@ -306,6 +306,7 @@
     <Content Include="Views\Perfiles\CambiarRol.cshtml" />
     <Content Include="Views\Perfiles\ResetPassword.cshtml" />
     <Content Include="Views\Perfiles\Crear.cshtml" />
+    <Content Include="Views\Login\Index2.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

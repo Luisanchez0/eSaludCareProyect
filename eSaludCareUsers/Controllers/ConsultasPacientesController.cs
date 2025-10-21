@@ -11,10 +11,12 @@ namespace eSaludCareUsers.Controllers
         private CN_ConsultasPacientes negocio = new CN_ConsultasPacientes();
 
         // GET: ConsultasPacientes
+        
         public ActionResult Index()
         {
             List<PacienteConsultaDTO> pacientes = negocio.ObtenerPacientesRegistrados();
             return View(pacientes);
         }
+        
     }
 }

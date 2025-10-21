@@ -425,6 +425,7 @@
     <Content Include="Scripts\vendor\fontawesome-free\webfonts\fa-v4compatibility.woff2" />
     <Content Include="Scripts\vendor\purecounter\purecounter_vanilla.js.map" />
     <Content Include="Scripts\vendor\swiper\swiper-bundle.min.js.map" />
+    <Content Include="Views\Home\Departamentos.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

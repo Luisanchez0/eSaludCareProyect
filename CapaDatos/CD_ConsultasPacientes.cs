@@ -9,7 +9,7 @@ namespace CapaDatos
     public class CD_ConsultasPacientes
     {
         private ConectionBD conexion = new ConectionBD();
-
+        
         public List<PacienteConsultaDTO> ListarPacientes()
         {
             var lista = new List<PacienteConsultaDTO>();
@@ -43,5 +43,6 @@ namespace CapaDatos
 
             return lista;
         }
+        
     }
 }

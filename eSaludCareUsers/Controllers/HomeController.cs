@@ -13,7 +13,7 @@ namespace eSaludCareUsers.Controllers
             return View();
         }
 
-        public ActionResult About()
+        public ActionResult Departamentos()
         {
             ViewBag.Message = "Your application description page.";
 

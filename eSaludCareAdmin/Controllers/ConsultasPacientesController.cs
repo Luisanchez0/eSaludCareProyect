@@ -3,7 +3,7 @@ using System.Web.Mvc;
 using CapaNegocio;
 using CapaEntidad;
 
-namespace eSaludCareUsers.Controllers
+namespace eSaludCareAdmin.Controllers
 {
     [Authorize(Roles = "admin,medico")]
     public class ConsultasPacientesController : Controller

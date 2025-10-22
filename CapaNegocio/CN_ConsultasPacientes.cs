@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace CapaNegocio
 {
-    internal class CN_ConsultasPacientes
+    public class CN_ConsultasPacientes
     {
         private CD_ConsultasPacientes datos = new CD_ConsultasPacientes();
 

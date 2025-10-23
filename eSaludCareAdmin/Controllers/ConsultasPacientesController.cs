@@ -5,7 +5,7 @@ using CapaEntidad;
 
 namespace eSaludCareAdmin.Controllers
 {
-    [Authorize(Roles = "admin,medico")]
+    //[Authorize(Roles = "admin,medico")]
     public class ConsultasPacientesController : Controller
     {
         private CN_ConsultasPacientes negocio = new CN_ConsultasPacientes();

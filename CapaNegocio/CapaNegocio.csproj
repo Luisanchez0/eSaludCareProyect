@@ -114,6 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CN_Citas.cs" />
+    <Compile Include="CN_ConsultasCitas.cs" />
     <Compile Include="CN_ConsultasPacientes.cs" />
     <Compile Include="CN_Medicos.cs" />
     <Compile Include="CN_Recursos.cs" />

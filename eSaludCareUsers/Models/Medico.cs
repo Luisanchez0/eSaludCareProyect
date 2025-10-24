@@ -19,7 +19,18 @@ namespace eSaludCareUsers.Models
         public string numero_cedula { get; set; }
 
         public virtual UsuarioEntidad Usuario { get; set; }
-
-
     }
+    public class MedicoDTO
+    {
+        public int IdUsuario { get; set; }
+        public string Nombre { get; set; }
+        public string Apellido { get; set; }
+        public string Correo { get; set; }
+        public string Telefono { get; set; }
+        public DateTime FechaRegistro { get; set; }
+        public DateTime FechaActualizacion { get; set; }
+        public string Especialidad { get; set; }
+        public string NumeroCedula { get; set; }
+    }
+
 }

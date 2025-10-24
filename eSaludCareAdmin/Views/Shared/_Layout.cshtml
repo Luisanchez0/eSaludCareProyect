@@ -63,10 +63,14 @@
                             </a>
                         }
                         <div class="sb-sidenav-menu-heading">Mantenimiento</div>
-                        <a class="nav-link" href="charts.html">
-                            <div class="sb-nav-link-icon"><i class="fas fa-chart-area"></i></div>
-                            Medicos
-                        </a>
+                        @if (Session["Rol"]?.ToString() == "admin")
+                        {
+                            <a class="nav-link" href="@Url.Action("Index", "Medicos")">
+                                <div class="sb-nav-link-icon"><i class="fas fa-user-md"></i></div>
+                                Médicos
+                            </a>
+                        }
+
                         <a class="nav-link" href="tables.html">
                             <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
                             Tables

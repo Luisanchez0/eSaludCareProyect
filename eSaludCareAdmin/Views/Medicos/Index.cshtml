@@ -1,0 +1,38 @@
+﻿@model List<CapaEntidad.MedicoDTO>
+
+<h2>Listado de Médicos Registrados</h2>
+
+@if (ViewBag.Error != null)
+{
+    <div class="alert alert-danger">@ViewBag.Error</div>
+}
+else
+{
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Correo</th>
+                <th>Teléfono</th>
+                <th>Especialidad</th>
+                <th>Cédula</th>
+                <th>Fecha de Registro</th>
+                <th>Última Actualización</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var medico in Model)
+            {
+                <tr>
+                    <td>@medico.Nombre @medico.Apellido</td>
+                    <td>@medico.Correo</td>
+                    <td>@medico.Telefono</td>
+                    <td>@medico.Especialidad</td>
+                    <td>@medico.NumeroCedula</td>
+                    <td>@medico.FechaRegistro.ToString("dd/MM/yyyy")</td>
+                    <td>@medico.FechaActualizacion.ToString("dd/MM/yyyy")</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}

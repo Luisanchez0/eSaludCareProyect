@@ -95,6 +95,7 @@
   <ItemGroup>
     <Compile Include="CitaMedica.cs" />
     <Compile Include="LoginRequest.cs" />
+    <Compile Include="Medico.cs" />
     <Compile Include="MedicoAsignado.cs" />
     <Compile Include="Paciente.cs" />
     <Compile Include="PacienteConsultaDTO.cs" />

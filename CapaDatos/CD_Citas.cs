@@ -116,5 +116,64 @@ namespace CapaDatos
                     return lista;
                 }
         */
+
+        public List<CitaMedica> ObtenerCitasPorPaciente(int idPaciente)
+        {
+            var lista = new List<CitaMedica>();
+
+            using (var con = conexion.Conectar())
+            {
+                con.Open();
+                    string query = @"SELECT c.id_cita, c.fecha, c.hora, c.estado, 
+                                    COALESCE(m.nombre || ' ' || m.apellido, '') AS doctor
+                                    FROM citas c
+                                    LEFT JOIN medicos m ON c.id_medico = m.id_medico
+                                    WHERE c.id_paciente = @id_paciente
+                                    ORDER BY c.fecha DESC";
+
+                using (var cmd = new NpgsqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("id_paciente", idPaciente);
+                    using (var dr = cmd.ExecuteReader())
+                    {
+                        while (dr.Read())
+                        {
+                            lista.Add(new CitaMedica
+                            {
+                                IdCita = Convert.ToInt32(dr["id_cita"]),
+                                Fecha = Convert.ToDateTime(dr["fecha"]),
+                                Hora = TimeSpan.Parse(dr["hora"].ToString()),
+                                Estado = dr["estado"].ToString(),
+                               // Doctor = dr["doctor"].ToString()
+                            });
+                        }
+                    }
+                }
+            }
+            return lista;
+        }
+
+        public bool ActualizarEstadoCita(int idCita, string nuevoEstado)
+        {
+            using (var con = conexion.Conectar())
+            {
+                con.Open();
+                string query = "UPDATE citas SET estado = @estado WHERE id_cita = @id_cita";
+
+                using (var cmd = new NpgsqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("estado", nuevoEstado);
+                    cmd.Parameters.AddWithValue("id_cita", idCita);
+                    return cmd.ExecuteNonQuery() > 0;
+                }
+            }
+        }
+
+
+
+
+
+
+
     }
 }

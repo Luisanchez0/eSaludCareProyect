@@ -1,0 +1,130 @@
+﻿@{
+    ViewBag.Title = "Mis Citas";
+}
+
+<main class="main">
+    <section id="hero" class="hero section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-12 bg-light p-4 rounded shadow-sm">
+                    <h3 class="department-name mb-3 text-center">Mis Citas</h3>
+
+                    <div class="table-responsive">
+                        <table class="table table-striped text-center" id="citas-table">
+                            <thead class="table-dark">
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Hora</th>
+                                    <th>Doctor</th>
+                                    <th>Estado</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <!-- Se llenará dinámicamente -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    <script>
+document.addEventListener("DOMContentLoaded", async function () {
+    const token = localStorage.getItem("token");
+    if (!token) {
+        window.location.href = "/Login/Index";
+        return;
+    }
+
+    const tbody = document.querySelector("#citas-table tbody");
+
+    // 🔹 Cargar citas del usuario autenticado
+    async function cargarCitas() {
+        try {
+            const res = await fetch("/api/v1/misCitas", {
+                method: "GET",
+                headers: {
+                    "Authorization": "Bearer " + token,
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!res.ok) throw new Error("Error al obtener citas");
+
+            const citas = await res.json();
+            tbody.innerHTML = "";
+
+            citas.forEach(cita => {
+                const tr = document.createElement("tr");
+
+                let acciones = "";
+                if (cita.estado === "Pendiente") {
+                    acciones = `
+                        <button class="btn btn-success btn-sm me-1" data-id="${cita.id_cita}" data-action="confirmar">
+                            Confirmar
+                        </button>
+                        <button class="btn btn-danger btn-sm" data-id="${cita.id_cita}" data-action="cancelar">
+                            Cancelar
+                        </button>
+                    `;
+                }
+
+                tr.innerHTML = `
+                    <td>${new Date(cita.fecha).toLocaleDateString()}</td>
+                    <td>${cita.hora}</td>
+                    <td>${cita.doctor || "Sin asignar"}</td>
+                    <td>${cita.estado}</td>
+                    <td>${acciones}</td>
+                `;
+
+                tbody.appendChild(tr);
+            });
+
+        } catch (error) {
+            console.error("Error al cargar citas:", error);
+            alert("No se pudieron cargar las citas");
+        }
+    }
+
+    await cargarCitas();
+
+    // 🔹 Confirmar o cancelar cita
+    tbody.addEventListener("click", async function (e) {
+        if (e.target.tagName === "BUTTON") {
+            const citaId = e.target.dataset.id;
+            const action = e.target.dataset.action;
+
+            const endpoint = action === "confirmar"
+                ? `/api/v1/confirmarCita/${citaId}`
+                : `/api/v1/cancelarCita/${citaId}`;
+
+            try {
+                const res = await fetch(endpoint, {
+                    method: "PUT",
+                    headers: {
+                        "Authorization": "Bearer " + token,
+                        "Content-Type": "application/json"
+                    }
+                });
+
+                if (!res.ok) throw new Error("No se pudo actualizar la cita");
+
+                // Actualiza la UI
+                const row = e.target.closest("tr");
+                const nuevoEstado = (action === "confirmar") ? "Confirmada" : "Cancelada";
+                row.querySelector("td:nth-child(4)").textContent = nuevoEstado;
+                row.querySelector("td:nth-child(5)").innerHTML = ""; // quitar botones
+
+            } catch (error) {
+                console.error(error);
+                alert("Error al actualizar la cita");
+            }
+        }
+    });
+});
+    </script>
+}

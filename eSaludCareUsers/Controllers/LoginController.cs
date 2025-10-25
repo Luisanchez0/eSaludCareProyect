@@ -16,18 +16,28 @@ namespace eSaludCareUsers.Views.Login
         {
             return View();
         }
-        /*
         [HttpPost]
-        public async Task<ActionResult> Login(string correo, string contraseña)
+        public JsonResult GuardarSesion(string token, string nombre, string rol)
         {
-            using (var client = new HttpClient())
+            if (string.IsNullOrEmpty(token))
             {
-                var json = JsonConvert.SerializeObject(new { correo, contraseña });
+                return Json(new { success = false, message = "Token inválidos." });
             }
+            Session["Token"] = token;
+            Session["Nombre"] = nombre;
+            Session["Rol"] = rol;
+            return Json(new { success = true });
+
         }
-        */
+        public ActionResult CerrarSesion()
+        {
+            Session.Clear();
+            Session.Abandon();
+            return RedirectToAction("Index", "Login");
+        }
 
 
-        
+
+
     }
 }

@@ -102,9 +102,11 @@ namespace eSaludCareUsers.Controllers
                 //filtrar horarios disponibles
                 var HorariosDisponibles = horariosAtencion.Except(citasAgendadas).ToList();
 
-                return Ok(new { 
+                return Ok(new
+                {
                     estado = true,
-                    horarios = HorariosDisponibles } );
+                    horarios = HorariosDisponibles
+                });
             }
             ;
         }
@@ -132,5 +134,97 @@ namespace eSaludCareUsers.Controllers
             }
         }
 
+
+
+
+        [HttpGet]
+        [Route("citas/paciente/{idPaciente}")]
+        public IHttpActionResult ObtenerCitasPaciente(int idPaciente)
+        {
+            using (var con = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["BDpsql"].ToString()))
+            {
+                con.Open();
+                string query = @"SELECT id_cita, id_medico, estado, motivo, fecha, hora, fecha_registro
+                                 FROM citas
+                                 WHERE id_paciente = @idPaciente
+                                 ORDER BY fecha DESC";
+
+                using (var cmd = new NpgsqlCommand(query, con))
+                {
+                    cmd.Parameters.AddWithValue("idPaciente", idPaciente);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        var lista = new List<object>();
+                        while (reader.Read())
+                        {
+                            lista.Add(new
+                            {
+                                id_cita = reader["id_cita"],
+                                id_medico = reader["id_medico"],
+                                estado = reader["estado"],
+                                motivo = reader["motivo"],
+                                fecha = reader["fecha"],
+                                hora = reader["hora"],
+                                fecha_registro = reader["fecha_registro"]
+                            });
+                        }
+                        return Ok(lista);
+                    }
+                }
+            }
+        }
+        [HttpGet]
+        [Route("misCitas")]
+        public IHttpActionResult MisCitas(int idPaciente)
+        {
+            try
+            {
+                var citas = _citaNegocio.ObtenerCitasPorPaciente(idPaciente);
+                return Ok(citas);
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        // ✅ Confirmar una cita
+        [HttpPut]
+        [Route("confirmarCita/{idCita:int}")]
+        public IHttpActionResult ConfirmarCita(int idCita)
+        {
+            try
+            {
+                bool actualizado = _citaNegocio.ActualizarEstadoCita(idCita, "Confirmada");
+                if (actualizado)
+                    return Ok(new { mensaje = "Cita confirmada correctamente." });
+                else
+                    return BadRequest("No se pudo confirmar la cita.");
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
+
+        // ✅ Cancelar una cita
+        [HttpPut]
+        [Route("cancelarCita/{idCita:int}")]
+        public IHttpActionResult CancelarCita(int idCita)
+        {
+            try
+            {
+                bool actualizado = _citaNegocio.ActualizarEstadoCita(idCita, "Cancelada");
+                if (actualizado)
+                    return Ok(new { mensaje = "Cita cancelada correctamente." });
+                else
+                    return BadRequest("No se pudo cancelar la cita.");
+            }
+            catch (Exception ex)
+            {
+                return InternalServerError(ex);
+            }
+        }
     }
+
 }

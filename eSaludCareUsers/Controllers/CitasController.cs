@@ -12,11 +12,11 @@ namespace eSaludCareUsers.Controllers
 {
     public class CitasController : Controller
     {
-        public ActionResult Index()
+        public ActionResult Registrar()
         {
             return View();
         }
-        public ActionResult Registrar()
+        public ActionResult MisCitas()
         {
 
             return View();

@@ -28,5 +28,21 @@ namespace CapaNegocio
 
             return _citaDatos.ListarCitas(idMedico, fecha);
         }
+
+
+        public List<CitaMedica> ObtenerCitasPorPaciente(int idPaciente)
+        {
+            return _citaDatos.ObtenerCitasPorPaciente(idPaciente);
+        }
+
+        public bool actualizarEstadoCita(int idCita, string nuevoEstado)
+        {
+            if (idCita <= 0)
+                throw new ArgumentException("El ID de la cita es obligatorio.");
+            if (string.IsNullOrEmpty(nuevoEstado))
+                throw new ArgumentException("El nuevo estado es obligatorio.");
+            return _citaDatos.actualizarEstadoCita(idCita, nuevoEstado);
+        }
+
     }
 }

@@ -316,6 +316,7 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Data\" />
+    <Folder Include="Imagenes\" />
     <Folder Include="Views\Admin\" />
     <Folder Include="Views\Historial\" />
   </ItemGroup>

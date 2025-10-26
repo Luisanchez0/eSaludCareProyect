@@ -26,8 +26,8 @@ namespace eSaludCareAdmin.Controllers
         }
         public ActionResult CerrarSesion()
         {
-            Session.Clear(); // Borra todos los datos de sesión
-            return RedirectToAction("Index", "Home"); // Redirige al inicio
+            Session.Clear(); 
+            return RedirectToAction("Index", "Home"); 
         }
 
 

@@ -61,6 +61,15 @@ namespace CapaEntidad
         public string Rol { get; set; }
     }
 
+    public class UserCita { 
+        public int IdUsuario { get; set; }
+        public string Nombre { get; set; }
+        public string Apellido { get; set; }
+        public string Correo { get; set; }
+        public string Contrasena { get; set; }
+        public string Rol { get; set; }
+    }
+
 
 
 

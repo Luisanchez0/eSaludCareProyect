@@ -12,7 +12,13 @@ namespace eSaludCareAdmin.Controllers
     {
         public ActionResult Index()
         {
+            if (Session["Token"] != null)
+            {
+                return RedirectToAction("Usuarios", "Home");
+            }
+
             return View();
+
         }
         public ActionResult Usuarios()
         {
@@ -24,5 +30,14 @@ namespace eSaludCareAdmin.Controllers
             return RedirectToAction("Index", "Home"); // Redirige al inicio
         }
 
+
+        [HttpPost]
+        public JsonResult RegistrarSesion(string token, string nombre, string rol)
+        {
+            Session["jwt"] = token;
+            Session["Usuario"] = nombre;
+            Session["Rol"] = rol;
+            return Json(new { success = true });
+        }
     }
 }

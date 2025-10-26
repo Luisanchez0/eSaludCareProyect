@@ -11,7 +11,7 @@ using System.Net.Http;
 using System.Web.Http;
 
 
-namespace eSaludCareUsers.Controllers
+/*namespace eSaludCareUsers.Controllers
 {
     [RoutePrefix("api/v1")]
     public class CitasApiController : ApiController
@@ -72,7 +72,7 @@ namespace eSaludCareUsers.Controllers
             }
 
         }
-        */
+        
 
 
         [HttpGet]
@@ -228,3 +228,4 @@ namespace eSaludCareUsers.Controllers
     }
 
 }
+*/ 

@@ -35,6 +35,7 @@ namespace CapaNegocio
             return _citaDatos.ObtenerCitasPorPaciente(idPaciente);
         }
 
+        /*
         public bool actualizarEstadoCita(int idCita, string nuevoEstado)
         {
             if (idCita <= 0)
@@ -43,6 +44,7 @@ namespace CapaNegocio
                 throw new ArgumentException("El nuevo estado es obligatorio.");
             return _citaDatos.actualizarEstadoCita(idCita, nuevoEstado);
         }
+        */
 
     }
 }

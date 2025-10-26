@@ -172,58 +172,62 @@ namespace eSaludCareUsers.Controllers
                     }
                 }
             }
-        }
-        [HttpGet]
-        [Route("misCitas")]
-        public IHttpActionResult MisCitas(int idPaciente)
-        {
-            try
-            {
-                var citas = _citaNegocio.ObtenerCitasPorPaciente(idPaciente);
-                return Ok(citas);
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
-        }
 
-        // ✅ Confirmar una cita
-        [HttpPut]
-        [Route("confirmarCita/{idCita:int}")]
-        public IHttpActionResult ConfirmarCita(int idCita)
-        {
-            try
-            {
-                bool actualizado = _citaNegocio.ActualizarEstadoCita(idCita, "Confirmada");
-                if (actualizado)
-                    return Ok(new { mensaje = "Cita confirmada correctamente." });
-                else
-                    return BadRequest("No se pudo confirmar la cita.");
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
-        }
 
-        // ✅ Cancelar una cita
-        [HttpPut]
-        [Route("cancelarCita/{idCita:int}")]
-        public IHttpActionResult CancelarCita(int idCita)
-        {
-            try
+            /* ✅ Confirmar una cita
+
+            [HttpGet]
+            [Route("misCitas")]
+            public IHttpActionResult MisCitas(int idPaciente)
             {
-                bool actualizado = _citaNegocio.ActualizarEstadoCita(idCita, "Cancelada");
-                if (actualizado)
-                    return Ok(new { mensaje = "Cita cancelada correctamente." });
-                else
-                    return BadRequest("No se pudo cancelar la cita.");
+                try
+                {
+                    var citas = _citaNegocio.ObtenerCitasPorPaciente(idPaciente);
+                    return Ok(citas);
+                }
+                catch (Exception ex)
+                {
+                    return InternalServerError(ex);
+                }
             }
-            catch (Exception ex)
+
+            [HttpPut]
+            [Route("confirmarCita/{idCita:int}")]
+            public IHttpActionResult ConfirmarCita(int idCita)
             {
-                return InternalServerError(ex);
+                try
+                {
+                    bool actualizado = _citaNegocio.ActualizarEstadoCita(idCita, "Confirmada");
+                    if (actualizado)
+                        return Ok(new { mensaje = "Cita confirmada correctamente." });
+                    else
+                        return BadRequest("No se pudo confirmar la cita.");
+                }
+                catch (Exception ex)
+                {
+                    return InternalServerError(ex);
+                }
             }
+
+            // ✅ Cancelar una cita
+            [HttpPut]
+            [Route("cancelarCita/{idCita:int}")]
+            public IHttpActionResult CancelarCita(int idCita)
+            {
+                try
+                {
+                    bool actualizado = _citaNegocio.ActualizarEstadoCita(idCita, "Cancelada");
+                    if (actualizado)
+                        return Ok(new { mensaje = "Cita cancelada correctamente." });
+                    else
+                        return BadRequest("No se pudo cancelar la cita.");
+                }
+                catch (Exception ex)
+                {
+                    return InternalServerError(ex);
+                }
+            }
+            */
         }
     }
 

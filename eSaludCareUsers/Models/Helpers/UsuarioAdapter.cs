@@ -20,7 +20,9 @@ namespace eSaludCareUsers.Models.Helpers
                 telefono = u.telefono,
                 rol = u.rol,
                 fecha_registro = u.fecha_registro,
-                fecha_actualizacion = u.fecha_actualizacion
+                fecha_actualizacion = u.fecha_actualizacion,
+                especialidad = u.rol == "medico" ? u.especialidad : null,
+                numero_cedula = u.rol == "medico" ? u.numero_cedula : null
             };
         }
 

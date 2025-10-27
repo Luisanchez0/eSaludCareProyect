@@ -93,7 +93,9 @@ namespace eSaludCareAdmin.Controllers
                     fecha_registro = DateTime.Now,
                     activo = true,
                     fecha_actualizacion = DateTime.Now,
-                    token = ""
+                    token = "",
+                    especialidad = perfil.Rol == "medico" ? perfil.Especialidad : null,
+                    numero_cedula = perfil.Rol == "medico" ? perfil.NumeroCedula : null
                 };
 
                 var content = new StringContent(JsonConvert.SerializeObject(usuario), Encoding.UTF8, "application/json");
@@ -161,7 +163,11 @@ namespace eSaludCareAdmin.Controllers
                     correo = perfil.Correo,
                     telefono = perfil.Telefono,
                     rol = perfil.Rol,
-                    fecha_actualizacion = DateTime.Now
+                    fecha_actualizacion = DateTime.Now,
+                    
+                    especialidad = perfil.Rol == "medico" ? perfil.Especialidad : null,
+                    numero_cedula = perfil.Rol == "medico" ? perfil.NumeroCedula : null
+
                 };
 
                 var content = new StringContent(JsonConvert.SerializeObject(usuario), Encoding.UTF8, "application/json");

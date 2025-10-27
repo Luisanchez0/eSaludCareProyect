@@ -37,6 +37,10 @@ namespace CapaEntidad
         public DateTime fecha_actualizacion { get; set; }
         public string token { get; set; }
         public DateTime fecha_registro { get; set; }
+
+        public string especialidad { get; set; }
+        public string numero_cedula { get; set; }
+
     }
 
     public class UsuarioEntidad
@@ -49,6 +53,9 @@ namespace CapaEntidad
         public string Telefono { get; set; }
         public string Rol { get; set; } = "paciente";
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
+        public string Especialidad { get; set; }
+        public string NumeroCedula { get; set; }
+
     }
 
 

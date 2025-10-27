@@ -18,6 +18,7 @@ namespace eSaludCareUsers.Data
         public DbSet<eSaludCareUsers.Models.Medico> Medicos { get; set; }
         public DbSet<eSaludCareUsers.Models.Paciente> Pacientes { get; set; }
         public DbSet<UsuarioEntidad> Usuarios { get; set; }
+     
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {

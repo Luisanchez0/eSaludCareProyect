@@ -37,6 +37,13 @@ namespace eSaludCareUsers.Models
 
         public DateTime fecha_actualizacion { get; set; }
 
+       
+        [NotMapped] // No se guarda en la tabla usuarios, solo se usa para transferencia
+        public string especialidad { get; set; }
+
+        [NotMapped]
+        public string numero_cedula { get; set; }
+
         // Relaciones
         public virtual Paciente Paciente { get; set; }
         public virtual Medico Medico { get; set; }

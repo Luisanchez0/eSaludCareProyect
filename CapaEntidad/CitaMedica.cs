@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -27,5 +28,7 @@ namespace CapaEntidad
         public string Estado { get; set; } // "Pendiente", "Confirmada", "Cancelada"
         public string Motivo { get; set; }
         public DateTime FechaRegistro { get; set; }
+
+        public string doctor { get; set; }
     }
 }

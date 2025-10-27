@@ -35,6 +35,33 @@ namespace CapaNegocio
             return _citaDatos.ObtenerCitasPorPaciente(idPaciente);
         }
 
+
+        public List<HorarioApi> ObtenerHorariosDisponibles(int idMedico, DateTime fecha)
+        {
+            var diaSemana = (int)fecha.DayOfWeek;
+            if (diaSemana == 0) diaSemana = 7; // Domingo = 7
+
+            var turnos = _citaDatos.ObtenerTurnosMedico(idMedico, diaSemana);
+            var citas = _citaDatos.ObtenerCitasPorFecha(idMedico, fecha);
+
+            var horarios = new List<HorarioApi>();
+
+            foreach (var turno in turnos)
+            {
+                var hora = turno.inicio;
+                while (hora < turno.fin)
+                {
+                    horarios.Add(new HorarioApi
+                    {
+                        Hora = hora.ToString(@"hh\:mm"),
+                        Ocupado = citas.Contains(hora)
+                    });
+                    hora = hora.Add(TimeSpan.FromMinutes(30));
+                }
+            }
+
+            return horarios.OrderBy(h => h.Hora).ToList();
+        }
         /*
         public bool actualizarEstadoCita(int idCita, string nuevoEstado)
         {

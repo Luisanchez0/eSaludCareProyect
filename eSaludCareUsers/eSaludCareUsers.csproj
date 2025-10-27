@@ -243,6 +243,8 @@
     <Compile Include="Controllers\CitasApiController.cs" />
     <Compile Include="Controllers\CitasController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
+    <Compile Include="Controllers\HorariosDisponiblesController.cs" />
+    <Compile Include="Controllers\IActionResult.cs" />
     <Compile Include="Controllers\LoginApiController.cs" />
     <Compile Include="Controllers\MedicosController.cs" />
     <Compile Include="Controllers\RegistroApiController.cs" />
@@ -253,6 +255,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\Citas.cs" />
+    <Compile Include="Models\CitaMedica.cs" />
     <Compile Include="Models\Helpers\UsuarioAdapter.cs" />
     <Compile Include="Models\Medico.cs" />
     <Compile Include="Models\Paciente.cs" />
@@ -429,7 +433,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Views\CitaMedica\" />
     <Folder Include="Views\ConsultasPacientes\" />
+    <Folder Include="Views\HorariosDisponibles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
@@ -459,6 +465,10 @@
     <Content Include="Scripts\jquery-3.7.0.min.map" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\CapaDatos\CapaDatos.csproj">
+      <Project>{00996d64-f433-491c-b62d-e60fa7c8a647}</Project>
+      <Name>CapaDatos</Name>
+    </ProjectReference>
     <ProjectReference Include="..\CapaEntidad\CapaEntidad.csproj">
       <Project>{0d2bd3b9-59ef-46f3-9ea7-bc2961dcbaeb}</Project>
       <Name>CapaEntidad</Name>

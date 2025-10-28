@@ -8,25 +8,74 @@ using System.Data.SqlClient;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 
-
-/*namespace eSaludCareUsers.Controllers
+namespace eSaludCareUsers.Controllers
 {
     [RoutePrefix("api/v1")]
     public class CitasApiController : ApiController
     {
         private readonly CN_Citas _citaNegocio = new CN_Citas();
+
         [HttpPost]
         [Route("registrarCita")]
-
         public IHttpActionResult RegistrarCita([FromBody] CitaMedica nuevaCita)
         {
             try
             {
-                if (nuevaCita == null)
-                    return BadRequest("Datos de cita no válidos.");
+                // Validación de datos obligatorios
+                if (nuevaCita == null ||
+                    nuevaCita.Fecha == default(DateTime) ||
+                    nuevaCita.Hora == default(TimeSpan) ||
+                    nuevaCita.IdMedico <= 0 ||
+                    nuevaCita.IdPaciente <= 0 ||
+                    string.IsNullOrEmpty(nuevaCita.Motivo))
+                {
+                    return BadRequest("Todos los campos son obligatorios.");
+                }
 
+                DateTime fechaCita = nuevaCita.Fecha;
+                TimeSpan hora = nuevaCita.Hora;
+
+                // Validar rango de horarios (9:00 a 17:00, intervalos de 30 minutos)
+                var horaMin = new TimeSpan(9, 0, 0);  // 9:00
+                var horaMax = new TimeSpan(17, 0, 0); // 17:00
+
+                if (hora < horaMin || hora > horaMax || hora.Minutes % 30 != 0)
+                {
+                    return BadRequest("El horario debe estar entre 9:00 y 17:00 en intervalos de 30 minutos.");
+                }
+
+                // Verificar si el horario ya está ocupado
+                using (var con = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["BDpsql"].ToString()))
+                {
+                    con.Open();
+                    string checkSql = @"
+                        SELECT COUNT(*) 
+                        FROM citas 
+                        WHERE id_medico = @idMedico 
+                        AND fecha = @fecha 
+                        AND hora = @hora 
+                        AND estado IN ('pendiente', 'confirmada', 'realizada')";
+
+                    using (var checkCmd = new NpgsqlCommand(checkSql, con))
+                    {
+                        checkCmd.Parameters.AddWithValue("@idMedico", nuevaCita.IdMedico);
+                        checkCmd.Parameters.AddWithValue("@fecha", fechaCita.Date);
+                        checkCmd.Parameters.AddWithValue("@hora", hora);
+
+                        object countObj = checkCmd.ExecuteScalar();
+                        int count = countObj != DBNull.Value ? Convert.ToInt32(countObj) : 0;
+
+                        if (count > 0)
+                        {
+                            return BadRequest("El horario seleccionado ya está ocupado.");
+                        }
+                    }
+                }
+
+                // Registrar cita
                 bool resultado = _citaNegocio.RegistrarCita(nuevaCita);
                 if (resultado)
                     return Ok(new { mensaje = "Cita registrada correctamente." });
@@ -35,82 +84,10 @@ using System.Web.Http;
             }
             catch (Exception ex)
             {
+                // Retornar error con excepción real
                 return InternalServerError(ex);
             }
         }
-
-
-        /*
-        public IHttpActionResult Registrar([FromBody] CitaMedica nuevaCita)
-        {
-            var userID = User.Identity.Name;//obtener id usuario desde el token
-            if (nuevaCita == null)
-                return BadRequest("Datos de cita no válidos.");
-
-            nuevaCita.Estado = "pendiente";
-
-            if (nuevaCita.IdPaciente <= 0 ||
-                nuevaCita.IdMedico <= 0 ||
-                nuevaCita.Fecha == default(DateTime) ||
-                nuevaCita.Hora == default(TimeSpan) ||
-                string.IsNullOrEmpty(nuevaCita.Motivo))
-            {
-                return BadRequest("Todos los campos obligatorios deben ser completados.");
-            }
-
-            try
-            {
-                bool citaRegistrada = _citaNegocio.RegistrarCita(nuevaCita);
-                if (citaRegistrada)
-                    return Ok(new { mensaje = "Cita registrada correctamente." });
-                else
-                    return BadRequest("No se pudo registrar la cita.");
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
-
-        }
-        
-
-
-        [HttpGet]
-        [Route("HorariosDisponibles")]
-        public IHttpActionResult HorariosDisponibles(int idMedico, DateTime fecha)
-        {
-            //definir horarios de atencion
-            var horariosAtencion = new List<string>();
-            {
-                int inicio = 9;
-                int fin = 17;
-                int intervalo = 30; // minutos
-                for (int hora = inicio; hora < fin; hora++)
-                {
-                    for (int min = 0; min < 60; min += intervalo)
-                    {
-                        horariosAtencion.Add($"{hora:D2}:{min:D2}");
-                    }
-
-                }
-
-                //obtener citas ya agendadas
-                var citasAgendadas = _citaNegocio.ListarCitas(idMedico, fecha)
-                    .Select(c => c.Hora.ToString(@"hh\:mm"))
-                    .ToList();
-
-                //filtrar horarios disponibles
-                var HorariosDisponibles = horariosAtencion.Except(citasAgendadas).ToList();
-
-                return Ok(new
-                {
-                    estado = true,
-                    horarios = HorariosDisponibles
-                });
-            }
-            ;
-        }
-
 
         [HttpGet]
         [Route("obtenerIdPaciente")]
@@ -124,8 +101,8 @@ using System.Web.Http;
                 using (var cmd = new NpgsqlCommand(query, con))
                 {
                     cmd.Parameters.AddWithValue("idUsuario", idUsuario);
-
                     object result = cmd.ExecuteScalar();
+
                     if (result != null)
                         return Ok(new { idPaciente = Convert.ToInt32(result) });
                     else
@@ -134,9 +111,6 @@ using System.Web.Http;
             }
         }
 
-
-
-
         [HttpGet]
         [Route("citas/paciente/{idPaciente}")]
         public IHttpActionResult ObtenerCitasPaciente(int idPaciente)
@@ -144,17 +118,20 @@ using System.Web.Http;
             using (var con = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["BDpsql"].ToString()))
             {
                 con.Open();
-                string query = @"SELECT id_cita, id_medico, estado, motivo, fecha, hora, fecha_registro
-                                 FROM citas
-                                 WHERE id_paciente = @idPaciente
-                                 ORDER BY fecha DESC";
+                string query = @"
+                    SELECT id_cita, id_medico, estado, motivo, fecha, hora, fecha_registro
+                    FROM citas
+                    WHERE id_paciente = @idPaciente
+                    ORDER BY fecha DESC";
 
                 using (var cmd = new NpgsqlCommand(query, con))
                 {
                     cmd.Parameters.AddWithValue("idPaciente", idPaciente);
+
                     using (var reader = cmd.ExecuteReader())
                     {
                         var lista = new List<object>();
+
                         while (reader.Read())
                         {
                             lista.Add(new
@@ -168,19 +145,63 @@ using System.Web.Http;
                                 fecha_registro = reader["fecha_registro"]
                             });
                         }
+
                         return Ok(lista);
                     }
                 }
             }
         }
+
+        //apartado mis citas
+
         [HttpGet]
         [Route("misCitas")]
-        public IHttpActionResult MisCitas(int idPaciente)
+        public IHttpActionResult ObtenerMisCitas([FromUri] int idUsuario)
         {
             try
             {
-                var citas = _citaNegocio.ObtenerCitasPorPaciente(idPaciente);
-                return Ok(citas);
+                using (var con = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["BDpsql"].ToString()))
+                {
+                    con.Open();
+
+                    string query = @"
+                SELECT 
+                    c.id_cita,
+                    c.fecha,
+                    c.hora,
+                    c.estado,
+                    CONCAT(u.nombre, ' ', u.apellido) AS doctor
+                FROM citas c
+                INNER JOIN medicos m ON c.id_medico = m.id_medico
+                INNER JOIN usuarios u ON m.id_usuario = u.id_usuario
+                INNER JOIN pacientes p ON c.id_paciente = p.id_paciente
+                WHERE p.id_usuario = @idUsuario
+                ORDER BY c.fecha DESC, c.hora ASC";
+
+                    using (var cmd = new NpgsqlCommand(query, con))
+                    {
+                        cmd.Parameters.AddWithValue("@idUsuario", idUsuario);
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            var citas = new List<CitasVista>();
+
+                            while (reader.Read())
+                            {
+                                citas.Add(new CitasVista
+                                {
+                                    IdCita = Convert.ToInt32(reader["id_cita"]),
+                                    Fecha = Convert.ToDateTime(reader["fecha"]).ToString("yyyy-MM-dd"),
+                                    Hora = reader["hora"].ToString(),
+                                    Doctor = reader["doctor"].ToString(),
+                                    Estado = reader["estado"].ToString()
+                                });
+                            }
+
+                            return Ok(citas); // ✅ ya no hay error de serialización
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -188,44 +209,54 @@ using System.Web.Http;
             }
         }
 
-        // ✅ Confirmar una cita
         [HttpPut]
-        [Route("confirmarCita/{idCita:int}")]
+        [Route("confirmarCita/{idCita}")]
         public IHttpActionResult ConfirmarCita(int idCita)
         {
-            try
-            {
-                bool actualizado = _citaNegocio.ActualizarEstadoCita(idCita, "Confirmada");
-                if (actualizado)
-                    return Ok(new { mensaje = "Cita confirmada correctamente." });
-                else
-                    return BadRequest("No se pudo confirmar la cita.");
-            }
-            catch (Exception ex)
-            {
-                return InternalServerError(ex);
-            }
+            return CambiarEstadoCita(idCita, "confirmada");
         }
 
-        // ✅ Cancelar una cita
         [HttpPut]
-        [Route("cancelarCita/{idCita:int}")]
+        [Route("cancelarCita/{idCita}")]
         public IHttpActionResult CancelarCita(int idCita)
+        {
+            return CambiarEstadoCita(idCita, "cancelada");
+        }
+
+        // 🔹 Método auxiliar para actualizar estado
+        private IHttpActionResult CambiarEstadoCita(int idCita, string nuevoEstado)
         {
             try
             {
-                bool actualizado = _citaNegocio.ActualizarEstadoCita(idCita, "Cancelada");
-                if (actualizado)
-                    return Ok(new { mensaje = "Cita cancelada correctamente." });
-                else
-                    return BadRequest("No se pudo cancelar la cita.");
+                using (var con = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["BDpsql"].ToString()))
+                {
+                    con.Open();
+
+                    string sql = @"UPDATE citas SET estado = @estado WHERE id_cita = @idCita";
+
+                    using (var cmd = new NpgsqlCommand(sql, con))
+                    {
+                        cmd.Parameters.AddWithValue("@estado", nuevoEstado);
+                        cmd.Parameters.AddWithValue("@idCita", idCita);
+
+                        int filasAfectadas = cmd.ExecuteNonQuery();
+
+                        if (filasAfectadas > 0)
+                            return Ok(new { mensaje = $"Cita {nuevoEstado} correctamente." });
+                        else
+                            return NotFound();
+                    }
+                }
             }
             catch (Exception ex)
             {
                 return InternalServerError(ex);
             }
         }
-    }
 
+
+
+
+    }
 }
 */ 

@@ -8,16 +8,31 @@ using System.Web;
 namespace eSaludCareUsers.Models
 {
     [Table("medicos", Schema = "public")]
-
     public class Medico
     {
         [Key]
-        [ForeignKey("Usuario")] 
+        [Column("id_medico")]
+        public int id_medico { get; set; }
+
+        [Required]
+        [Column("id_usuario")]
         public int id_usuario { get; set; }
 
+        [Required]
+        [Column("especialidad")]
         public string especialidad { get; set; }
+
+        [Required]
+        [Column("numero_cedula")]
         public string numero_cedula { get; set; }
 
+        public TimeSpan? hora_inicio { get; set; }
+
+        public TimeSpan? hora_fin { get; set; }
+
+        public int duracion_turno_minutos { get; set; } = 30;
+
+        [ForeignKey("id_usuario")]
         public virtual UsuarioEntidad Usuario { get; set; }
     }
     public class MedicoDTO

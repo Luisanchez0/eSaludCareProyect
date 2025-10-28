@@ -61,22 +61,21 @@
                     contentType: "application/json; charset=utf-8",
                     success: function (response) {
                         if (response.success) {
-                            // Guardar token y datos del usuario
+                            // ✅ Guardar token y datos en localStorage
                             localStorage.setItem("token", response.token);
+                            localStorage.setItem("idUsuario", response.id_usuario); // 👈 IMPORTANTE
                             localStorage.setItem("rol", response.role);
                             localStorage.setItem("nombre", response.nombre);
 
-                            // Si es paciente, guardar Id del paciente (extraído del token si se necesita)
-                            // Supongamos que el IdPaciente viene en response.idPaciente
-                            if (response.role === "paciente") {
-                                localStorage.setItem("pacienteId", response.idPaciente || response.tokenUsuario || "0");
-                            }
-
                             alert("Bienvenido, " + response.nombre);
 
-                            // Redirigir según el rol
-                            if (response.role === "admin") {
+                            // ✅ Redirigir según el rol
+                            if (response.role === "paciente") {
+                                window.location.href = "/Home/Index";
+                            } else if (response.role === "admin") {
                                 window.location.href = "/Admin/Index";
+                            } else if (response.role === "doctor") {
+                                window.location.href = "/Doctor/Panel";
                             } else {
                                 window.location.href = "/Home/Index";
                             }

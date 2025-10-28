@@ -87,35 +87,149 @@ namespace CapaDatos
             return lista;
         }
 
-        // Obtener citas por paciente
-        /*        public List<CitaMedica> ListarPorPaciente(int idPaciente)
-                {
-                    List<Cita> lista = new List<CitaMedica>();
-                    using (SqlConnection cn = new SqlConnection(conexion))
-                    {
-                        string query = "SELECT * FROM Citas WHERE IdPaciente = @IdPaciente";
-                        SqlCommand cmd = new SqlCommand(query, cn);
-                        cmd.Parameters.AddWithValue("@IdPaciente", idPaciente);
-                        cn.Open();
+        public List<DateTime> ObtenerHorariosDisponibles(int idMedico, DateTime fecha)
+        {
+            List<DateTime> horariosDisponibles = new List<DateTime>();
+            string sql = @"
+                SELECT hora 
+                FROM citas 
+                WHERE id_medico = @idMedico 
+                AND fecha = @fecha 
+                AND estado NOT IN ('pendiente', 'confirmada', 'realizada')
+                UNION
+                SELECT '09:00:00' AS hora -- Horario inicial
+                UNION
+                SELECT '09:30:00'
+                UNION
+                SELECT '10:00:00'
+                UNION
+                SELECT '10:30:00'
+                UNION
+                SELECT '11:00:00'
+                UNION
+                SELECT '11:30:00'
+                UNION
+                SELECT '14:00:00'
+                UNION
+                SELECT '14:30:00'
+                UNION
+                SELECT '15:00:00'
+                UNION
+                SELECT '15:30:00';";
 
-                        SqlDataReader dr = cmd.ExecuteReader();
-                        while (dr.Read())
+                using (var con = conexion.Conectar()){
+                con.Open();
+
+                using (var command = new NpgsqlCommand(sql, con))
+                {
+                    command.Parameters.AddWithValue("@idMedico", idMedico);
+                    command.Parameters.AddWithValue("@fecha", fecha.Date);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
                         {
-                            lista.Add(new Cita
+                            if (reader["hora"] != DBNull.Value)
                             {
-                                IdCita = Convert.ToInt32(dr["IdCita"]),
-                                IdPaciente = Convert.ToInt32(dr["IdPaciente"]),
-                                IdMedico = Convert.ToInt32(dr["IdMedico"]),
-                                FechaCita = Convert.ToDateTime(dr["FechaCita"]),
-                                HoraCita = dr["HoraCita"].ToString(),
-                                Motivo = dr["Motivo"].ToString(),
-                                Estado = dr["Estado"].ToString()
-                            });
+                                horariosDisponibles.Add(DateTime.Today.Add(reader.GetTimeSpan(0))); // Convierte hora a DateTime
+                            }
                         }
                     }
-                    return lista;
                 }
-        */
+            }
+
+            return horariosDisponibles;
+        }
+
+
+        public List<TimeSpan> ObtenerHorariosOcupados(int idMedico, DateTime fecha)
+        {
+            var  horariosOcupados = new List<TimeSpan>();
+            string sql = @"
+                SELECT hora 
+                FROM citas 
+                WHERE id_medico = @idMedico 
+                AND fecha = @fecha 
+                AND estado IN ('pendiente', 'confirmada', 'realizada');";
+            using (var con = conexion.Conectar())
+            {
+                con.Open();
+                using (var command = new NpgsqlCommand(sql, con))
+                {
+                    command.Parameters.AddWithValue("@idMedico", idMedico);
+                    command.Parameters.AddWithValue("@fecha", fecha.Date);
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            if (reader["hora"] != DBNull.Value)
+                            {
+                                horariosOcupados.Add(reader.GetTimeSpan(0)); // Convierte hora a TimeSpan
+                            }
+                        }
+                    }
+                }
+            }
+            return horariosOcupados;
+        }
+
+        // Obtener las citas de un médico en un día específico
+        public List<TimeSpan> ObtenerCitasPorFecha(int idMedico, DateTime fecha)
+        {
+            var citas = new List<TimeSpan>();
+            string sql = @"SELECT hora FROM citas WHERE id_medico=@idMedico AND fecha=@fecha";
+
+            using (var con = conexion.Conectar())
+            {
+                con.Open();
+                using (var cmd = new NpgsqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@idMedico", idMedico);
+                    cmd.Parameters.AddWithValue("@fecha", fecha.Date);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            citas.Add(reader.GetTimeSpan(0));
+                        }
+                    }
+                }
+            }
+
+            return citas;
+        }
+
+        // Obtener turnos del médico para un día de la semana
+        public List<(TimeSpan inicio, TimeSpan fin)> ObtenerTurnosMedico(int idMedico, int diaSemana)
+        {
+            var turnos = new List<(TimeSpan, TimeSpan)>();
+            string sql = @"SELECT hora_inicio, hora_fin FROM horarios_medicos 
+                       WHERE id_medico=@idMedico AND dia_semana=@diaSemana";
+
+            using (var con = conexion.Conectar())
+            {
+                con.Open();
+                using (var cmd = new NpgsqlCommand(sql, con))
+                {
+                    cmd.Parameters.AddWithValue("@idMedico", idMedico);
+                    cmd.Parameters.AddWithValue("@diaSemana", diaSemana);
+
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        while (reader.Read())
+                        {
+                            turnos.Add((reader.GetTimeSpan(0), reader.GetTimeSpan(1)));
+                        }
+                    }
+                }
+            }
+
+            return turnos;
+        }
+
+
+
+
 
         public List<CitaMedica> ObtenerCitasPorPaciente(int idPaciente)
         {

@@ -172,7 +172,28 @@ namespace eSaludCareUsers.Controllers
             entidad.rol = usuario.rol;
             entidad.fecha_actualizacion = DateTime.Now;
 
-            _context.SaveChanges();
+            if (usuario.rol == "medico")
+            {
+                entidad.especialidad = usuario.especialidad;
+                entidad.numero_cedula = usuario.numero_cedula;
+
+                var medico = _context.Medicos.FirstOrDefault(m => m.id_usuario == id);
+                if (medico != null)
+                {
+                    medico.especialidad = usuario.especialidad;
+                    medico.numero_cedula = usuario.numero_cedula;
+                }
+                else
+                {
+                    _context.Medicos.Add(new eSaludCareUsers.Models.Medico
+                    {
+                        id_usuario = id,
+                        especialidad = usuario.especialidad,
+                        numero_cedula = usuario.numero_cedula
+                    });
+                }
+            }
+                _context.SaveChanges();
 
             return Ok(new { mensaje = "Usuario actualizado correctamente", id = entidad.id_usuario });
         }

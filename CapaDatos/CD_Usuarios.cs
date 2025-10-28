@@ -100,14 +100,13 @@ namespace CapaDatos
             {
                 con.Open();
 
-                // Iniciar una transacción para asegurar la atomicidad de las operaciones
                 using (var transaction = con.BeginTransaction())
                 {
                     try
                     {
                         string query = @"INSERT INTO usuarios (nombre, apellido, correo, contrasena, telefono, rol, fecha_registro, esta_activo)
                                  VALUES (@nombre, @apellido, @correo, @contrasena, @telefono, @rol, @fecha_registro, TRUE)
-                                 RETURNING id_usuario;"; // Asumiendo que la tabla tiene una columna id_usuario
+                                 RETURNING id_usuario;"; 
 
                         int idUsuario;
 
@@ -121,11 +120,9 @@ namespace CapaDatos
                             cmd.Parameters.AddWithValue("rol", usuario.Rol);
                             cmd.Parameters.AddWithValue("fecha_registro", usuario.FechaRegistro);
 
-                            // Ejecutar y obtener el ID del usuario insertado
                             idUsuario = Convert.ToInt32(cmd.ExecuteScalar());
                         }
 
-                        // Verificar si es paciente y realizar inserción adicional
                         if (usuario.Rol.ToLower() == "paciente")
                         {
                             string query2 = @"INSERT INTO pacientes (id_usuario)
@@ -137,16 +134,25 @@ namespace CapaDatos
                                 cmd2.ExecuteNonQuery();
                             }
                         }
+                        else if (usuario.Rol.ToLower() == "medico")
+                        {
+                            string query3 = @"INSERT INTO medicos (id_usuario, especialidad, numero_cedula)
+                                    VALUES (@idUsuario, @especialidad, @numero_cedula)";
+                            using (var cmd3 = new NpgsqlCommand(query3, con, transaction))
+                            {
+                                cmd3.Parameters.AddWithValue(@"idUsuario", idUsuario);
+                                cmd3.Parameters.AddWithValue(@"especialidad", usuario.Especialidad ?? (object)DBNull.Value);
+                                cmd3.Parameters.AddWithValue(@"numero_cedula", usuario.NumeroCedula ?? (object)DBNull.Value);
+                                cmd3.ExecuteNonQuery();
+                            }
+                        }
 
-                        // Confirmar la transacción
-                        transaction.Commit();
+                            transaction.Commit();
                         return true;
                     }
                     catch (Exception ex)
                     {
-                        // Revertir la transacción en caso de error
                         transaction.Rollback();
-                        // Considerar loggear el error: _logger.LogError(ex, "Error al insertar usuario");
                         return false;
                     }
                 }

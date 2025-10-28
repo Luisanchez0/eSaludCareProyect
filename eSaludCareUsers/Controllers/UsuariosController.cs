@@ -174,8 +174,8 @@ namespace eSaludCareUsers.Controllers
 
             if (usuario.rol == "medico")
             {
-                entidad.especialidad = usuario.especialidad;
-                entidad.numero_cedula = usuario.numero_cedula;
+                //entidad.especialidad = usuario.especialidad;
+                //entidad.numero_cedula = usuario.numero_cedula;
 
                 var medico = _context.Medicos.FirstOrDefault(m => m.id_usuario == id);
                 if (medico != null)

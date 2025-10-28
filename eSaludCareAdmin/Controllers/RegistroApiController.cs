@@ -16,7 +16,7 @@ namespace eSaludCareUsers.Controllers
     {
         private readonly CN_Usuarios _usuarioNegocio = new CN_Usuarios();
         [HttpPost]
-        [Route("registroPaciente")]
+        [Route("registroAdmiMedi")]
         public IHttpActionResult Registrar([FromBody] UsuarioEntidad nuevoUsuario)
         {
             if (nuevoUsuario == null)
@@ -30,9 +30,21 @@ namespace eSaludCareUsers.Controllers
             {
                 return BadRequest("Todos los campos obligatorios deben ser completados.");
             }
-            if (string.IsNullOrEmpty(nuevoUsuario.Rol))
+
+
+            string rol = nuevoUsuario.Rol.ToLower();
+            if (rol != "admin" && rol != "medico")
             {
-                nuevoUsuario.Rol = "paciente";
+                return BadRequest("El rol debe ser 'administrador' o 'medico'.");
+            }
+
+            if (rol == "medico")
+            {
+                if (string.IsNullOrEmpty(nuevoUsuario.Especialidad) ||
+                    string.IsNullOrEmpty(nuevoUsuario.NumeroCedula))
+                {
+                    return BadRequest("Los campos 'Especialidad' y 'Número de Cédula' son obligatorios para el rol 'medico'.");
+                }
             }
 
             try

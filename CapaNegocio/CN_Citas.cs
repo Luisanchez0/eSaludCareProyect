@@ -6,7 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-/*namespace CapaNegocio
+namespace CapaNegocio
 {
     public class CN_Citas
     {
@@ -72,7 +72,8 @@ using System.Threading.Tasks;
             return _citaDatos.actualizarEstadoCita(idCita, nuevoEstado);
         }
         */
+        
 
     }
 }
-*/
+

@@ -104,6 +104,7 @@
             max-width: 280px;
             margin-bottom: 5px;
         }
+        }
     </style>
 </head>
 <body>
@@ -126,7 +127,7 @@
             </div>
             <button type="submit" class="btn btn-login-main">Iniciar Sesión</button>
 
-            @* ✅ Error visual si el login falla *@
+            @*  Error visual si el login falla *@
             if (ViewBag.Error != null)
             {
                 <div class="alert alert-danger mt-3">@ViewBag.Error</div>
@@ -134,9 +135,61 @@
         }
 
         <div class="links-adicionales">
-            <a href="#">¿Olvidó su contraseña?</a>
-            <a href="#">¡Crea una cuenta!</a>
+            <a href="#">¿Olvidó su contraseña?</a>"
+            <a href="@Url.Action("Registro","Login")">¡Crea una cuenta!</a>
         </div>
     </div>
+
+    @section Scripts {
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script>
+            $(document).ready(function () {
+                $("#formLogin").on("submit", function (e) {
+                    e.preventDefault();
+
+                    const datos = {
+                        correo: $("#email").val(),
+                        contrasena: $("#password").val()
+                    };
+
+                    $.ajax({
+                        url: "/api/v1/login",
+                        type: "POST",
+                        data: JSON.stringify(datos),
+                        contentType: "application/json; charset=utf-8",
+                        success: function (response) {
+                            if (response.success) {
+                                // ✅ Guardar token y datos en localStorage
+                                localStorage.setItem("token", response.token);
+                                localStorage.setItem("idUsuario", response.id_usuario); // 👈 IMPORTANTE
+                                localStorage.setItem("rol", response.role);
+                                localStorage.setItem("nombre", response.nombre);
+
+                                alert("Bienvenido, " + response.nombre);
+
+                                // ✅ Redirigir según el rol
+                                if (response.role === "admin") {
+                                    window.location.href = "/Home/Index";
+                                } else if (response.role === "doctor") {
+                                    window.location.href = "/Home/Index";
+                                } else {
+                                    window.location.href = "/Home/Index";
+                                }
+                            } else {
+                                alert("Usuario o contraseña incorrectos.");
+                            }
+                        },
+                        error: function (xhr) {
+                            if (xhr.status === 401) {
+                                alert("Credenciales incorrectas. Verifica tu correo y contraseña.");
+                            } else {
+                                alert("Error al iniciar sesión: " + xhr.responseText);
+                            }
+                        }
+                    });
+                });
+            });
+        </script>
+    }
 </body>
 </html>

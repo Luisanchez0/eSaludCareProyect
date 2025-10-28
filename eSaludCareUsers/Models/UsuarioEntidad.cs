@@ -40,6 +40,8 @@ namespace eSaludCareUsers.Models
 
         //  Relaciones
         public virtual Paciente Paciente { get; set; }
+        //public virtual Medico Medico { get; set; }
+
         public virtual ICollection<Medico> Medicos { get; set; }
         public virtual ICollection<TokenSesion> TokensSesion { get; set; }
 

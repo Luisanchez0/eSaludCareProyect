@@ -60,16 +60,19 @@
             return;
         }
 
+
+
         const data = {
             Nombre: nombres,
             Apellido: apellidos,
             Correo: email,
             Contrasena: password,
-            Telefono: telefono
+            Telefono: telefono,
+            Rol: "paciente"
         };
 
         try {
-            const response = await fetch('/api/v1/registro', {
+            const response = await fetch('/api/v1/registroPaciente', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'

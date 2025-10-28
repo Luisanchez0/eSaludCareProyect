@@ -21,13 +21,18 @@ namespace eSaludCareAdmin.Controllers
             return View();
         }
 
+        public ActionResult Registro()
+        {
+            return View();
+        }
+
         [HttpPost]
         public async Task<ActionResult> Index(string correo, string contrasena)
 
         {
             using (var client = new System.Net.Http.HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:44301/"); // Asegúrate del puerto correcto
+                client.BaseAddress = new Uri("https://localhost:44325/"); // Asegúrate del puerto correcto
 
                 var loginData = new { correo, contrasena };
                 var content = new System.Net.Http.StringContent(

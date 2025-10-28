@@ -51,10 +51,12 @@ namespace CapaEntidad
         public string Correo { get; set; }
         public string Contrasena { get; set; }
         public string Telefono { get; set; }
-        public string Rol { get; set; } = "paciente";
+        public string Rol { get; set; }
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
         public string Especialidad { get; set; }
         public string NumeroCedula { get; set; }
+
+
 
     }
 

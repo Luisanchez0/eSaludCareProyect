@@ -1,36 +1,128 @@
 ﻿@{
-    ViewBag.Title = "Home Page";
+    ViewBag.Title = "Bienvenida | eSaludCare";
+    Layout = null;
 }
 
-<main>
-    <div class="container-fluid px-4">
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewBag.Title</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background-color: #E6F8F8;
+            font-family: 'Roboto', sans-serif;
+        }
 
-        <section class="row" aria-labelledby="aspnetTitle">
-            <h1 id="title">ASP.NET</h1>
-            <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-            <p><a href="https://asp.net" class="btn btn-primary btn-md">Learn more &raquo;</a></p>
-        </section>
+        .hero {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            text-align: center;
+        }
 
-        <div class="row">
-            <section class="col-md-4" aria-labelledby="gettingStartedTitle">
-                <h2 id="gettingStartedTitle">Getting started</h2>
-                <p>
-                    ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-                    enables a clean separation of concerns and gives you full control over markup
-                    for enjoyable, agile development.
-                </p>
-                <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-            </section>
-            <section class="col-md-4" aria-labelledby="librariesTitle">
-                <h2 id="librariesTitle">Get more libraries</h2>
-                <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-                <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-            </section>
-            <section class="col-md-4" aria-labelledby="hostingTitle">
-                <h2 id="hostingTitle">Web Hosting</h2>
-                <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-                <p><a class="btn btn-outline-dark" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-            </section>
-        </div>
-        </div>
-</main>
+            .hero h1 {
+                color: #007b7f;
+                font-size: 3rem;
+                font-weight: 700;
+                margin-bottom: 5px;
+            }
+
+            .hero p {
+                color: #495057;
+                font-size: 1.15rem;
+                max-width: 600px;
+                margin-bottom: 30px;
+            }
+
+            .hero .lead {
+                font-size: 1.3rem;
+                color: #00b3b0;
+                font-weight: 400;
+                margin-bottom: 25px;
+            }
+
+        .tagline {
+            background-color: #007b7f;
+            color: white;
+            padding: 8px 18px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 25px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .img-illustration {
+            max-height: 250px;
+            width: auto;
+            margin: 30px 0;
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn-login, .btn-panel {
+            padding: 14px 30px;
+            font-size: 1.1rem;
+            font-weight: bold;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+        }
+
+        .btn-login {
+            background-color: #007b7f;
+            color: white;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 123, 127, 0.4);
+        }
+
+            .btn-login:hover {
+                background: linear-gradient(135deg, #007b7f, #00b3b0);
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(0, 123, 127, 0.6);
+            }
+
+        .btn-panel {
+            background-color: #00b3b0;
+            color: white;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 179, 176, 0.4);
+        }
+
+            .btn-panel:hover {
+                background: linear-gradient(135deg, #00b3b0, #007b7f);
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(0, 179, 176, 0.6);
+            }
+    </style>
+</head>
+<body>
+    <div class="hero">
+        <div class="tagline">PROVEEDOR DE ATENCIÓN MÉDICA DE CONFIANZA</div>
+
+        <h1>eSaludCare: Tu Plataforma Central de Atención y Gestión</h1>
+
+        <p class="lead">Optimizando la administración y la calidad de atención desde <strong>2005</strong>.</p>
+
+        <img src="~/Imagenes/doctor-welcome.png" alt="Ilustración de un panel de control médico digital" class="img-fluid img-illustration">
+
+        <p>Accede a tu panel para <strong>optimizar la gestión administrativa</strong>, <strong>acceder a expedientes</strong> de pacientes y <strong>facilitar las consultas</strong> con total seguridad.</p>
+        
+        @if (Session["Token"] == null)
+        {
+            <a href="/Login" class="btn btn-login">INICIAR SESIÓN Y ACCEDER</a>
+        }
+        else
+        {
+            <a href="/Home/Usuarios" class="btn btn-panel">IR AL PANEL</a>
+        }
+    </div>
+</body>
+</html>

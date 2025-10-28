@@ -16,7 +16,6 @@ namespace CapaEntidad
         public string Especialidad { get; set; }
     }
 
-
     public class MedicoDTO
     {
         public int IdUsuario { get; set; }
@@ -29,5 +28,6 @@ namespace CapaEntidad
         public string Especialidad { get; set; }
         public string NumeroCedula { get; set; }
     }
+
 
 }

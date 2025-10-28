@@ -26,6 +26,7 @@ namespace eSaludCareUsers.Data
 
 
         public DbSet<UsuarioEntidad> Usuarios { get; set; }
+     
 
 
        public DbSet<CitaMedica> CitaMedica { get; set; }

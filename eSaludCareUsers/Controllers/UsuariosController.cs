@@ -125,16 +125,29 @@ namespace eSaludCareUsers.Controllers
             if (existe)
                 return Conflict();
 
-           
             usuario.contrasena = BCrypt.Net.BCrypt.HashPassword(usuario.contrasena);
-
             usuario.fecha_registro = DateTime.Now;
             usuario.fecha_actualizacion = DateTime.Now;
             usuario.token = Guid.NewGuid().ToString();
 
-            var entidad = UsuarioAdapter.Convertir(usuario); 
+            var entidad = UsuarioAdapter.Convertir(usuario);
             _context.Usuarios.Add(entidad);
             _context.SaveChanges();
+
+            // 👨‍⚕️ Si el rol es médico, registrar también en la tabla "medicos"
+            if (usuario.rol.ToLower() == "medico")
+            {
+                
+               var medico = new eSaludCareUsers.Models.Medico
+                {
+                    id_usuario = entidad.id_usuario,
+                    especialidad = usuario.especialidad,
+                    numero_cedula = usuario.numero_cedula
+                };
+
+                _context.Medicos.Add(medico);
+                _context.SaveChanges();
+            }
 
             return Ok(new { mensaje = "Usuario creado correctamente", id = entidad.id_usuario });
         }
@@ -159,7 +172,28 @@ namespace eSaludCareUsers.Controllers
             entidad.rol = usuario.rol;
             entidad.fecha_actualizacion = DateTime.Now;
 
-            _context.SaveChanges();
+            if (usuario.rol == "medico")
+            {
+                entidad.especialidad = usuario.especialidad;
+                entidad.numero_cedula = usuario.numero_cedula;
+
+                var medico = _context.Medicos.FirstOrDefault(m => m.id_usuario == id);
+                if (medico != null)
+                {
+                    medico.especialidad = usuario.especialidad;
+                    medico.numero_cedula = usuario.numero_cedula;
+                }
+                else
+                {
+                    _context.Medicos.Add(new eSaludCareUsers.Models.Medico
+                    {
+                        id_usuario = id,
+                        especialidad = usuario.especialidad,
+                        numero_cedula = usuario.numero_cedula
+                    });
+                }
+            }
+                _context.SaveChanges();
 
             return Ok(new { mensaje = "Usuario actualizado correctamente", id = entidad.id_usuario });
         }

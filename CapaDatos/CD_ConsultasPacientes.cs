@@ -14,13 +14,16 @@ namespace CapaDatos
 
             using (var con = conexion.Conectar())
             {
-                var cmd = new NpgsqlCommand(@"
-                    SELECT p.id_paciente, u.nombre, u.correo, u.telefono, 
-                           p.fecha_nacimiento, p.genero, p.direccion
+                con.Open(); // ✅ ESTA LÍNEA ES CLAVE
+
+                var query = @"
+                    SELECT p.id_paciente, u.nombre, u.apellido, p.fecha_nacimiento, u.genero, u.direccion
                     FROM pacientes p
                     JOIN usuarios u ON p.id_usuario = u.id_usuario
-                    WHERE u.rol = 'paciente'", con);
+                    JOIN usuarios_roles ur ON u.id_usuario = ur.id_usuario
+                    WHERE ur.id_rol = 3"; // ← Ajusta según tu lógica de roles
 
+                using (var cmd = new NpgsqlCommand(query, con))
                 using (var reader = cmd.ExecuteReader())
                 {
                     while (reader.Read())

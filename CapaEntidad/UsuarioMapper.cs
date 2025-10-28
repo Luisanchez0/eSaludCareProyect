@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
+using CapaEntidad;
 
 namespace CapaEntidad
 {
@@ -38,7 +38,10 @@ namespace CapaEntidad
                 fecha_registro = u.FechaRegistro,
                 activo = true,
                 fecha_actualizacion = DateTime.Now,
-                token = ""
+                token = "",
+                especialidad = u.Rol == "medico" ? u.Especialidad : null,
+                numero_cedula = u.Rol == "medico" ? u.NumeroCedula : null
+
             };
         }
 

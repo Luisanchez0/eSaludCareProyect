@@ -13,14 +13,14 @@ namespace eSaludCareAdmin
         public static void RegisterRoutes(RouteCollection routes)
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
-            routes.MapMvcAttributeRoutes();
 
             routes.MapRoute(
-    name: "RutaUnica_" + Guid.NewGuid().ToString(), // 🔒 Garantiza unicidad
+    name: "AdminDefaultRoute", // 👈 nombre único y descriptivo
     url: "{controller}/{action}/{id}",
-    defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+    defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },
+    namespaces: new[] { "eSaludCareAdmin.Controllers" }
 );
-         
+
         }
     }
 }

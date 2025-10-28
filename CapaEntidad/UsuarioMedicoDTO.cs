@@ -6,19 +6,18 @@ using System.Threading.Tasks;
 
 namespace CapaEntidad
 {
-    public class PerfilUsuarioDTO
+    public class UsuarioMedicoDTO
     {
-      
-        public int Id { get; set; }
         public string Nombre { get; set; }
+        public string Apellido { get; set; }
         public string Correo { get; set; }
         public string Telefono { get; set; }
         public string Rol { get; set; }
-        public string Contrasena { get; set; }
+        public string Contraseña { get; set; }
 
+        // Solo si el rol es médico
         public string Especialidad { get; set; }
         public string NumeroCedula { get; set; }
-
 
     }
 }

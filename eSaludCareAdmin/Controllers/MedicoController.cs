@@ -1,9 +1,11 @@
-﻿using System;
+﻿using CapaEntidad;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
+using eSaludCareUsers.Data;
 
 namespace eSaludCareAdmin.Controllers
 {
@@ -12,18 +14,32 @@ namespace eSaludCareAdmin.Controllers
     public class MedicoController : ApiController
     {
 
+        private readonly AppDbContext _context = new AppDbContext();
+
         [HttpGet]
         [Route("listar")]
         public IHttpActionResult GetMedicos()
         {
-            // Ejemplo simple, luego puedes conectarlo con CapaNegocio
-            return Ok(new
-            {
-                success = true,
-                message = "Acceso autorizado",
-                usuario = User.Identity.Name
-            });
-        }
+            var medicos = _context.Medicos
+                .Where(m => m.Usuario.rol == "medico")
+                .Select(m => new MedicoDTO
+                {
+                    IdUsuario = m.id_usuario,
+                    Nombre = m.Usuario.nombre,
+                    Apellido = m.Usuario.apellido,
+                    Correo = m.Usuario.correo,
+                    Telefono = m.Usuario.telefono,
+                    FechaRegistro = m.Usuario.fecha_registro,
+                    FechaActualizacion = m.Usuario.fecha_actualizacion,
+                    Especialidad = m.especialidad,
+                    NumeroCedula = m.numero_cedula
+                })
+                .ToList();
 
+            return Ok(medicos);
+        }
     }
+
+
 }
+

@@ -1,38 +1,17 @@
-﻿using CapaEntidad;
-using eSaludCareUsers.Data;
+﻿using eSaludCareUsers.Data;
 using System;
 using System.Collections.Generic;
-using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
-using System.Text;
 using System.Web.Http;
+using CapaEntidad;
 
 namespace eSaludCareUsers.Controllers
 {
     public class MedicosController : ApiController
     {
         private readonly AppDbContext _context = new AppDbContext();
-
-        // 🔧 Función para quitar acentos
-        private string QuitarAcentos(string texto)
-        {
-            if (string.IsNullOrEmpty(texto)) return texto;
-
-            var textoNormalizado = texto.Normalize(NormalizationForm.FormD);
-            var sb = new StringBuilder();
-
-            foreach (var c in textoNormalizado)
-            {
-                var categoria = CharUnicodeInfo.GetUnicodeCategory(c);
-                if (categoria != UnicodeCategory.NonSpacingMark)
-                    sb.Append(c);
-            }
-
-            return sb.ToString().Normalize(NormalizationForm.FormC);
-        }
-
 
         [HttpGet]
         [Route("api/medicos")]

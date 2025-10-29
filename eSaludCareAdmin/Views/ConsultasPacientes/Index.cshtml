@@ -1,32 +1,33 @@
-﻿@model List<CapaEntidad.ConsultaPacientesDTO>
+﻿@model IEnumerable<CapaEntidad.ConsultaPacientesDTO>
+
 @{
-    ViewBag.Title = "Listado de Pacientes Registrados";
+    ViewBag.Title = "Listado de Consultas de Pacientes";
+    Layout = "~/Views/Shared/_Layout.cshtml"; // Ajusta si usas otro layout
 }
 
-<h2>Listado de Pacientes Registrados</h2>
-<p>Total pacientes encontrados: @Model.Count()</p>
+<h2>Listado de Consultas de Pacientes</h2>
 
 <table class="table table-bordered table-striped">
     <thead>
         <tr>
+            <th>ID</th>
             <th>Nombre</th>
-            <th>Correo</th>
-            <th>Teléfono</th>
-            <th>Fecha Nacimiento</th>
-            <th>Género</th>
+            <th>Fecha de Nacimiento</th>
             <th>Dirección</th>
+            <th>Teléfono</th>
+            <th>Correo</th>
         </tr>
     </thead>
     <tbody>
         @foreach (var paciente in Model)
         {
             <tr>
+                <td>@paciente.IdPaciente</td>
                 <td>@paciente.Nombre</td>
-                <td>@paciente.Correo</td>
-                <td>@paciente.Telefono</td>
                 <td>@paciente.FechaNacimiento.ToShortDateString()</td>
-                <td>@paciente.Genero</td>
                 <td>@paciente.Direccion</td>
+                <td>@paciente.Telefono</td>
+                <td>@paciente.Correo</td>
             </tr>
         }
     </tbody>

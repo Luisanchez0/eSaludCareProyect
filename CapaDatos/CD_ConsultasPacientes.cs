@@ -35,7 +35,6 @@ namespace CapaDatos
                             Correo = reader.GetString(2),
                             Telefono = reader.GetString(3),
                             FechaNacimiento = reader.GetDateTime(4),
-                            Genero = reader.GetString(5),
                             Direccion = reader.GetString(6)
                         });
                     }

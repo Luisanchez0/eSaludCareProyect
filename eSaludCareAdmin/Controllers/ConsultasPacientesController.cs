@@ -11,7 +11,7 @@ public class ConsultasPacientesController : Controller
 
     public ConsultasPacientesController()
     {
-        string cadenaConexion = "Host=localhost;Port=5432;Database=clinica_db;Username=postgres;Password=tu_contraseña;";
+        string cadenaConexion = "Host=localhost;Port=5432;Database=clinica_db;Username=postgres;Password=102538;";
         consultasPacientes = new CN_ConsultasPacientes(cadenaConexion);
     }
 

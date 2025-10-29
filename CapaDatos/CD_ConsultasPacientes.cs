@@ -1,47 +1,29 @@
-﻿using System.Collections.Generic;
+﻿using CapaEntidad;
+using Dapper;
 using Npgsql;
-using CapaEntidad;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace CapaDatos
+public class CD_ConsultasPacientes
 {
-    public class CD_ConsultasPacientes
+    private readonly string cadenaConexion;
+
+    public CD_ConsultasPacientes(string cadenaConexion)
     {
-        private ConectionBD conexion = new ConectionBD();
+        this.cadenaConexion = cadenaConexion;
+    }
 
-        public List<ConsultaPacientesDTO> ListarPacientes()
+    public async Task<List<ConsultaPacientesDTO>> ConsultaPacientes()
+    {
+        using (var connection = new NpgsqlConnection(cadenaConexion))
         {
-        var lista = new List<ConsultaPacientesDTO>();
+            await connection.OpenAsync();
 
-            using (var con = conexion.Conectar())
-            {
-                con.Open(); // ✅ ESTA LÍNEA ES CLAVE
+            var resultado = await connection.QueryAsync<ConsultaPacientesDTO>(
+                "SELECT * FROM ConsultaPaciente()"
+            );
 
-                var query = @"
-                    SELECT p.id_paciente, u.nombre, u.apellido, p.fecha_nacimiento, u.genero, u.direccion
-                    FROM pacientes p
-                    JOIN usuarios u ON p.id_usuario = u.id_usuario
-                    JOIN usuarios_roles ur ON u.id_usuario = ur.id_usuario
-                    WHERE ur.id_rol = 3"; // ← Ajusta según tu lógica de roles
-
-                using (var cmd = new NpgsqlCommand(query, con))
-                using (var reader = cmd.ExecuteReader())
-                {
-                    while (reader.Read())
-                    {
-                        lista.Add(new ConsultaPacientesDTO
-                        {
-                            IdPaciente = reader.GetInt32(0),
-                            Nombre = reader.GetString(1),
-                            Correo = reader.GetString(2),
-                            Telefono = reader.GetString(3),
-                            FechaNacimiento = reader.GetDateTime(4),
-                            Direccion = reader.GetString(6)
-                        });
-                    }
-                }
-            }
-
-            return lista;
+            return resultado.AsList();
         }
     }
 }

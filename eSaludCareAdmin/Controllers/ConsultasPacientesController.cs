@@ -14,7 +14,7 @@ namespace eSaludCareAdmin.Controllers
         
         public ActionResult Index()
         {
-            List<PacienteConsultaDTO> pacientes = negocio.ObtenerPacientesRegistrados();
+            List<ConsultaPacientesDTO> pacientes = negocio.ObtenerPacientesRegistrados();
             return View(pacientes);
         }
         

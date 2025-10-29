@@ -12,7 +12,7 @@ namespace CapaNegocio
     {
         private CD_ConsultasPacientes datos = new CD_ConsultasPacientes();
 
-        public List<PacienteConsultaDTO> ObtenerPacientesRegistrados()
+        public List<ConsultaPacientesDTO> ObtenerPacientesRegistrados()
         {
             return datos.ListarPacientes();
         }

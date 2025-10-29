@@ -8,9 +8,9 @@ namespace CapaDatos
     {
         private ConectionBD conexion = new ConectionBD();
 
-        public List<PacienteConsultaDTO> ListarPacientes()
+        public List<ConsultaPacientesDTO> ListarPacientes()
         {
-            var lista = new List<PacienteConsultaDTO>();
+        var lista = new List<ConsultaPacientesDTO>();
 
             using (var con = conexion.Conectar())
             {
@@ -28,7 +28,7 @@ namespace CapaDatos
                 {
                     while (reader.Read())
                     {
-                        lista.Add(new PacienteConsultaDTO
+                        lista.Add(new ConsultaPacientesDTO
                         {
                             IdPaciente = reader.GetInt32(0),
                             Nombre = reader.GetString(1),

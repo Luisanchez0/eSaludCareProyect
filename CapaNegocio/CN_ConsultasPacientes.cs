@@ -1,22 +1,21 @@
-﻿using CapaDatos;
-using CapaEntidad;
-using System;
+﻿using CapaEntidad;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace CapaNegocio
+public class CN_ConsultasPacientes
 {
-    public class CN_ConsultasPacientes
+    private readonly CD_ConsultasPacientes accesoDatos;
+
+    public CN_ConsultasPacientes(string cadenaConexion)
     {
-        private CD_ConsultasPacientes datos = new CD_ConsultasPacientes();
+        accesoDatos = new CD_ConsultasPacientes(cadenaConexion);
+    }
 
-        public List<ConsultaPacientesDTO> ObtenerPacientesRegistrados()
-        {
-            return datos.ListarPacientes();
-        }
+    public async Task<List<ConsultaPacientesDTO>> ObtenerPacientes()
+    {
+        var pacientes = await accesoDatos.ConsultaPacientes();
 
-
+        // Aquí podrías aplicar lógica adicional si fuera necesario
+        return pacientes;
     }
 }

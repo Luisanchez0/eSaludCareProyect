@@ -1,22 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using CapaEntidad;
+using eSaludCareUsers.Controllers;
 using System.Web.Mvc;
-using CapaNegocio;
-using CapaEntidad;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
-namespace eSaludCareAdmin.Controllers
+
+public class ConsultasPacientesController : Controller
 {
-    //[Authorize(Roles = "admin,medico")]
-    public class ConsultasPacientesController : Controller
-    {
-        private CN_ConsultasPacientes negocio = new CN_ConsultasPacientes();
+    private readonly CN_ConsultasPacientes consultasPacientes;
 
-        // GET: ConsultasPacientes
-        
-        public ActionResult Index()
-        {
-            List<ConsultaPacientesDTO> pacientes = negocio.ObtenerPacientesRegistrados();
-            return View(pacientes);
-        }
-        
+    public ConsultasPacientesController()
+    {
+        string cadenaConexion = "Host=localhost;Port=5432;Database=clinica_db;Username=postgres;Password=tu_contraseña;";
+        consultasPacientes = new CN_ConsultasPacientes(cadenaConexion);
+    }
+
+    public async Task<ActionResult> Index()
+    {
+        List<ConsultaPacientesDTO> pacientes = await consultasPacientes.ObtenerPacientes();
+        return View(pacientes);
     }
 }

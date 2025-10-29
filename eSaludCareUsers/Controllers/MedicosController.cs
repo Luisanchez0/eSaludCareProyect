@@ -1,11 +1,13 @@
-﻿using eSaludCareUsers.Data;
+﻿using CapaEntidad;
+using eSaludCareUsers.Data;
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Net.Http;
+using System.Text;
 using System.Web.Http;
-using CapaEntidad;
 
 namespace eSaludCareUsers.Controllers
 {
@@ -13,12 +15,39 @@ namespace eSaludCareUsers.Controllers
     {
         private readonly AppDbContext _context = new AppDbContext();
 
+        // 🔧 Función para quitar acentos
+        private string QuitarAcentos(string texto)
+        {
+            if (string.IsNullOrEmpty(texto)) return texto;
+
+            var textoNormalizado = texto.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder();
+
+            foreach (var c in textoNormalizado)
+            {
+                var categoria = CharUnicodeInfo.GetUnicodeCategory(c);
+                if (categoria != UnicodeCategory.NonSpacingMark)
+                    sb.Append(c);
+            }
+
+            return sb.ToString().Normalize(NormalizationForm.FormC);
+        }
+
+
         [HttpGet]
         [Route("api/medicos")]
-        public IHttpActionResult ObtenerMedicos()
+        public IHttpActionResult ObtenerMedicos([FromUri] string nombre = null, [FromUri] string especialidad = null)
         {
-            var medicos = _context.Medicos
-                .Where(m => m.Usuario.rol == "medico")
+            var query = _context.Medicos
+                .Where(m => m.Usuario.rol == "medico");
+
+            if (!string.IsNullOrEmpty(nombre))
+                query = query.Where(m => m.Usuario.nombre.Contains(nombre));
+
+            if (!string.IsNullOrEmpty(especialidad))
+                query = query.Where(m => m.especialidad.Contains(especialidad));
+
+            var medicos = query
                 .Select(m => new MedicoDTO
                 {
                     IdUsuario = m.id_usuario,
@@ -35,7 +64,7 @@ namespace eSaludCareUsers.Controllers
 
             return Ok(medicos);
         }
-    }
-
 
     }
+
+}

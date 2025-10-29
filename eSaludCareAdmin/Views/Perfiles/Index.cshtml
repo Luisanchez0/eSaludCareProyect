@@ -2,22 +2,102 @@
 @using System.Linq
 
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Listado de Perfiles";
 }
 
-<h2>Listado de Perfiles</h2>
-<p>Total perfiles recibidos: @Model.Count()</p>
+<style>
+    /* Estilo del Encabezado de la Página */
+    h2 {
+        color: #007b7f; /* Verde azulado de la marca */
+        font-weight: 700;
+        margin-bottom: 5px;
+        font-size: 1.8rem;
+    }
+
+    /* Contador de Perfiles */
+    .perfiles-count {
+        margin-bottom: 25px;
+        font-size: 0.95rem;
+        color: #495057;
+    }
+
+    /* Estilos de Tabla */
+    .table thead th {
+        background-color: #007b7f;
+        color: white;
+        font-weight: 500;
+        text-transform: uppercase;
+        font-size: 0.8rem;
+        letter-spacing: 0.5px;
+        border: none !important;
+        padding: 12px 15px;
+        vertical-align: middle;
+    }
+
+    .table tbody tr td {
+        padding: 12px 15px;
+        font-size: 0.95rem;
+        vertical-align: middle;
+        border-color: #e9ecef;
+    }
+
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: #f8f8f8;
+    }
+
+    /* Estilos para la Columna de Acciones */
+    .action-icons-group a {
+        padding: 4px 8px;
+        margin-right: 5px;
+        border-radius: 4px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        line-height: 1;
+        transition: all 0.2s ease;
+        text-decoration: none;
+    }
+
+    /* Estilo para el botón de Agregar Usuario (Verde institucional) */
+    .btn-crear-usuario {
+        background-color: #00b3b0; /* Color de marca */
+        color: white;
+        font-weight: 600;
+        padding: 8px 15px;
+        border-radius: 6px;
+        transition: background-color 0.2s ease;
+    }
+
+        .btn-crear-usuario:hover {
+            background-color: #007b7f; /* Tono más oscuro al pasar el ratón */
+            color: white;
+        }
+
+    /* Colores de Marca y Contraste para los Botones de Acción */
+    .btn-perfil-ver {
+        background-color: #00b3b0;
+        color: white;
+    }
+
+        .btn-perfil-ver:hover {
+            background-color: #007b7f;
+            color: white;
+        }
+</style>
+
+<h2>Perfiles de Usuario</h2>
+
+<p class="perfiles-count">Total perfiles recibidos: @Model.Count()</p>
 
 @if (Model != null && Model.Any())
 {
-    <table class="table table-bordered">
+    <table class="table table-striped">
         <thead>
             <tr>
                 <th>Nombre</th>
                 <th>Correo</th>
                 <th>Teléfono</th>
                 <th>Rol</th>
-                <th>Acciones</th>
+                <th class="text-center">Acciones</th>
             </tr>
         </thead>
         <tbody>
@@ -29,12 +109,12 @@
                     <td>@perfil.Telefono</td>
                     <td>@perfil.Rol</td>
 
-                    <td>
+                    <td class="action-icons-group text-center">
                         @if (perfil.Id > 0)
                         {
-                            <a href="@Url.Action("Detalles", "Perfiles", new { id = perfil.Id })" class="btn btn-sm btn-info">Ver</a>
+                            <a href="@Url.Action("Detalles", "Perfiles", new { id = perfil.Id })" class="btn btn-sm btn-perfil-ver">Ver</a>
                         }
-                        <a href="@Url.Action("Editar", "Perfiles", new { id = perfil.Id })" class="btn btn-warning">Editar</a>
+                        <a href="@Url.Action("Editar", "Perfiles", new { id = perfil.Id })" class="btn btn-sm btn-warning">Editar</a>
                         <a href="@Url.Action("Eliminar", "Perfiles", new { id = perfil.Id })" class="btn btn-sm btn-danger" onclick="return confirm('¿Eliminar este perfil?');">Eliminar</a>
                         <a href="@Url.Action("CambiarRol", "Perfiles", new { id = perfil.Id })" class="btn btn-sm btn-secondary">Rol</a>
                         <a href="@Url.Action("ResetPassword", "Perfiles", new { id = perfil.Id })" class="btn btn-sm btn-dark">Reset</a>
@@ -44,13 +124,22 @@
         </tbody>
     </table>
 
+    @* REUBICACIÓN DEL BOTÓN DEBAJO DE LA TABLA, ALINEADO A LA IZQUIERDA *@
     <div class="mt-3">
-        <a href="@Url.Action("Crear", "Perfiles")" class="btn btn-success">Agregar Usuario</a>
+        <a href="@Url.Action("Crear", "Perfiles")" class="btn btn-crear-usuario">
+            <i class="fas fa-plus"></i> Agregar Nuevo Usuario
+        </a>
     </div>
 }
 else
 {
     <div class="alert alert-warning">
         <strong>Atención:</strong> @ViewBag.Error
+    </div>
+
+    <div class="mt-3">
+        <a href="@Url.Action("Crear", "Perfiles")" class="btn btn-crear-usuario">
+            <i class="fas fa-plus"></i> Agregar Nuevo Usuario
+        </a>
     </div>
 }

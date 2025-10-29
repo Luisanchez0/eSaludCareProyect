@@ -4,7 +4,65 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - Mi aplicación ASP.NET</title>
+    <title>@ViewBag.Title - eSaludCare Panel</title>
+
+    <style>
+        /* ------------------------------------- */
+        /* Colores de Marca eSaludCare (Barras Verde Azulado) */
+        /* ------------------------------------- */
+        :root {
+            --teal-primary: #007b7f; /* Fondo Principal de las Barras */
+            --teal-light: #00b3b0; /* Verde Azulado Claro (Highlight/Hover) */
+            --teal-secondary-dark: #006669; /* Un tono un poco más oscuro para el pie del sidenav */
+        }
+
+        /* 1. Barra Superior (Navbar) - VERDE AZULADO OSCURO */
+        .sb-topnav {
+            background-color: var(--teal-primary) !important;
+        }
+
+            .sb-topnav .navbar-brand {
+                color: white;
+                font-weight: 700;
+                letter-spacing: 0.5px;
+            }
+
+        /* 2. Barra Lateral (Sidenav) - VERDE AZULADO OSCURO */
+        .sb-sidenav-dark {
+            background-color: var(--teal-primary);
+        }
+
+        /* 3. Estilos de Navegación del Menú Lateral */
+        .sb-sidenav-menu-heading {
+            color: #d1e5e6;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .sb-sidenav-dark .sb-sidenav-menu .nav-link {
+            color: white;
+        }
+
+            /* 4. Estado Activo/Hover del Menú Lateral: HIGHLIGHT CON VERDE AZULADO CLARO */
+            .sb-sidenav-dark .sb-sidenav-menu .nav-link:hover {
+                color: white;
+                background-color: var(--teal-light);
+            }
+
+        /* 5. Pie de Página del Sidenav (Logged in as) */
+        .sb-sidenav-footer {
+            background-color: var(--teal-secondary-dark);
+            padding: 15px;
+            color: white;
+        }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
@@ -12,11 +70,8 @@
 </head>
 <body class="sb-nav-fixed">
     <nav class="sb-topnav navbar navbar-expand navbar-dark bg-dark">
-        <!-- Navbar Brand-->
-        <a class="navbar-brand ps-3" href="index.html">eHealCare Panel</a>
-        <!-- Sidebar Toggle-->
+        <a class="navbar-brand ps-3" href="@Url.Action("Index", "Home")">eSaludCare Panel</a>
         <button class="btn btn-link btn-sm order-1 order-lg-0 me-4 me-lg-0" id="sidebarToggle" href="#!"><i class="fas fa-bars"></i></button>
-        <!-- Navbar-->
         <ul class="navbar-nav ms-auto me-0 me-md-3 my-2 my-md-0">
             @if (Session["Token"] == null)
             {
@@ -73,7 +128,7 @@
 
                         <a class="nav-link" href="tables.html">
                             <div class="sb-nav-link-icon"><i class="fas fa-table"></i></div>
-                            Tables
+                            Mesas
                         </a>
                         @if (Session["Rol"]?.ToString() == "admin")
                         {
@@ -86,36 +141,39 @@
                     </div>
                 </div>
                 <div class="sb-sidenav-footer">
-                    <div class="small">Logged in as:</div>
-                    Start Bootstrap
+                    <div class="small">Sesión activa como:</div>
+                    @if (Session["Nombre"] != null)
+                    {
+                        @Session["Nombre"]
+                    }
+                    else
+                    {
+                        <span>Invitado</span>
+                    }
                 </div>
             </nav>
         </div>
         <div id="layoutSidenav_content">
             <main>
-                @RenderBody()
-
+                <div class="container-fluid px-4">
+                    @RenderBody()
+                </div>
             </main>
             <footer class="py-4 bg-light mt-auto">
                 <div class="container-fluid px-4">
                     <div class="d-flex align-items-center justify-content-between small">
-                        <div class="text-muted">Copyright &copy; Your Website 2023</div>
+                        <div class="text-muted">Copyright &copy; eSaludCare @DateTime.Now.Year</div>
                         <div>
-                            <a href="#">Privacy Policy</a>
+                            <a href="#">Política de Privacidad</a>
                             &middot;
-                            <a href="#">Terms &amp; Conditions</a>
+                            <a href="#">Términos y Condiciones</a>
                         </div>
                     </div>
                 </div>
             </footer>
         </div>
     </div>
-    @*
-        <li>@Html.ActionLink("Inicio", "Index", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-        <li>@Html.ActionLink("Acerca de", "About", "Home", new { area = "" }, new { @class = "nav-link" })</li>
-        <li>@Html.ActionLink("Contacto", "Contact", "Home", new { area = "" }, new { @class = "nav-link" })</li>
 
-    *@
     @Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/complements")
     @Scripts.Render("~/bundles/bootstrap")

@@ -15,15 +15,21 @@ namespace eSaludCareAdmin.Controllers
 
     public class MedicosController : Controller
     {
-        public async Task<ActionResult> Index()
+        public async Task<ActionResult> Index(string nombre = null, string especialidad = null)
         {
             var token = Session["Token"]?.ToString();
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:44301/"); // Ajusta el puerto si es necesario
+                client.BaseAddress = new Uri("https://localhost:44301/");
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
-                var response = await client.GetAsync("api/medicos");
+                var url = "api/medicos";
+                var queryParams = new List<string>();
+                if (!string.IsNullOrEmpty(nombre)) queryParams.Add($"nombre={Uri.EscapeDataString(nombre)}");
+                if (!string.IsNullOrEmpty(especialidad)) queryParams.Add($"especialidad={Uri.EscapeDataString(especialidad)}");
+                if (queryParams.Any()) url += "?" + string.Join("&", queryParams);
+
+                var response = await client.GetAsync(url);
                 if (!response.IsSuccessStatusCode)
                 {
                     ViewBag.Error = "No se pudo obtener la lista de médicos.";

@@ -433,6 +433,7 @@
     <Content Include="Scripts\vendor\swiper\swiper-bundle.min.js.map" />
     <Content Include="Views\Home\Departamentos.cshtml" />
     <Content Include="Views\Citas\MisCitas.cshtml" />
+    <Content Include="Views\Home\Servicios.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

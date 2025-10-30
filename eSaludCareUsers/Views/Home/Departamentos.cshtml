@@ -11,12 +11,9 @@
             <div class="container">
                 <div class="row d-flex justify-content-center text-center">
                     <div class="col-lg-8">
-                        <h1 class="heading-title">Departamentos</h1>
+                        <h1 class="heading-title">Áreas</h1>
                         <p class="mb-0">
-                            Odio et unde deleniti. Deserunt numquam exercitationem. Officiis quo
-                            odio sint voluptas consequatur ut a odio voluptatem. Sit dolorum
-                            debitis veritatis natus dolores. Quasi ratione sint. Sit quaerat
-                            ipsum dolorem.
+                            En eSaludCare contamos con distintas áreas médicas especializadas, diseñadas para ofrecer atención integral y de calidad a nuestros pacientes. Cada departamento está conformado por profesionales capacitados y equipados con tecnología moderna para brindar diagnósticos precisos y tratamientos efectivos.
                         </p>
                     </div>
                 </div>
@@ -26,7 +23,7 @@
             <div class="container">
                 <ol>
                     <li><a href="index.html">Home</a></li>
-                    <li class="current">Departments</li>
+                    <li class="current">Áreas</li>
                 </ol>
             </div>
         </nav>
@@ -38,6 +35,35 @@
 
             <div class="row gy-4">
 
+                <!-- Department Item -->
+                <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="600">
+                    <div class="department-item">
+                        <div class="department-content">
+                            <div class="department-header">
+                                <div class="department-icon">
+                                    <i class="fas fa-heartbeat"></i>
+                                </div>
+                                <div class="department-info">
+                                    <h3>Emergencias</h3>
+                                    <span class="department-category">Atención Crítica 24/7</span>
+                                </div>
+                            </div>
+                            <p>Convallis tellus id interdum velit laoreet id donec ultrices tincidunt arcu non sodales neque sodales ut etiam.</p>
+                            <div class="department-features">
+                                <span class="feature-badge">Las 24 horas del día</span>
+                                <span class="feature-badge">Centro de Trauma</span>
+                            </div>
+                        </div>
+                        <div class="department-image">
+                            <img src="@Url.Content("~/Content/img/health/emergency-3.webp")" alt="Emergency Department" class="img-fluid">
+                            <div class="department-overlay">
+                                <a href="#" class="department-link">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- End Department Item -->
                 <!-- Department Item -->
                 <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="100">
                     <div class="department-item">
@@ -53,12 +79,13 @@
                             </div>
                             <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae.</p>
                             <div class="department-features">
-                                <span class="feature-badge">24/7 Emergency</span>
-                                <span class="feature-badge">Advanced Diagnostics</span>
+                                <span class="feature-badge">Emergencias 24/7</span>
+                                <span class="feature-badge">Diagnósticos Avanzados</span>
                             </div>
                         </div>
                         <div class="department-image">
-                            <img src="assets/img/health/cardiology-2.webp" alt="Departamento de Cardiologia" class="img-fluid">
+                            <!--IMAGENES-->
+                            <img src="@Url.Content("~/Content/img/health/cardiology-2.webp")" alt="Departamento de Cardiologia" class="img-fluid">
                             <div class="department-overlay">
                                 <a href="#" class="department-link">
                                     <i class="fas fa-arrow-right"></i>
@@ -82,12 +109,12 @@
                             </div>
                             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
                             <div class="department-features">
-                                <span class="feature-badge">MRI Available</span>
-                                <span class="feature-badge">Specialist Team</span>
+                                <span class="feature-badge">Resonancia magnética disponible</span>
+                                <span class="feature-badge">Equipo de especialistas</span>
                             </div>
                         </div>
                         <div class="department-image">
-                            <img src="assets/img/health/neurology-3.webp" alt="Neurology Department" class="img-fluid">
+                            <img src="@Url.Content("~/Content/img/health/neurology-3.webp")" alt="Neurology Department" class="img-fluid">
                             <div class="department-overlay">
                                 <a href="#" class="department-link">
                                     <i class="fas fa-arrow-right"></i>
@@ -111,12 +138,12 @@
                             </div>
                             <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute.</p>
                             <div class="department-features">
-                                <span class="feature-badge">Sports Medicine</span>
-                                <span class="feature-badge">Joint Replacement</span>
+                                <span class="feature-badge">Medicina deportiva</span>
+                                <span class="feature-badge">Reemplazo de articulaciones</span>
                             </div>
                         </div>
                         <div class="department-image">
-                            <img src="assets/img/health/orthopedics-4.webp" alt="Orthopedics Department" class="img-fluid">
+                            <img src="@Url.Content("~/Content/img/health/orthopedics-4.webp")" alt="Orthopedics Department" class="img-fluid">
                             <div class="department-overlay">
                                 <a href="#" class="department-link">
                                     <i class="fas fa-arrow-right"></i>
@@ -126,6 +153,306 @@
                     </div>
                 </div><!-- End Department Item -->
                 <!-- Department Item -->
+                <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="department-item">
+                        <div class="department-content">
+                            <div class="department-header">
+                                <div class="department-icon">
+                                    <i class="fas fa-baby"></i>
+                                </div>
+                                <div class="department-info">
+                                    <h3>Pediatria</h3>
+                                    <span class="department-category">Salud Infantil</span>
+                                </div>
+                            </div>
+                            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum sed.</p>
+                            <div class="department-features">
+                                <span class="feature-badge">Amigable para los niños</span>
+                                <span class="feature-badge"> Centro de vacunación</span>
+                            </div>
+                        </div>
+                        <div class="department-image">
+                            <img src="@Url.Content("~/Content/img/health/pediatrics-4.webp")" alt="Pediatrics Department" class="img-fluid">
+                            <div class="department-overlay">
+                                <a href="#" class="department-link">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- End Department Item -->
+                <!-- Department Item -->
+                <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="500">
+                    <div class="department-item">
+                        <div class="department-content">
+                            <div class="department-header">
+                                <div class="department-icon">
+                                    <i class="fas fa-microscope"></i>
+                                </div>
+                                <div class="department-info">
+                                    <h3>Laboratorio</h3>
+                                    <span class="department-category">Servicios de Diagnóstico</span>
+                                </div>
+                            </div>
+                            <p>Nulla facilisi morbi tempus iaculis urna id volutpat lacus laoreet non curabitur gravida arcu ac tortor dignissim.</p>
+                            <div class="department-features">
+                                <span class="feature-badge">Resultados Rápidos</span>
+                                <span class="feature-badge">Informes Digitales</span>
+                            </div>
+                        </div>
+                        <div class="department-image">
+                            <img src="@Url.Content("~/Content/img/health/laboratory-3.webp")" alt="Laboratory Department" class="img-fluid">
+                            <div class="department-overlay">
+                                <a href="#" class="department-link">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- End Department Item -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+            </div>
+        </div>
+    </section>
+</main>
+<!-- End Departments Section -->
+
+@{
+    ViewBag.Title = "Departamentos";
+}
+
+<main class="main">
+
+    <!-- Page Title -->
+    <div class="page-title">
+        <div class="heading">
+            <div class="container">
+                <div class="row d-flex justify-content-center text-center">
+                    <div class="col-lg-8">
+                        <h1 class="heading-title">Áreas</h1>
+                        <p class="mb-0">
+                            En eSaludCare contamos con distintas áreas médicas especializadas, diseñadas para ofrecer atención integral y de calidad a nuestros pacientes. Cada departamento está conformado por profesionales capacitados y equipados con tecnología moderna para brindar diagnósticos precisos y tratamientos efectivos.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <nav class="breadcrumbs">
+            <div class="container">
+                <ol>
+                    <li><a href="index.html">Home</a></li>
+                    <li class="current">Áreas</li>
+                </ol>
+            </div>
+        </nav>
+    </div><!-- End Page Title -->
+    <!-- Departments Section -->
+    <section id="departments" class="departments section">
+
+        <div class="container" data-aos="fade-up" data-aos-delay="100">
+
+            <div class="row gy-4">
+
+                <!-- Department Item -->
+                <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="600">
+                    <div class="department-item">
+                        <div class="department-content">
+                            <div class="department-header">
+                                <div class="department-icon">
+                                    <i class="fas fa-heartbeat"></i>
+                                </div>
+                                <div class="department-info">
+                                    <h3>Emergencias</h3>
+                                    <span class="department-category">Atención Crítica 24/7</span>
+                                </div>
+                            </div>
+                            <p>Convallis tellus id interdum velit laoreet id donec ultrices tincidunt arcu non sodales neque sodales ut etiam.</p>
+                            <div class="department-features">
+                                <span class="feature-badge">Las 24 horas del día</span>
+                                <span class="feature-badge">Centro de Trauma</span>
+                            </div>
+                        </div>
+                        <div class="department-image">
+                            <img src="@Url.Content("~/Content/img/health/emergency-3.webp")" alt="Emergency Department" class="img-fluid">
+                            <div class="department-overlay">
+                                <a href="#" class="department-link">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- End Department Item -->
+                <!-- Department Item -->
+                <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="100">
+                    <div class="department-item">
+                        <div class="department-content">
+                            <div class="department-header">
+                                <div class="department-icon">
+                                    <i class="fas fa-heartbeat"></i>
+                                </div>
+                                <div class="department-info">
+                                    <h3>Cardiologia</h3>
+                                    <span class="department-category">Corazon &amp; Vascular</span>
+                                </div>
+                            </div>
+                            <p>Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Vestibulum tortor quam, feugiat vitae.</p>
+                            <div class="department-features">
+                                <span class="feature-badge">Emergencias 24/7</span>
+                                <span class="feature-badge">Diagnósticos Avanzados</span>
+                            </div>
+                        </div>
+                        <div class="department-image">
+                            <!--IMAGENES-->
+                            <img src="@Url.Content("~/Content/img/health/cardiology-2.webp")" alt="Departamento de Cardiologia" class="img-fluid">
+                            <div class="department-overlay">
+                                <a href="#" class="department-link">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- End Department Item -->
+                <!-- Department Item -->
+                <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="200">
+                    <div class="department-item">
+                        <div class="department-content">
+                            <div class="department-header">
+                                <div class="department-icon">
+                                    <i class="fas fa-brain"></i>
+                                </div>
+                                <div class="department-info">
+                                    <h3>Neurologia</h3>
+                                    <span class="department-category">Cerebro &amp; Sisitema Nervioso</span>
+                                </div>
+                            </div>
+                            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+                            <div class="department-features">
+                                <span class="feature-badge">Resonancia magnética disponible</span>
+                                <span class="feature-badge">Equipo de especialistas</span>
+                            </div>
+                        </div>
+                        <div class="department-image">
+                            <img src="@Url.Content("~/Content/img/health/neurology-3.webp")" alt="Neurology Department" class="img-fluid">
+                            <div class="department-overlay">
+                                <a href="#" class="department-link">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- End Department Item -->
+                <!-- Department Item -->
+                <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="300">
+                    <div class="department-item">
+                        <div class="department-content">
+                            <div class="department-header">
+                                <div class="department-icon">
+                                    <i class="fas fa-bone"></i>
+                                </div>
+                                <div class="department-info">
+                                    <h3>Ortopedia</h3>
+                                    <span class="department-category">Huesos &amp; Articulaciones</span>
+                                </div>
+                            </div>
+                            <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat duis aute.</p>
+                            <div class="department-features">
+                                <span class="feature-badge">Medicina deportiva</span>
+                                <span class="feature-badge">Reemplazo de articulaciones</span>
+                            </div>
+                        </div>
+                        <div class="department-image">
+                            <img src="@Url.Content("~/Content/img/health/orthopedics-4.webp")" alt="Orthopedics Department" class="img-fluid">
+                            <div class="department-overlay">
+                                <a href="#" class="department-link">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- End Department Item -->
+                <!-- Department Item -->
+                <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="400">
+                    <div class="department-item">
+                        <div class="department-content">
+                            <div class="department-header">
+                                <div class="department-icon">
+                                    <i class="fas fa-baby"></i>
+                                </div>
+                                <div class="department-info">
+                                    <h3>Pediatria</h3>
+                                    <span class="department-category">Salud Infantil</span>
+                                </div>
+                            </div>
+                            <p>Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum sed.</p>
+                            <div class="department-features">
+                                <span class="feature-badge">Amigable para los niños</span>
+                                <span class="feature-badge"> Centro de vacunación</span>
+                            </div>
+                        </div>
+                        <div class="department-image">
+                            <img src="@Url.Content("~/Content/img/health/pediatrics-4.webp")" alt="Pediatrics Department" class="img-fluid">
+                            <div class="department-overlay">
+                                <a href="#" class="department-link">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- End Department Item -->
+                <!-- Department Item -->
+                <div class="col-lg-6" data-aos="zoom-in" data-aos-delay="500">
+                    <div class="department-item">
+                        <div class="department-content">
+                            <div class="department-header">
+                                <div class="department-icon">
+                                    <i class="fas fa-microscope"></i>
+                                </div>
+                                <div class="department-info">
+                                    <h3>Laboratorio</h3>
+                                    <span class="department-category">Servicios de Diagnóstico</span>
+                                </div>
+                            </div>
+                            <p>Nulla facilisi morbi tempus iaculis urna id volutpat lacus laoreet non curabitur gravida arcu ac tortor dignissim.</p>
+                            <div class="department-features">
+                                <span class="feature-badge">Resultados Rápidos</span>
+                                <span class="feature-badge">Informes Digitales</span>
+                            </div>
+                        </div>
+                        <div class="department-image">
+                            <img src="@Url.Content("~/Content/img/health/laboratory-3.webp")" alt="Laboratory Department" class="img-fluid">
+                            <div class="department-overlay">
+                                <a href="#" class="department-link">
+                                    <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div><!-- End Department Item -->
+
+
+
+
+
+
+
+
+
+
+
+
+
             </div>
         </div>
     </section>

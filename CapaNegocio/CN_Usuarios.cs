@@ -32,7 +32,7 @@ namespace CapaNegocio
             var usuario = objCapaDato.ObtenerUsuarioPorCorreo(correo);
 
             if (usuario == null)
-                return null;
+                return null;    
 
             bool contraseñaValid = BCrypt.Net.BCrypt.Verify(contrasena, usuario.contrasena);
 

@@ -10,17 +10,20 @@
     <title>@ViewBag.Title</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@800&display=swap" rel="stylesheet">
     <style>
-        /* Paleta Suave: Navy Suave (#294B7C), Teal Suave (#4A8EB3), Fondo muy claro (#F5F5F7) */
+        /* Nueva Paleta de Colores: Azul y Dorado Moderno */
         :root {
-            --color-principal: #294B7C; /* Navy Suave - Títulos, links */
-            --color-acento: #4A8EB3; /* Azul Medio Suave - Botón de acción */
-            --color-mustard: #EBD08B; /* Mostaza Suave - Para acentos si se necesitan */
-            --color-fondo-claro: #F5F5F7; /* Fondo general muy claro */
+            --color-azul-intenso: #1A374D; /* Azul oscuro elegante (principal) */
+            --color-dorado-vibrante: #D4AF37; /* Dorado clásico y brillante (acento principal) */
+            --color-azul-claro: #86BBD8; /* Azul más suave para secundarios/detalles */
+            --color-fondo-claro-moderno: #EAF2F8; /* <--- ¡VALOR ACTUALIZADO! (Azul pálido sutil) */
+            --color-gris-texto: #495057; /* Texto general */
+            --color-borde-input: #dee2e6; /* Borde inputs */
         }
 
         body {
-            background-color: var(--color-fondo-claro);
+            background-color: var(--color-fondo-claro-moderno); /* Fondo azul pálido */
             font-family: 'Roboto', sans-serif;
             display: flex;
             justify-content: center;
@@ -34,84 +37,152 @@
             background-color: white;
             padding: 40px;
             border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1); /* Sombra pronunciada */
             max-width: 450px;
             width: 100%;
             text-align: center;
+            position: relative;
+            overflow: hidden;
         }
 
-            .login-container h2 {
-                color: var(--color-principal); /* Navy Suave para el título */
-                font-size: 2.2rem;
-                font-weight: 700;
-                margin-bottom: 25px;
-            }
+        .login-container h2 {
+            color: var(--color-azul-intenso); /* Color de fallback para el h2 */
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 30px; /* Ajuste para dar espacio al contenido */
+            line-height: 1.2;
+        }
 
-            .login-container .form-control {
-                border-radius: 8px;
-                padding: 12px 15px;
-                margin-bottom: 15px;
-                border: 1px solid #ced4da;
-                transition: border-color 0.3s ease, box-shadow 0.3s ease;
-            }
+        /* ESTILO para eSaludCare dentro del h2 */
+        .login-container h2 .brand-name {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 800;
+            color: var(--color-azul-intenso);
+            font-size: 1.1em; /* Tamaño ajustado */
+            display: block;
+            margin-bottom: 0; /* Cero margen inferior */
+            letter-spacing: 0.5px;
+            text-shadow: none;
+        }
 
-                .login-container .form-control:focus {
-                    border-color: var(--color-acento); /* Azul Medio Suave para el foco */
-                    box-shadow: 0 0 0 0.25rem rgba(74, 142, 179, 0.4);
-                }
+        /* ESTILO ESPECÍFICO para el mensaje de bienvenida */
+        .login-container h2 .welcome-message {
+            color: var(--color-dorado-vibrante); /* Dorado */
+            display: block; /* Para que caiga debajo del brand-name */
+            font-size: 0.8em; /* Sutil y más pequeño que la marca */
+            font-weight: 500;
+            margin-top: 5px;
+        }
 
+        /* Estilos de input */
+        .login-container .form-control {
+            border-radius: 8px;
+            padding: 14px 18px;
+            margin-bottom: 15px;
+            border: 1px solid var(--color-borde-input);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            font-size: 1.05rem;
+        }
+
+        .login-container .form-control:focus {
+            border-color: var(--color-azul-claro);
+            box-shadow: 0 0 0 0.25rem rgba(134, 187, 216, 0.4);
+            outline: none;
+        }
+
+        /* ESTADO NORMAL DEL BOTÓN: AZUL INTENSO */
         .btn-login-main {
-            background-color: var(--color-acento); /* Azul Medio Suave para el botón principal */
+            background-color: var(--color-azul-intenso); /* Color inicial Azul Intenso */
             color: white;
             border: none;
-            padding: 12px 25px;
-            font-size: 1.1rem;
+            padding: 15px 30px;
+            font-size: 1.2rem;
             font-weight: bold;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(74, 142, 179, 0.3);
+            border-radius: 10px;
+            box-shadow: 0 8px 20px rgba(26, 55, 77, 0.3);
             transition: all 0.3s ease;
             width: 100%;
-            margin-top: 15px;
+            margin-top: 25px;
+            letter-spacing: 0.8px;
         }
 
-            .btn-login-main:hover {
-                /* Usamos el color principal Navy para el hover y el Mustrad Suave en el gradiente para un toque visual */
-                background: linear-gradient(135deg, var(--color-principal), var(--color-mustard));
-                transform: translateY(-1px);
-                box-shadow: 0 6px 15px rgba(41, 75, 124, 0.5);
-            }
+        /* ESTADO HOVER DEL BOTÓN: DORADO VIBRANTE */
+        .btn-login-main:hover {
+            background-color: var(--color-dorado-vibrante); /* Dorado Vibrante al pasar el cursor */
+            color: var(--color-azul-intenso); /* Texto en azul oscuro para contraste en dorado */
+            transform: translateY(-2px);
+            box-shadow: 0 12px 25px rgba(212, 175, 55, 0.4);
+        }
 
         .form-check {
             text-align: left;
-            margin-bottom: 20px;
-            color: #495057;
-        }
-
-        .form-check-input:checked {
-            background-color: var(--color-principal); /* Navy Suave para el checkbox */
-            border-color: var(--color-principal);
-        }
-
-        .links-adicionales {
-            margin-top: 30px;
+            margin-bottom: 25px;
+            color: var(--color-gris-texto);
             font-size: 0.95rem;
         }
 
-            .links-adicionales a {
-                color: var(--color-principal); /* Links en Navy Suave */
-                text-decoration: none;
-                margin: 0 10px;
-                transition: color 0.3s ease;
-            }
+        .form-check-input:checked {
+            background-color: var(--color-azul-intenso);
+            border-color: var(--color-azul-intenso);
+        }
 
-                .links-adicionales a:hover {
-                    color: var(--color-acento); /* Hover en Azul Medio Suave */
-                    text-decoration: underline;
-                }
+        .links-adicionales {
+            margin-top: 35px;
+            font-size: 1rem;
+        }
+
+        .links-adicionales a {
+            color: var(--color-azul-intenso);
+            text-decoration: none;
+            margin: 0 12px;
+            transition: color 0.3s ease;
+            font-weight: 500;
+        }
+
+        .links-adicionales a:hover {
+            color: var(--color-dorado-vibrante);
+            text-decoration: underline;
+        }
 
         .logo-login {
-            max-width: 280px;
-            margin-bottom: 5px;
+            max-width: 180px;
+            margin-bottom: 30px;
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.08));
+        }
+
+        /* Responsive adjustments */
+        media (max-width: 576px) {
+            .login-container {
+                padding: 30px;
+                border-radius: 10px;
+                box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            }
+            .login-container h2 {
+                font-size: 2rem;
+                margin-bottom: 20px;
+            }
+            .login-container h2 .brand-name {
+                font-size: 1em;
+            }
+            .login-container h2 .welcome-message {
+                font-size: 0.7em;
+            }
+            .login-container .form-control {
+                padding: 12px 15px;
+                margin-bottom: 15px;
+            }
+            .btn-login-main {
+                padding: 12px 25px;
+                font-size: 1.1rem;
+                margin-top: 20px;
+            }
+            .links-adicionales {
+                margin-top: 25px;
+            }
+            .links-adicionales a {
+                display: block;
+                margin: 10px 0;
+            }
         }
     </style>
 </head>
@@ -119,7 +190,10 @@
     <div class="login-container">
         <img src="~/Imagenes/eSaludCare_Logo.png" alt="Logo eSaludCare" class="logo-login" />
 
-        <h2>¡Bienvenido!</h2>
+        <h2>
+            <span class="brand-name">eSaludCare</span>
+            <span class="welcome-message">¡Bienvenido/a de nuevo!</span>
+        </h2>
 
         @* **IMPORTANTE:** Asegúrate de que el formulario tenga el ID "formLogin" para que el script AJAX funcione. *@
         @using (Html.BeginForm("Index", "Login", FormMethod.Post, new { id = "formLogin" }))
@@ -149,50 +223,49 @@
         </div>
     </div>
 
-    @section Scripts {
-        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <script>
-            $(document).ready(function () {
-                $("#formLogin").on("submit", function (e) {
-                    e.preventDefault();
+    @* Se asume que esta sección de scripts va al final del body o en un Layout *@
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#formLogin").on("submit", function (e) {
+                e.preventDefault();
 
-                    const datos = {
-                        correo: $("[name='correo']").val(),
-                        contrasena: $("[name='contrasena']").val()
-                    };
+                const datos = {
+                    correo: $("[name='correo']").val(),
+                    contrasena: $("[name='contrasena']").val()
+                };
 
-                    $.ajax({
-                        url: "/api/v1/login",
-                        type: "POST",
-                        data: JSON.stringify(datos),
-                        contentType: "application/json; charset=utf-8",
-                        success: function (response) {
-                            if (response.success) {
+                $.ajax({
+                    url: "/api/v1/login",
+                    type: "POST",
+                    data: JSON.stringify(datos),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        if (response.success) {
 
-                                localStorage.setItem("token", response.token);
-                                localStorage.setItem("idUsuario", response.id_usuario);
-                                localStorage.setItem("rol", response.role);
-                                localStorage.setItem("nombre", response.nombre);
+                            localStorage.setItem("token", response.token);
+                            localStorage.setItem("idUsuario", response.id_usuario);
+                            localStorage.setItem("rol", response.role);
+                            localStorage.setItem("nombre", response.nombre);
 
-                                alert("Bienvenido, " + response.nombre);
+                            alert("Bienvenido, " + response.nombre);
 
-                                // Redirección
-                                window.location.href = "/Home/Index";
-                            } else {
-                                alert("Usuario o contraseña incorrectos.");
-                            }
-                        },
-                        error: function (xhr) {
-                            if (xhr.status === 401) {
-                                alert("Credenciales incorrectas. Verifica tu correo y contraseña.");
-                            } else {
-                                alert("Error al iniciar sesión: " + xhr.responseText);
-                            }
+                            // Redirección
+                            window.location.href = "/Home/Index";
+                        } else {
+                            alert("Usuario o contraseña incorrectos.");
                         }
-                    });
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 401) {
+                            alert("Credenciales incorrectas. Verifica tu correo y contraseña.");
+                        } else {
+                            alert("Error al iniciar sesión: " + xhr.responseText);
+                        }
+                    }
                 });
             });
-        </script>
-    }
+        });
+    </script>
 </body>
 </html>

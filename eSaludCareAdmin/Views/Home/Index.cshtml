@@ -11,118 +11,202 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            background-color: #E6F8F8;
-            font-family: 'Roboto', sans-serif;
+        /* Paleta de Colores: Navy Intenso (#24274F), Mostaza Intenso (#AD8A1F) */
+        :root {
+            --color-navy-intenso: #24274F;
+            --color-mostaza-intenso: #AD8A1F;
+            --color-fondo-body: #EAF2F8; /* Azul pálido muy suave para el fondo del body */
+            --color-fondo-contenido: white; /* Fondo blanco puro para la tarjeta de contenido */
+            --color-texto-general: #333; /* Color de texto oscuro para legibilidad */
+            --color-gris-claro: #ced4da; /* Borde de inputs */
         }
 
-        .hero {
+        body {
+            background-color: var(--color-fondo-body); /* Fondo azul pálido */
+            font-family: 'Roboto', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             min-height: 100vh;
+            padding: 20px;
+            box-sizing: border-box; /* Asegura que el padding no cause desbordamiento */
+        }
+
+        .welcome-container {
+            display: flex;
+            background-color: var(--color-fondo-contenido); /* Fondo blanco para el contenedor */
+            border-radius: 15px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15); /* Sombra más pronunciada */
+            max-width: 1200px; /* Ancho máximo similar al de una landing page */
+            width: 100%;
+            overflow: hidden; /* Para asegurar que las imágenes con border-radius se vean bien */
+        }
+
+        .image-section {
+            flex: 1; /* Ocupa la mitad del espacio */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px;
+            background-color: #F8F8F8; /* Un fondo ligeramente diferente para la sección de imagen */
+            position: relative;
+            overflow: hidden;
+            border-top-left-radius: 15px;
+            border-bottom-left-radius: 15px;
+        }
+
+        .image-section img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px; /* Bordes redondeados para la imagen */
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+        }
+
+        .content-section {
+            flex: 1; /* Ocupa la otra mitad */
+            padding: 50px; /* Más padding para que respire el contenido */
             display: flex;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
-            padding: 20px;
-            text-align: center;
+            align-items: flex-start; /* Alinear texto a la izquierda */
+            text-align: left;
         }
-
-            .hero h1 {
-                color: #007b7f;
-                font-size: 3rem;
-                font-weight: 700;
-                margin-bottom: 5px;
-            }
-
-            .hero p {
-                color: #495057;
-                font-size: 1.15rem;
-                max-width: 600px;
-                margin-bottom: 30px;
-            }
-
-            .hero .lead {
-                font-size: 1.3rem;
-                color: #00b3b0;
-                font-weight: 400;
-                margin-bottom: 25px;
-            }
 
         .tagline {
-            background-color: #007b7f;
-            color: white;
+            background-color: var(--color-mostaza-intenso); /* Mostaza Intenso de fondo */
+            color: white; /* Texto blanco para contraste */
             padding: 8px 18px;
-            border-radius: 20px;
+            border-radius: 25px; /* Más redondeado */
             display: inline-block;
             margin-bottom: 25px;
-            font-size: 0.9rem;
-            font-weight: 500;
+            font-size: 0.95rem; /* Un poco más grande */
+            font-weight: 600; /* Más peso */
             text-transform: uppercase;
+            letter-spacing: 0.5px; /* Espaciado para más impacto */
+            box-shadow: 0 4px 10px rgba(173, 138, 31, 0.3); /* Sombra para el tagline */
         }
 
-        .img-illustration {
-            max-height: 250px;
-            width: auto;
-            margin: 30px 0;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        .content-section h1 {
+            color: var(--color-navy-intenso); /* Navy Intenso */
+            font-size: 3.2rem; /* Más grande y llamativo */
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.2;
         }
 
-        .btn-login, .btn-panel {
-            padding: 14px 30px;
-            font-size: 1.1rem;
+        .content-section .lead {
+            font-size: 1.4rem; /* Texto principal más grande */
+            color: var(--color-mostaza-intenso); /* Mostaza Intenso */
+            font-weight: 500;
+            margin-bottom: 30px;
+        }
+
+        .content-section p {
+            color: var(--color-texto-general);
+            font-size: 1.05rem;
+            line-height: 1.7;
+            margin-bottom: 35px;
+            max-width: 550px;
+        }
+
+        .btn-accion {
+            padding: 15px 35px; /* Más padding para botones */
+            font-size: 1.15rem; /* Texto de botón más grande */
             font-weight: bold;
-            border-radius: 8px;
+            border-radius: 10px; /* Bordes más redondeados */
             transition: all 0.3s ease;
             text-decoration: none;
+            display: inline-block;
+            margin-right: 15px; /* Espacio entre botones */
+            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.15); /* Sombra para botones */
         }
 
+        /* --- Estilos para el botón INICIAR SESIÓN --- */
         .btn-login {
-            background-color: #007b7f;
+            background-color: var(--color-navy-intenso); /* Navy Intenso */
             color: white;
             border: none;
-            box-shadow: 0 5px 15px rgba(0, 123, 127, 0.4);
         }
 
-            .btn-login:hover {
-                background: linear-gradient(135deg, #007b7f, #00b3b0);
-                transform: translateY(-2px);
-                box-shadow: 0 8px 20px rgba(0, 123, 127, 0.6);
-            }
+        .btn-login:hover {
+            background: linear-gradient(135deg, var(--color-navy-intenso), var(--color-mostaza-intenso)); /* Transición Navy a Mostaza */
+            transform: translateY(-3px); /* Efecto de "levantar" más pronunciado */
+            box-shadow: 0 10px 25px rgba(36, 39, 79, 0.4);
+        }
 
+        /* --- Estilos para el botón IR AL PANEL --- */
         .btn-panel {
-            background-color: #00b3b0;
-            color: white;
+            background-color: var(--color-mostaza-intenso); /* Mostaza Intenso */
+            color: white; /* Texto blanco para contraste */
             border: none;
-            box-shadow: 0 5px 15px rgba(0, 179, 176, 0.4);
         }
 
-            .btn-panel:hover {
-                background: linear-gradient(135deg, #00b3b0, #007b7f);
-                transform: translateY(-2px);
-                box-shadow: 0 8px 20px rgba(0, 179, 176, 0.6);
+        .btn-panel:hover {
+            background: linear-gradient(135deg, var(--color-mostaza-intenso), var(--color-navy-intenso)); /* Transición Mostaza a Navy */
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(173, 138, 31, 0.4);
+        }
+
+        /* Responsive adjustments */
+        media (max-width: 992px) {
+            .welcome-container {
+                flex-direction: column; /* Apila las secciones en pantallas más pequeñas */
+                max-width: 700px;
             }
+            .image-section, .content-section {
+                border-radius: 0; /* Quitar redondeado para columnas apiladas */
+                padding: 40px;
+            }
+            .image-section {
+                 border-top-left-radius: 15px;
+                 border-top-right-radius: 15px;
+            }
+            .content-section {
+                align-items: center; /* Centrar texto en pantallas pequeñas */
+                text-align: center;
+                border-bottom-left-radius: 15px;
+                border-bottom-right-radius: 15px;
+            }
+            .content-section h1 {
+                font-size: 2.5rem;
+            }
+            .content-section .lead {
+                font-size: 1.2rem;
+            }
+            .btn-accion {
+                margin: 10px 0; /* Espacio vertical entre botones */
+                width: 100%; /* Botones de ancho completo */
+            }
+        }
     </style>
 </head>
 <body>
-    <div class="hero">
-        <div class="tagline">PROVEEDOR DE ATENCIÓN MÉDICA DE CONFIANZA</div>
+    <div class="welcome-container">
+        <div class="image-section">
+            <img src="~/Imagenes/doctor-welcome.png" alt="Ilustración de un panel de control médico digital" class="img-fluid">
+        </div>
+        <div class="content-section">
+            <div class="tagline">PROVEEDOR DE ATENCIÓN MÉDICA DE CONFIANZA</div>
 
-        <h1>eSaludCare: Tu Plataforma Central de Atención y Gestión</h1>
+            <h1>eSaludCare: Tu Plataforma Central de Atención y Gestión</h1>
 
-        <p class="lead">Optimizando la administración y la calidad de atención desde <strong>2005</strong>.</p>
+            <p class="lead">Optimizando la administración y la calidad de atención desde <strong>2005</strong>.</p>
 
-        <img src="~/Imagenes/doctor-welcome.png" alt="Ilustración de un panel de control médico digital" class="img-fluid img-illustration">
+            <p>Accede a tu panel para <strong>optimizar la gestión administrativa</strong>, <strong>acceder a expedientes</strong> de pacientes y <strong>facilitar las consultas</strong> con total seguridad.</p>
 
-        <p>Accede a tu panel para <strong>optimizar la gestión administrativa</strong>, <strong>acceder a expedientes</strong> de pacientes y <strong>facilitar las consultas</strong> con total seguridad.</p>
-        
-        @if (Session["Token"] == null)
-        {
-            <a href="/Login" class="btn btn-login">INICIAR SESIÓN Y ACCEDER</a>
-        }
-        else
-        {
-            <a href="/Home/Usuarios" class="btn btn-panel">IR AL PANEL</a>
-        }
+            <div class="d-flex flex-column flex-md-row">
+                @* Contenedor para los botones, responsive *@
+                @if (Session["Token"] == null)
+                {
+                    <a href="/Login" class="btn-accion btn-login">INICIAR SESIÓN Y ACCEDER</a>
+                }
+                else
+                {
+                    <a href="/Home/Usuarios" class="btn-accion btn-panel">IR AL PANEL</a>
+                }
+            </div>
+        </div>
     </div>
 </body>
 </html>

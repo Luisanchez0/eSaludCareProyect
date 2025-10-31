@@ -11,8 +11,16 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        /* Paleta Suave: Navy Suave (#294B7C), Teal Suave (#4A8EB3), Fondo muy claro (#F5F5F7) */
+        :root {
+            --color-principal: #294B7C; /* Navy Suave - Títulos, links */
+            --color-acento: #4A8EB3; /* Azul Medio Suave - Botón de acción */
+            --color-mustard: #EBD08B; /* Mostaza Suave - Para acentos si se necesitan */
+            --color-fondo-claro: #F5F5F7; /* Fondo general muy claro */
+        }
+
         body {
-            background-color: #E6F8F8;
+            background-color: var(--color-fondo-claro);
             font-family: 'Roboto', sans-serif;
             display: flex;
             justify-content: center;
@@ -33,7 +41,7 @@
         }
 
             .login-container h2 {
-                color: #007b7f;
+                color: var(--color-principal); /* Navy Suave para el título */
                 font-size: 2.2rem;
                 font-weight: 700;
                 margin-bottom: 25px;
@@ -48,28 +56,29 @@
             }
 
                 .login-container .form-control:focus {
-                    border-color: #00b3b0;
-                    box-shadow: 0 0 0 0.25rem rgba(0, 179, 176, 0.25);
+                    border-color: var(--color-acento); /* Azul Medio Suave para el foco */
+                    box-shadow: 0 0 0 0.25rem rgba(74, 142, 179, 0.4);
                 }
 
         .btn-login-main {
-            background-color: #007b7f;
+            background-color: var(--color-acento); /* Azul Medio Suave para el botón principal */
             color: white;
             border: none;
             padding: 12px 25px;
             font-size: 1.1rem;
             font-weight: bold;
             border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 123, 127, 0.3);
+            box-shadow: 0 4px 12px rgba(74, 142, 179, 0.3);
             transition: all 0.3s ease;
             width: 100%;
             margin-top: 15px;
         }
 
             .btn-login-main:hover {
-                background: linear-gradient(135deg, #007b7f, #00b3b0);
+                /* Usamos el color principal Navy para el hover y el Mustrad Suave en el gradiente para un toque visual */
+                background: linear-gradient(135deg, var(--color-principal), var(--color-mustard));
                 transform: translateY(-1px);
-                box-shadow: 0 6px 15px rgba(0, 123, 127, 0.5);
+                box-shadow: 0 6px 15px rgba(41, 75, 124, 0.5);
             }
 
         .form-check {
@@ -79,8 +88,8 @@
         }
 
         .form-check-input:checked {
-            background-color: #007b7f;
-            border-color: #007b7f;
+            background-color: var(--color-principal); /* Navy Suave para el checkbox */
+            border-color: var(--color-principal);
         }
 
         .links-adicionales {
@@ -89,21 +98,20 @@
         }
 
             .links-adicionales a {
-                color: #007b7f;
+                color: var(--color-principal); /* Links en Navy Suave */
                 text-decoration: none;
                 margin: 0 10px;
                 transition: color 0.3s ease;
             }
 
                 .links-adicionales a:hover {
-                    color: #00b3b0;
+                    color: var(--color-acento); /* Hover en Azul Medio Suave */
                     text-decoration: underline;
                 }
 
         .logo-login {
             max-width: 280px;
             margin-bottom: 5px;
-        }
         }
     </style>
 </head>
@@ -113,7 +121,8 @@
 
         <h2>¡Bienvenido!</h2>
 
-        @using (Html.BeginForm("Index", "Login", FormMethod.Post))
+        @* **IMPORTANTE:** Asegúrate de que el formulario tenga el ID "formLogin" para que el script AJAX funcione. *@
+        @using (Html.BeginForm("Index", "Login", FormMethod.Post, new { id = "formLogin" }))
         {
             <div class="mb-3">
                 <input type="email" class="form-control" name="correo" placeholder="Ingrese su dirección de correo electrónico..." required />
@@ -127,7 +136,7 @@
             </div>
             <button type="submit" class="btn btn-login-main">Iniciar Sesión</button>
 
-            @*  Error visual si el login falla *@
+            @* Error visual si el login falla *@
             if (ViewBag.Error != null)
             {
                 <div class="alert alert-danger mt-3">@ViewBag.Error</div>
@@ -135,7 +144,7 @@
         }
 
         <div class="links-adicionales">
-            <a href="#">¿Olvidó su contraseña?</a>"
+            <a href="#">¿Olvidó su contraseña?</a>
             <a href="@Url.Action("Registro","Login")">¡Crea una cuenta!</a>
         </div>
     </div>
@@ -148,8 +157,8 @@
                     e.preventDefault();
 
                     const datos = {
-                        correo: $("#email").val(),
-                        contrasena: $("#password").val()
+                        correo: $("[name='correo']").val(),
+                        contrasena: $("[name='contrasena']").val()
                     };
 
                     $.ajax({
@@ -159,21 +168,16 @@
                         contentType: "application/json; charset=utf-8",
                         success: function (response) {
                             if (response.success) {
-                                
+
                                 localStorage.setItem("token", response.token);
-                                localStorage.setItem("idUsuario", response.id_usuario); 
+                                localStorage.setItem("idUsuario", response.id_usuario);
                                 localStorage.setItem("rol", response.role);
                                 localStorage.setItem("nombre", response.nombre);
 
                                 alert("Bienvenido, " + response.nombre);
 
-                                if (response.role === "admin") {
-                                    window.location.href = "/Home/Index";
-                                } else if (response.role === "doctor") {
-                                    window.location.href = "/Home/Index";
-                                } else {
-                                    window.location.href = "/Home/Index";
-                                }
+                                // Redirección
+                                window.location.href = "/Home/Index";
                             } else {
                                 alert("Usuario o contraseña incorrectos.");
                             }

@@ -6,81 +6,127 @@
 }
 
 <style>
+    /* Nueva Paleta de Colores: Azul y Dorado Moderno */
+    :root {
+        --color-azul-intenso: #1A374D; /* Azul oscuro elegante (principal) */
+        --color-dorado-vibrante: #D4AF37; /* Dorado clásico y brillante (acento principal) */
+        --color-azul-claro: #86BBD8; /* Azul más suave para secundarios/detalles */
+        --color-gris-texto: #495057; /* Texto general */
+        --color-rojo-peligro: #dc3545; /* Rojo de Bootstrap */
+        --color-amarillo-advertencia: #ffc107; /* Amarillo de Bootstrap */
+    }
+
     /* Estilo del Encabezado de la Página */
     h2 {
-        color: #007b7f; /* Verde azulado de la marca */
+        color: var(--color-azul-intenso);
         font-weight: 700;
         margin-bottom: 5px;
-        font-size: 1.8rem;
+        font-size: 2rem; /* Ligeramente más grande */
     }
 
     /* Contador de Perfiles */
     .perfiles-count {
         margin-bottom: 25px;
-        font-size: 0.95rem;
-        color: #495057;
+        font-size: 1rem; /* Ligeramente más grande */
+        color: var(--color-gris-texto);
     }
 
     /* Estilos de Tabla */
     .table thead th {
-        background-color: #007b7f;
+        background-color: var(--color-azul-intenso); /* Encabezado de tabla: Azul Intenso */
         color: white;
         font-weight: 500;
         text-transform: uppercase;
-        font-size: 0.8rem;
-        letter-spacing: 0.5px;
+        font-size: 0.85rem;
+        letter-spacing: 0.8px; /* Mayor espaciado para un look premium */
         border: none !important;
-        padding: 12px 15px;
+        padding: 15px 18px; /* Mayor padding */
         vertical-align: middle;
     }
 
     .table tbody tr td {
-        padding: 12px 15px;
+        padding: 12px 18px; /* Padding ajustado */
         font-size: 0.95rem;
         vertical-align: middle;
         border-color: #e9ecef;
     }
 
     .table-striped tbody tr:nth-of-type(odd) {
-        background-color: #f8f8f8;
+        background-color: #f5f9fc; /* Fondo a rayas muy sutil para mejor contraste */
     }
 
     /* Estilos para la Columna de Acciones */
     .action-icons-group a {
-        padding: 4px 8px;
+        padding: 6px 10px; /* Botones de acción más grandes */
         margin-right: 5px;
-        border-radius: 4px;
-        font-size: 0.8rem;
+        border-radius: 6px; /* Bordes más redondeados */
+        font-size: 0.85rem;
         font-weight: 600;
         line-height: 1;
-        transition: all 0.2s ease;
+        transition: all 0.3s ease;
         text-decoration: none;
     }
 
-    /* Estilo para el botón de Agregar Usuario (Verde institucional) */
+    /* Estilo para el botón de Agregar Usuario (Principal: Dorado Vibrante) */
     .btn-crear-usuario {
-        background-color: #00b3b0; /* Color de marca */
-        color: white;
-        font-weight: 600;
-        padding: 8px 15px;
-        border-radius: 6px;
-        transition: background-color 0.2s ease;
+        background-color: var(--color-dorado-vibrante); /* Dorado como acento principal */
+        color: var(--color-azul-intenso); /* Texto en azul oscuro */
+        font-weight: 700;
+        padding: 10px 20px;
+        border-radius: 8px;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 10px rgba(212, 175, 55, 0.3);
     }
 
         .btn-crear-usuario:hover {
-            background-color: #007b7f; /* Tono más oscuro al pasar el ratón */
+            background-color: var(--color-azul-intenso); /* Azul Intenso al pasar el ratón */
             color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(26, 55, 77, 0.4);
         }
 
     /* Colores de Marca y Contraste para los Botones de Acción */
+    /* VER: Azul más claro (secundario de marca) */
     .btn-perfil-ver {
-        background-color: #00b3b0;
-        color: white;
+        background-color: var(--color-azul-claro);
+        color: var(--color-azul-intenso);
+        border: 1px solid var(--color-azul-claro);
     }
 
         .btn-perfil-ver:hover {
-            background-color: #007b7f;
+            background-color: var(--color-azul-intenso);
             color: white;
+            border-color: var(--color-azul-intenso);
+        }
+
+    /* EDICIÓN: Mantener Bootstrap Warning pero darle un toque */
+    .btn-warning {
+        background-color: var(--color-amarillo-advertencia);
+        border-color: var(--color-amarillo-advertencia);
+        color: #333; /* Texto más oscuro para mejor legibilidad */
+    }
+
+        .btn-warning:hover {
+            background-color: #e0a800;
+            border-color: #e0a800;
+        }
+
+    /* ELIMINAR: Mantener Bootstrap Danger */
+    .btn-danger {
+        background-color: var(--color-rojo-peligro);
+        border-color: var(--color-rojo-peligro);
+    }
+
+    /* OTROS: Usar colores Neutros/Azules */
+    .btn-secondary, .btn-dark {
+        background-color: #6c757d;
+        border-color: #6c757d;
+        color: white;
+    }
+
+        .btn-secondary:hover, .btn-dark:hover {
+            background-color: #5a6268;
+            border-color: #5a6268;
         }
 </style>
 
@@ -124,8 +170,7 @@
         </tbody>
     </table>
 
-    @* REUBICACIÓN DEL BOTÓN DEBAJO DE LA TABLA, ALINEADO A LA IZQUIERDA *@
-    <div class="mt-3">
+    <div class="mt-4">
         <a href="@Url.Action("Crear", "Perfiles")" class="btn btn-crear-usuario">
             <i class="fas fa-plus"></i> Agregar Nuevo Usuario
         </a>
@@ -137,7 +182,7 @@ else
         <strong>Atención:</strong> @ViewBag.Error
     </div>
 
-    <div class="mt-3">
+    <div class="mt-4">
         <a href="@Url.Action("Crear", "Perfiles")" class="btn btn-crear-usuario">
             <i class="fas fa-plus"></i> Agregar Nuevo Usuario
         </a>

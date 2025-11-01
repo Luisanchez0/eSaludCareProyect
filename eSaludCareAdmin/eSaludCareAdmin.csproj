@@ -321,6 +321,7 @@
     <Content Include="Views\ConsultasPacientes\Index.cshtml" />
     <Content Include="Views\Medicos\Index.cshtml" />
     <Content Include="Views\Login\Registro.cshtml" />
+    <Content Include="Views\ConsultasAgendadas\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

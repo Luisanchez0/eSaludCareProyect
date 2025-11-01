@@ -1,0 +1,171 @@
+﻿@{
+    ViewBag.Title = "Mi Perfil | eSaludCare";
+}
+<main class="main">
+    <section id="hero" class="hero section">
+        <div class="container">
+
+            <div class="container mt-4">
+                <h3 class="text-primary mb-4">Mi Perfil</h3>
+
+                <!-- 🧩 Toast de notificación -->
+                <div class="position-fixed top-0 end-0 p-3" style="z-index: 1100">
+                    <div id="toastPerfil" class="toast align-items-center text-white border-0 d-none"
+                         role="alert" aria-live="assertive" aria-atomic="true">
+                        <div class="d-flex">
+                            <div class="toast-body" id="toastMensaje"></div>
+                            <button type="button" class="btn-close btn-close-white me-2 m-auto"
+                                    data-bs-dismiss="toast" aria-label="Cerrar"></button>
+                        </div>
+                    </div>
+                </div>
+
+                <form id="formPerfil">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label><span class="texto-opaco">Nombre (No disponible por el momento)</span></label>
+                            <input id="nombre" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-6">
+                            <label>Apellido (No disponible por el momento)</label>
+                            <input id="apellido" class="form-control" readonly />
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+                            <label>Correo (No disponible por el momento)</label>
+                            <input id="correo" class="form-control" readonly />
+                        </div>
+                        <div class="col-md-6 mt-3">
+                            <label>Teléfono</label>
+                            <input id="telefono" class="form-control" />
+                        </div>
+
+                        <div class="col-md-6 mt-3">
+                            <label>Fecha de Nacimiento</label>
+                            <input id="fechaNacimiento" type="date" class="form-control" />
+                        </div>
+                        <div class="col-md-6 mt-3">
+                            <label>Género</label>
+                            <select id="genero" class="form-control">
+                                <option value="">Seleccione...</option>
+                                <option>Masculino</option>
+                                <option>Femenino</option>
+                                <option>Otro</option>
+                            </select>
+                        </div>
+
+                        <div class="col-md-12 mt-3">
+                            <label>Dirección</label>
+                            <textarea id="direccion" class="form-control" rows="3"></textarea>
+                        </div>
+
+                        <div class="col-md-12 text-end mt-4">
+                            <button type="submit" class="btn-getstarted px-4">Guardar Cambios</button>
+    
+                        </div>
+                    </div>
+                </form>
+            </div>
+            </div>
+    </section>
+</main>
+
+            @section scripts {
+                <script>
+                    document.addEventListener("DOMContentLoaded", async () => {
+                        const token = localStorage.getItem("token");
+
+                        // Si no hay token, redirige al login
+                        if (!token || token.trim() === "") {
+                            window.location.href = '/Login/Index';
+                            return;
+                        }
+
+                        // Elementos del toast
+                        const toastEl = document.getElementById("toastPerfil");
+                        const toastBody = document.getElementById("toastMensaje");
+
+                        const mostrarToast = (mensaje, tipo = "success") => {
+                            toastEl.classList.remove("d-none", "bg-danger", "bg-success");
+                            toastEl.classList.add(tipo === "success" ? "bg-success" : "bg-danger");
+                            toastBody.textContent = mensaje;
+                            const toast = new bootstrap.Toast(toastEl, { delay: 3000 });
+                            toast.show();
+                        };
+
+                        const form = document.getElementById("formPerfil");
+
+                        // 🟢 Cargar datos del perfil
+                        try {
+                            const response = await fetch(`/api/v1/paciente/perfil`, {
+                                headers: { "Authorization": "Bearer " + token }
+                            });
+
+                            if (response.status === 401) {
+                                localStorage.removeItem("token");
+                                window.location.href = '/Login/Index';
+                                return;
+                            }
+
+                            if (!response.ok) throw new Error("Error al obtener perfil");
+
+                            const perfil = await response.json();
+
+                            // Asignar valores a los inputs
+                            document.getElementById("nombre").value = perfil.Nombre || "";
+                            document.getElementById("apellido").value = perfil.Apellido || "";
+                            document.getElementById("correo").value = perfil.Correo || "";
+                            document.getElementById("telefono").value = perfil.Telefono || "";
+                            if (perfil.FechaNacimiento)
+                                document.getElementById("fechaNacimiento").value = perfil.FechaNacimiento.split('T')[0];
+                            document.getElementById("genero").value = perfil.Genero || "";
+                            document.getElementById("direccion").value = perfil.Direccion || "";
+
+                        } catch (error) {
+                            mostrarToast("❌ Error al cargar el perfil.", "danger");
+                            console.error(error);
+                        }
+
+                        // 🟢 Guardar cambios
+                        form.addEventListener("submit", async (e) => {
+                            e.preventDefault();
+
+                            const data = {
+                                Telefono: document.getElementById("telefono").value,
+                                FechaNacimiento: document.getElementById("fechaNacimiento").value,
+                                Genero: document.getElementById("genero").value,
+                                Direccion: document.getElementById("direccion").value
+                            };
+
+                            try {
+                                const response = await fetch(`/api/v1/paciente/actualizarPerfil`, {
+                                    method: "PUT",
+                                    headers: {
+                                        "Content-Type": "application/json",
+                                        "Authorization": "Bearer " + token
+                                    },
+                                    body: JSON.stringify(data)
+                                });
+
+                                const text = await response.text();
+                                let result;
+                                try { result = JSON.parse(text); } catch { result = text; }
+
+                                const mensaje =
+                                    typeof result === "string"
+                                        ? result
+                                        : result?.mensaje || "";
+
+                                if (response.ok) {
+                                    mostrarToast(mensaje || "✅ Perfil actualizado correctamente.", "success");
+                                } else {
+                                    mostrarToast(mensaje || "❌ No se pudo actualizar el perfil.", "danger");
+                                }
+                            } catch (error) {
+                                mostrarToast("⚠️ Error de conexión con el servidor.", "danger");
+                                console.error(error);
+                            }
+                        });
+                    });
+                </script>
+            }

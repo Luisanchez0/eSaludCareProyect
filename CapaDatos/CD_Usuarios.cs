@@ -164,10 +164,10 @@ namespace CapaDatos
 
             try
             {
-                using (var conexion = new NpgsqlConnection("Host = localhost; Port = 5432; Username = postgres; Password = 102538; Database = clinica_db"))
+                using (var con = conexion.Conectar())
                 {
-                    conexion.Open();
-                    using (var comando = new NpgsqlCommand("SELECT * FROM usuarios", conexion))
+                    con.Open();
+                    using (var comando = new NpgsqlCommand("SELECT * FROM usuarios", con))
                     {
                         using (var reader = comando.ExecuteReader())
                         {
@@ -252,5 +252,52 @@ namespace CapaDatos
 
             return resultado;
         }
+
+        public UsuarioEntidad ObtenerUsuarioPorId(int idUsuario)
+        {
+            UsuarioEntidad usuario = null;
+            try
+            {
+                using (var con = conexion.Conectar())
+                {
+                    con.Open();
+                    string query = @"SELECT id_usuario, nombre, apellido, correo, telefono, rol, esta_activo, fecha_registro, fecha_actualizacion
+                                 FROM usuarios
+                                 WHERE id_usuario = @id";
+                    using (var cmd = new NpgsqlCommand(query, con))
+                    {
+                        cmd.Parameters.AddWithValue("@id", idUsuario);
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                usuario = new UsuarioEntidad
+                                {
+                                    IdUsuario = Convert.ToInt32(reader["id_usuario"]),
+                                    Nombre = reader["nombre"].ToString(),
+                                    Apellido = reader["apellido"].ToString(),
+                                    Correo = reader["correo"].ToString(),
+                                    Telefono = reader["telefono"] != DBNull.Value ? reader["telefono"].ToString() : null,
+                                    Rol = reader["rol"].ToString(),
+                                    FechaRegistro = Convert.ToDateTime(reader["fecha_registro"]),
+                                    fecha_actualizacion =Convert.ToDateTime(reader["fecha_actualizacion"])
+                                };
+                            }
+                        }
+
+                        return usuario;
+
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejo de errores si es necesario
+            }
+            return usuario;
+        }
+
+
     }
 }

@@ -39,5 +39,12 @@ namespace eSaludCareUsers.Controllers
             ViewBag.Message = "Nuestros servicios";
             return View();
         }
+
+        public ActionResult MiPerfil() 
+        {
+            ViewBag.Message = "Tu Perfil de Uusuario";
+            return View();
+        }
+
     }
 }

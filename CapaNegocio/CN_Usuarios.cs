@@ -74,6 +74,11 @@ namespace CapaNegocio
             Console.WriteLine("Hash generado: " + hash);
         }
 
+        public UsuarioEntidad ObtenerUsuarioPorId(int idUsuario)
+        {
+            return objCapaDato.ObtenerUsuarioPorId(idUsuario);
+        }
+
     }
 
 

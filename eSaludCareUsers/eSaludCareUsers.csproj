@@ -250,6 +250,8 @@
     <Compile Include="Controllers\IActionResult.cs" />
     <Compile Include="Controllers\LoginApiController.cs" />
     <Compile Include="Controllers\MedicosController.cs" />
+    <Compile Include="Controllers\PerfilPacienteApiController.cs" />
+    <Compile Include="Controllers\PerfilPacienteController.cs" />
     <Compile Include="Controllers\RegistroApiController.cs" />
     <Compile Include="Controllers\UsuarioApiController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
@@ -435,12 +437,12 @@
     <Content Include="Views\Home\Departamentos.cshtml" />
     <Content Include="Views\Citas\MisCitas.cshtml" />
     <Content Include="Views\Home\Servicios.cshtml" />
+    <Content Include="Views\PerfilPaciente\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Views\CitaMedica\" />
     <Folder Include="Views\ConsultasPacientes\" />
-    <Folder Include="Views\HorariosDisponibles\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

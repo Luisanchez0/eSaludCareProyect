@@ -55,6 +55,7 @@ namespace CapaEntidad
         public DateTime FechaRegistro { get; set; } = DateTime.Now;
         public string Especialidad { get; set; }
         public string NumeroCedula { get; set; }
+        public DateTime fecha_actualizacion { get; set; }
 
 
 

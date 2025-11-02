@@ -15,25 +15,25 @@ namespace CapaDatos
 
         public List<CitaAgendadaDTO> ListarCitas()
         {
-            var lista = new List<CitaAgendadaDTO>();
+            List<CitaAgendadaDTO> lista = new List<CitaAgendadaDTO>();
 
             using (var conn = new NpgsqlConnection(_cadenaConexion))
             {
                 conn.Open();
                 using (var cmd = new NpgsqlCommand(@"
                     SELECT 
-                        c.id_cita,
-                        u_p.nombre || ' ' || u_p.apellido AS NombrePaciente,
-                        u_m.nombre || ' ' || u_m.apellido AS NombreMedico,
-                        c.fecha,
-                        TO_CHAR(c.hora, 'HH24:MI') AS Hora,
-                        m.especialidad,
-                        c.estado
-                    FROM citas c
-                    JOIN pacientes p ON c.id_paciente = p.id_paciente
-                    JOIN usuarios u_p ON p.id_usuario = u_p.id_usuario
-                    JOIN medicos m ON c.id_medico = m.id_medico
-                    JOIN usuarios u_m ON m.id_usuario = u_m.id_usuario", conn))
+                        ci.id_cita,
+                        us.nombre AS nombre_paciente,
+                        med.nombre AS nombre_medico,
+                        ci.fecha_cita,
+                        TO_CHAR(ci.fecha_cita, 'HH24:MI') AS hora,
+                        me.especialidad,
+                        ci.estado
+                    FROM citas ci
+                    JOIN pacientes pa ON ci.id_paciente = pa.id_paciente
+                    JOIN usuarios us ON pa.id_usuario = us.id_usuario
+                    JOIN medicos me ON ci.id_medico = me.id_medico
+                    JOIN usuarios med ON me.id_usuario = med.id_usuario", conn))
                 {
                     using (var reader = cmd.ExecuteReader())
                     {

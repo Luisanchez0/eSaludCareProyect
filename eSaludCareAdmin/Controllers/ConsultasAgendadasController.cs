@@ -19,8 +19,7 @@ namespace eSaludCareAdmin.Controllers
         // GET: ConsultasAgendadas
         public ActionResult Index()
         {
-            List<CitaAgendadaDTO> citas = negocio.ObtenerCitasAgendadas();
-            return View(citas);
+            return View(new List<CitaAgendadaDTO>()); // Prueba con una lista vacía
         }
     }
 }

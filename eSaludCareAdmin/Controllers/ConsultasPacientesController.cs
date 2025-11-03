@@ -1,23 +1,29 @@
-﻿using CapaEntidad;
-using eSaludCareUsers.Controllers;
+﻿using System.Collections.Generic;
 using System.Web.Mvc;
-using System.Collections.Generic;
-using System.Threading.Tasks;
+using CapaEntidad;
+using CapaNegocio;
 
-
-public class ConsultasPacientesController : Controller
+namespace eSaludCareAdmin.Controllers
 {
-    private readonly CN_ConsultasPacientes consultasPacientes;
-
-    public ConsultasPacientesController()
+    public class ConsultasPacientesController : Controller
     {
-        string cadenaConexion = "Host=localhost;Port=5432;Database=clinica_db;Username=postgres;Password=102538;";
-        consultasPacientes = new CN_ConsultasPacientes(cadenaConexion);
-    }
+        private readonly CN_ConsultasPacientes consultasPacientes;
 
-    public async Task<ActionResult> Index()
-    {
-        List<ConsultaPacientesDTO> pacientes = await consultasPacientes.ObtenerPacientes();
-        return View(pacientes);
+        public ConsultasPacientesController()
+        {
+            string cadenaConexion = "Host=localhost;Port=5432;Database=clinica_db;Username=postgres;Password=102538";
+            consultasPacientes = new CN_ConsultasPacientes(cadenaConexion);
+        }
+
+        public async System.Threading.Tasks.Task<ActionResult> Index()
+        {
+            if (Session["Rol"]?.ToString() != "admin")
+            {
+                return RedirectToAction("Index", "Login");
+            }
+
+            var pacientes = await consultasPacientes.ObtenerPacientes();
+            return View(pacientes);
+        }
     }
 }

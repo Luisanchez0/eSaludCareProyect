@@ -1,21 +1,25 @@
 ﻿using CapaEntidad;
+using CapaDatos;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-public class CN_ConsultasPacientes
+namespace CapaNegocio
 {
-    private readonly CD_ConsultasPacientes accesoDatos;
-
-    public CN_ConsultasPacientes(string cadenaConexion)
+    public class CN_ConsultasPacientes
     {
-        accesoDatos = new CD_ConsultasPacientes(cadenaConexion);
-    }
+        private readonly CD_ConsultasPacientes accesoDatos;
 
-    public async Task<List<ConsultaPacientesDTO>> ObtenerPacientes()
-    {
-        var pacientes = await accesoDatos.ConsultaPacientes();
+        public CN_ConsultasPacientes(string cadenaConexion)
+        {
+            accesoDatos = new CD_ConsultasPacientes(cadenaConexion);
+        }
 
-        // Aquí podrías aplicar lógica adicional si fuera necesario
-        return pacientes;
+        public async Task<List<ConsultasPacientesDTO>> ObtenerPacientes()
+        {
+            var pacientes = await accesoDatos.ObtenerPacientes();
+
+            // Aquí podrías aplicar lógica adicional si fuera necesario
+            return pacientes;
+        }
     }
 }

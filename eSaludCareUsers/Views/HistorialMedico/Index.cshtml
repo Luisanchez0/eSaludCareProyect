@@ -2,72 +2,70 @@
     ViewBag.Title = "Historial Médico | eSaludCare";
 }
 
-
 <main class="main">
     <!-- Page Title -->
     <div class="page-title">
         <div class="heading">
-            <div class="container"
+            <div class="container">
+                <div class="container mt-4">
+                    <h3 class="text-primary mb-4"> Historial Médico</h3>
 
-<div class="container mt-4">
-    <h3 class="text-primary mb-4"> Historial Médico</h3>
+                    <div id="alerta" class="alert d-none"></div>
 
-    <div id="alerta" class="alert d-none"></div>
+                    <form id="formHistorialMedico">
+                        <input type="hidden" id="id_historial_medico" />
 
-    <form id="formHistorialMedico">
-        <input type="hidden" id="id_historial_medico" />
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Enfermedades previas</label>
+                            <textarea class="form-control" id="enfermedades_previas" rows="2" placeholder="Ejemplo: Diabetes, hipertensión..."></textarea>
+                        </div>
 
-        <div class="mb-3">
-            <label class="form-label fw-bold">Enfermedades previas</label>
-            <textarea class="form-control" id="enfermedades_previas" rows="2" placeholder="Ejemplo: Diabetes, hipertensión..."></textarea>
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Alergias</label>
+                            <textarea class="form-control" id="alergias" rows="2" placeholder="Ejemplo: Penicilina, mariscos..."></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Cirugías</label>
+                            <textarea class="form-control" id="cirugias" rows="2" placeholder="Ejemplo: Apendicectomía en 2018..."></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Medicamentos actuales</label>
+                            <textarea class="form-control" id="medicamentos_actuales" rows="2" placeholder="Ejemplo: Losartán 50mg diarios..."></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Antecedentes familiares</label>
+                            <textarea class="form-control" id="antecedentes_familiares" rows="2" placeholder="Ejemplo: Madre con diabetes tipo II..."></textarea>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-bold">Hábitos</label>
+                            <textarea class="form-control" id="habitos" rows="2" placeholder="Ejemplo: Fuma ocasionalmente, hace ejercicio 3 veces por semana..."></textarea>
+                        </div>
+
+                        <div class="col-12 mt-3">
+                            <button id="btnGuardar" type="submit" class="btn btn-getstarted">Guardar Historial Médico</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
         </div>
-
-        <div class="mb-3">
-            <label class="form-label fw-bold">Alergias</label>
-            <textarea class="form-control" id="alergias" rows="2" placeholder="Ejemplo: Penicilina, mariscos..."></textarea>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label fw-bold">Cirugías</label>
-            <textarea class="form-control" id="cirugias" rows="2" placeholder="Ejemplo: Apendicectomía en 2018..."></textarea>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label fw-bold">Medicamentos actuales</label>
-            <textarea class="form-control" id="medicamentos_actuales" rows="2" placeholder="Ejemplo: Losartán 50mg diarios..."></textarea>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label fw-bold">Antecedentes familiares</label>
-            <textarea class="form-control" id="antecedentes_familiares" rows="2" placeholder="Ejemplo: Madre con diabetes tipo II..."></textarea>
-        </div>
-
-        <div class="mb-3">
-            <label class="form-label fw-bold">Hábitos</label>
-            <textarea class="form-control" id="habitos" rows="2" placeholder="Ejemplo: Fuma ocasionalmente, hace ejercicio 3 veces por semana..."></textarea>
-        </div>
-
-        <div class="col-12 mt-3">
-            <button id="btnGuardar" type="submit" class="btn btn-getstarted">Guardar Historial Médico</button>
-        </div>
-    </form>
-</div>
-</div>
-        </div>
+    </div>
 </main>
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
-        // ===============================
-        // CONFIGURACIÓN Y VARIABLES
-        // ===============================
-        const apiBase = `${window.location.origin}/api/v1/HistMedic`; // ✅ coincide con tu controlador
+        const apiBase = `${window.location.origin}/api/v1/HistMedic`;
         let idHistorial = 0;
-        let idPaciente = localStorage.getItem("pacienteId"); // ✅ coincide con tu localStorage
+        let idPaciente = null;
 
         $(document).ready(function () {
             // Si no hay paciente válido, obtenerlo desde el backend
+            idPaciente = localStorage.getItem("pacienteId");
+
             if (!idPaciente || idPaciente === "0") {
                 const idUsuario = localStorage.getItem("idUsuario");
                 const token = localStorage.getItem("token");

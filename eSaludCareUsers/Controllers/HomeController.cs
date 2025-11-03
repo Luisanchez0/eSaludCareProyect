@@ -46,5 +46,10 @@ namespace eSaludCareUsers.Controllers
             return View();
         }
 
+        public ActionResult CambiaContrasena()
+        {
+            return View();
+        }
+
     }
 }

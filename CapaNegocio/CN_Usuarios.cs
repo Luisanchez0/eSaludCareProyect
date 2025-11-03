@@ -79,6 +79,13 @@ namespace CapaNegocio
             return objCapaDato.ObtenerUsuarioPorId(idUsuario);
         }
 
+
+        public bool CambiarContrasena(int idUsuario, string nuevaClave)
+        {
+            string claveEncriptada = BCrypt.Net.BCrypt.HashPassword(nuevaClave);
+            return objCapaDato.CambiarContrasena(idUsuario, claveEncriptada);
+        }
+
     }
 
 

@@ -1,0 +1,80 @@
+﻿@{
+    ViewBag.Title = "Recuperar Contraseña | eSaludCare";
+}
+
+
+<main class="main">
+    <section id="hero" class="hero section">
+        <div class="container">
+            <h3 class="department-name text-primary mb-4">Recuperar Contraseña</h3>
+
+            <div class="row align-items-center">
+                <form id="formRecuperar" class="row g-3" autocomplete="off">
+                    <div class="col-md-8">
+                        <label for="email"><span class="text-danger">*</span> Correo Electrónico</label>
+                        <input type="email" id="email" class="form-control" required>
+                    </div>
+
+                    <div class="col-12">
+                        <i><b>Nota:</b> Ingresa el correo con el que te registraste. Recibirás una clave temporal por correo electrónico.</i>
+                    </div>
+
+                    <div class="col-12 mt-3">
+                        <button id="btnRecuperar" type="submit" class="btn btn-getstarted">Enviar Clave Temporal</button>
+                    </div>
+
+                    <div class="col-12 mt-3">
+                        <a href="@Url.Action("Index", "Login")">Volver a Iniciar Sesión</a>
+                    </div>
+                </form>
+            </div>
+
+            <div id="alerta" class="alert mt-4 d-none"></div>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#formRecuperar").on("submit", function (e) {
+                e.preventDefault();
+
+                const correo = $("#email").val().trim();
+                if (correo === "") {
+                    mostrarAlerta("Por favor ingresa tu correo electrónico.", "warning");
+                    return;
+                }
+
+                $("#btnRecuperar").prop("disabled", true).text("Enviando...");
+
+                $.ajax({
+                    url: "/api/v1/recuperar-clave",
+                    type: "POST",
+                    data: JSON.stringify(correo),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        mostrarAlerta(response.mensaje || "Se ha enviado la nueva clave temporal a tu correo.", "success");
+                        $("#btnRecuperar").prop("disabled", false).text("Enviar Clave Temporal");
+                        $("#formRecuperar")[0].reset();
+                    },
+                    error: function (xhr) {
+                        let msg = "Error al procesar la solicitud.";
+                        if (xhr.responseText) msg = xhr.responseText;
+                        mostrarAlerta(msg, "danger");
+                        $("#btnRecuperar").prop("disabled", false).text("Enviar Clave Temporal");
+                    }
+                });
+            });
+
+            function mostrarAlerta(mensaje, tipo) {
+                const alerta = $("#alerta");
+                alerta.removeClass("d-none alert-success alert-danger alert-warning");
+                alerta.addClass(`alert alert-${tipo}`);
+                alerta.text(mensaje);
+            }
+        });
+    </script>
+}

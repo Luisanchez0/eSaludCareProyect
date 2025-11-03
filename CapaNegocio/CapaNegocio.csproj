@@ -117,6 +117,7 @@
     <Compile Include="CN_Citas.cs" />
     <Compile Include="CN_ConsultasCitas.cs" />
     <Compile Include="CN_ConsultasPacientes.cs" />
+    <Compile Include="CN_Correos.cs" />
     <Compile Include="CN_HistorialClinico.cs" />
     <Compile Include="CN_HistorialMedico.cs" />
     <Compile Include="CN_Medicos.cs" />

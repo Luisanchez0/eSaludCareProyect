@@ -245,6 +245,7 @@
     <Compile Include="Controllers\MedicosController.cs" />
     <Compile Include="Controllers\NotasEvolucionApiController.cs" />
     <Compile Include="Controllers\PerfilesController.cs" />
+    <Compile Include="Controllers\RecuperarApiController.cs" />
     <Compile Include="Controllers\RegistroApiController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -334,6 +335,7 @@
     <Folder Include="Imagenes\" />
     <Folder Include="Views\Admin\" />
     <Folder Include="Views\Historial\" />
+    <Folder Include="Views\Recuperar\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

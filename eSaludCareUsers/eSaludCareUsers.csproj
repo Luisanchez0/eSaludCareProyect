@@ -245,6 +245,7 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\CitasApiController.cs" />
     <Compile Include="Controllers\CitasController.cs" />
+    <Compile Include="Controllers\HistorialMedicoController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\HorariosDisponiblesController.cs" />
     <Compile Include="Controllers\IActionResult.cs" />
@@ -255,6 +256,7 @@
     <Compile Include="Controllers\RegistroApiController.cs" />
     <Compile Include="Controllers\UsuarioApiController.cs" />
     <Compile Include="Controllers\UsuariosController.cs" />
+    <Compile Include="Controllers\HistMedicApiController.cs" />
     <Compile Include="Data\AppDbContext.cs" />
     <Compile Include="Data\NpgsqlConfiguration.cs" />
     <Compile Include="Global.asax.cs">
@@ -438,6 +440,7 @@
     <Content Include="Views\Citas\MisCitas.cshtml" />
     <Content Include="Views\Home\Servicios.cshtml" />
     <Content Include="Views\PerfilPaciente\Index.cshtml" />
+    <Content Include="Views\HistorialMedico\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

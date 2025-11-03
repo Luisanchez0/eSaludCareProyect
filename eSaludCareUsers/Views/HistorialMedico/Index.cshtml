@@ -1,0 +1,207 @@
+﻿@{
+    ViewBag.Title = "Historial Médico | eSaludCare";
+}
+
+
+<main class="main">
+    <!-- Page Title -->
+    <div class="page-title">
+        <div class="heading">
+            <div class="container"
+
+<div class="container mt-4">
+    <h3 class="text-primary mb-4"> Historial Médico</h3>
+
+    <div id="alerta" class="alert d-none"></div>
+
+    <form id="formHistorialMedico">
+        <input type="hidden" id="id_historial_medico" />
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Enfermedades previas</label>
+            <textarea class="form-control" id="enfermedades_previas" rows="2" placeholder="Ejemplo: Diabetes, hipertensión..."></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Alergias</label>
+            <textarea class="form-control" id="alergias" rows="2" placeholder="Ejemplo: Penicilina, mariscos..."></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Cirugías</label>
+            <textarea class="form-control" id="cirugias" rows="2" placeholder="Ejemplo: Apendicectomía en 2018..."></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Medicamentos actuales</label>
+            <textarea class="form-control" id="medicamentos_actuales" rows="2" placeholder="Ejemplo: Losartán 50mg diarios..."></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Antecedentes familiares</label>
+            <textarea class="form-control" id="antecedentes_familiares" rows="2" placeholder="Ejemplo: Madre con diabetes tipo II..."></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Hábitos</label>
+            <textarea class="form-control" id="habitos" rows="2" placeholder="Ejemplo: Fuma ocasionalmente, hace ejercicio 3 veces por semana..."></textarea>
+        </div>
+
+        <div class="col-12 mt-3">
+            <button id="btnGuardar" type="submit" class="btn btn-getstarted">Guardar Historial Médico</button>
+        </div>
+    </form>
+</div>
+</div>
+        </div>
+</main>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        // ===============================
+        // CONFIGURACIÓN Y VARIABLES
+        // ===============================
+        const apiBase = `${window.location.origin}/api/v1/HistMedic`; // ✅ coincide con tu controlador
+        let idHistorial = 0;
+        let idPaciente = localStorage.getItem("pacienteId"); // ✅ coincide con tu localStorage
+
+        $(document).ready(function () {
+            // Si no hay paciente válido, obtenerlo desde el backend
+            if (!idPaciente || idPaciente === "0") {
+                const idUsuario = localStorage.getItem("idUsuario");
+                const token = localStorage.getItem("token");
+
+                if (idUsuario && token) {
+                    obtenerIdPaciente(idUsuario, token).then(() => {
+                        if (idPaciente && idPaciente !== "0") {
+                            cargarHistorial();
+                        } else {
+                            mostrarAlerta("error", "No se encontró el paciente asociado al usuario.");
+                        }
+                    });
+                } else {
+                    mostrarAlerta("error", "No se encontró el usuario autenticado.");
+                    return;
+                }
+            } else {
+                cargarHistorial();
+            }
+
+            // Evento para guardar historial
+            $("#formHistorialMedico").submit(function (e) {
+                e.preventDefault();
+                guardarHistorial();
+            });
+        });
+
+        // ===============================
+        // OBTENER ID PACIENTE
+        // ===============================
+        async function obtenerIdPaciente(idUsuario, token) {
+            try {
+                const response = await fetch(`/api/v1/obtenerIdPaciente?idUsuario=${idUsuario}`, {
+                    headers: { 'Authorization': `Bearer ${token}` }
+                });
+                const data = await response.json();
+
+                if (data.idPaciente && data.idPaciente !== 0) {
+                    idPaciente = data.idPaciente;
+                    localStorage.setItem("pacienteId", idPaciente); // ✅ guardamos correctamente
+                } else {
+                    mostrarAlerta("error", "No se encontró el paciente asociado al usuario.");
+                }
+            } catch (err) {
+                console.error("Error al obtener paciente:", err);
+                mostrarAlerta("error", "Error al obtener datos del paciente.");
+            }
+        }
+
+        // ===============================
+        // CARGAR HISTORIAL EXISTENTE
+        // ===============================
+        function cargarHistorial() {
+            $.ajax({
+                url: `${apiBase}/paciente/${idPaciente}`,
+                type: "GET",
+                success: function (data) {
+                    if (data && data.length > 0) {
+                        const h = data[0];
+                        idHistorial = h.id_historial_medico;
+                        $("#id_historial_medico").val(h.id_historial_medico);
+                        $("#enfermedades_previas").val(h.enfermedades_previas);
+                        $("#alergias").val(h.alergias);
+                        $("#cirugias").val(h.cirugias);
+                        $("#medicamentos_actuales").val(h.medicamentos_actuales);
+                        $("#antecedentes_familiares").val(h.antecedentes_familiares);
+                        $("#habitos").val(h.habitos);
+                        $("#btnGuardar").text("Actualizar Historial Médico");
+                    } else {
+                        $("#btnGuardar").text("Guardar Historial Médico");
+                    }
+                },
+                error: function (xhr) {
+                    console.error("Error al cargar historial:", xhr);
+                    mostrarAlerta("error", "No se pudo cargar el historial médico.");
+                }
+            });
+        }
+
+        // ===============================
+        // GUARDAR O ACTUALIZAR HISTORIAL
+        // ===============================
+        function guardarHistorial() {
+            if (!idPaciente || idPaciente === "0") {
+                mostrarAlerta("error", "No se encontró el paciente. Intenta recargar la página.");
+                return;
+            }
+
+            const historial = {
+                id_historial_medico: idHistorial,
+                id_paciente: parseInt(idPaciente),
+                enfermedades_previas: $("#enfermedades_previas").val(),
+                alergias: $("#alergias").val(),
+                cirugias: $("#cirugias").val(),
+                medicamentos_actuales: $("#medicamentos_actuales").val(),
+                antecedentes_familiares: $("#antecedentes_familiares").val(),
+                habitos: $("#habitos").val()
+            };
+
+            const metodo = idHistorial === 0 ? "POST" : "PUT";
+            const url = idHistorial === 0 ? `${apiBase}/crear` : `${apiBase}/actualizar`;
+
+            $.ajax({
+                url: url,
+                type: metodo,
+                data: JSON.stringify(historial),
+                contentType: "application/json; charset=utf-8",
+                success: function (resp) {
+                    if (resp && resp.mensaje) {
+                        mostrarAlerta("success", resp.mensaje);
+                        if (idHistorial === 0) cargarHistorial();
+                    } else {
+                        mostrarAlerta("error", "Error al guardar los datos.");
+                    }
+                },
+                error: function (xhr) {
+                    console.error("Error al guardar historial:", xhr);
+                    mostrarAlerta("error", "Error de conexión con el servidor.");
+                }
+            });
+        }
+
+        // ===============================
+        // MOSTRAR ALERTAS
+        // ===============================
+        function mostrarAlerta(tipo, mensaje) {
+            const alerta = $("#alerta");
+            alerta.removeClass("d-none alert-success alert-danger");
+
+            if (tipo === "success") alerta.addClass("alert-success");
+            else alerta.addClass("alert-danger");
+
+            alerta.stop(true, true).text(mensaje).fadeIn();
+            setTimeout(() => alerta.fadeOut(), 3000);
+        }
+    </script>
+}

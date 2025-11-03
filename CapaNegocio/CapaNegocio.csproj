@@ -113,10 +113,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CD_HistorialClinico.cs" />
     <Compile Include="CN_Citas.cs" />
     <Compile Include="CN_ConsultasCitas.cs" />
     <Compile Include="CN_ConsultasPacientes.cs" />
+    <Compile Include="CN_HistorialClinico.cs" />
+    <Compile Include="CN_HistorialMedico.cs" />
     <Compile Include="CN_Medicos.cs" />
+    <Compile Include="CN_NotaEvolucion.cs" />
     <Compile Include="CN_Pacientes.cs" />
     <Compile Include="CN_Recursos.cs" />
     <Compile Include="CN_Tokens.cs" />

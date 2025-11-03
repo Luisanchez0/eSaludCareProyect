@@ -1,0 +1,110 @@
+﻿@{
+    ViewBag.Title = "Notas de Evolución | eSaludCare";
+}
+
+<div class="container mt-4">
+    <h3 class="text-primary mb-4">Notas de Evolución del Paciente</h3>
+
+    <form id="formNotaEvolucion" class="border rounded p-3 shadow-sm">
+        <div class="mb-3">
+            <label class="form-label fw-bold">Diagnóstico</label>
+            <textarea class="form-control" id="diagnostico" required></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Signos Vitales</label>
+            <textarea class="form-control" id="signos_vitales"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Resultados de Estudios</label>
+            <textarea class="form-control" id="resultados_estudios"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Tratamiento Actual</label>
+            <textarea class="form-control" id="tratamiento_actual"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Pronóstico</label>
+            <textarea class="form-control" id="pronostico"></textarea>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label fw-bold">Observaciones</label>
+            <textarea class="form-control" id="observaciones"></textarea>
+        </div>
+
+        <button type="button" id="btnGuardarNota" class="btn btn-success w-100">Guardar Nota</button>
+    </form>
+
+    <hr class="my-4" />
+
+    <h5 class="text-secondary">Historial de Notas de Evolución</h5>
+    <table class="table table-striped mt-3" id="tablaNotas">
+        <thead class="table-primary">
+            <tr>
+                <th>Fecha</th>
+                <th>Diagnóstico</th>
+                <th>Tratamiento</th>
+                <th>Observaciones</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<script>
+    const idHistorial = localStorage.getItem("id_historial"); // Se obtiene del historial clínico
+    const idMedico = localStorage.getItem("id_medico");
+
+    function cargarNotas() {
+        fetch(`/api/v1/notas_evolucion/historial/${idHistorial}`)
+            .then(res => res.json())
+            .then(data => {
+                const tbody = document.querySelector("#tablaNotas tbody");
+                tbody.innerHTML = "";
+                data.forEach(n => {
+                    tbody.innerHTML += `
+                        <tr>
+                            <td>${new Date(n.fecha_nota).toLocaleString()}</td>
+                            <td>${n.diagnostico}</td>
+                            <td>${n.tratamiento_actual || "-"}</td>
+                            <td>${n.observaciones || "-"}</td>
+                        </tr>`;
+                });
+            });
+    }
+
+    document.querySelector("#btnGuardarNota").addEventListener("click", () => {
+        const nota = {
+            id_historial: parseInt(idHistorial),
+            id_medico: parseInt(idMedico),
+            diagnostico: document.getElementById("diagnostico").value,
+            signos_vitales: document.getElementById("signos_vitales").value,
+            resultados_estudios: document.getElementById("resultados_estudios").value,
+            tratamiento_actual: document.getElementById("tratamiento_actual").value,
+            pronostico: document.getElementById("pronostico").value,
+            observaciones: document.getElementById("observaciones").value
+        };
+
+        fetch("/api/v1/notas_evolucion/crear", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(nota)
+        })
+            .then(res => res.json())
+            .then(r => {
+                if (r.success) {
+                    alert("Nota guardada correctamente");
+                    cargarNotas();
+                    document.getElementById("formNotaEvolucion").reset();
+                } else {
+                    alert("Error al guardar la nota");
+                }
+            });
+    });
+
+    cargarNotas();
+</script>

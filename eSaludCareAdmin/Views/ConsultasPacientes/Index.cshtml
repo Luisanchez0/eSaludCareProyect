@@ -5,30 +5,96 @@
     Layout = "~/Views/Shared/_Layout.cshtml"; // Ajusta si usas otro layout
 }
 
-<h2>Pacientes registrados.</h2>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
-<table class="table table-bordered table-striped">
-    <thead>
-        <tr>
-            <th>ID</th>
-            <th>Nombre</th>
-            <th>Fecha de Nacimiento</th>
-            <th>Dirección</th>
-            <th>Teléfono</th>
-            <th>Correo</th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var paciente in Model)
-        {
-            <tr>
-                <td>@paciente.IdPaciente</td>
-                <td>@paciente.Nombre</td>
-                <td>@(paciente.FechaNacimiento.HasValue ? paciente.FechaNacimiento.Value.ToShortDateString() : "Sin fecha")</td> // ✅
-                <td>@paciente.Direccion</td>
-                <td>@paciente.Telefono</td>
-                <td>@paciente.Correo</td>
-            </tr>
+<style>
+    /* Paleta de Colores: Navy Intenso (#24274F) y Mostaza Intenso (#AD8A1F) */
+    :root {
+        --color-navy-intenso: #24274F;
+        --color-mostaza-intenso: #AD8A1F;
+        --color-fondo-claro: #F8F8F8; /* Fondo de filas impares */
+        --color-texto-general: #333;
+    }
+
+    h2 {
+        color: var(--color-mostaza-intenso); /* Título en Mostaza Intenso */
+        font-weight: 700;
+        margin-bottom: 25px;
+        font-size: 1.8rem;
+    }
+
+    /* --- Estilos de la tabla --- */
+    .table {
+        border: 1px solid #dee2e6; /* Borde general de la tabla */
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05); /* Sombra sutil a la tabla */
+    }
+
+        .table thead th {
+            background-color: var(--color-navy-intenso); /* Cabecera en Navy Intenso */
+            color: white;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85rem;
+            border-color: var(--color-navy-intenso) !important;
+            padding: 14px 18px;
+            letter-spacing: 0.5px;
+            vertical-align: middle;
         }
-    </tbody>
-</table>
+
+        /* Filas y celdas */
+        .table tbody tr td {
+            padding: 12px 18px;
+            font-size: 0.95rem;
+            vertical-align: middle;
+            color: var(--color-texto-general);
+            border-color: #e9ecef;
+        }
+
+    /* Filas alternas (striped) */
+    .table-striped tbody tr:nth-of-type(odd) {
+        background-color: var(--color-fondo-claro);
+    }
+
+    /* Efecto hover */
+    .table-hover tbody tr:hover {
+        background-color: rgba(173, 138, 31, 0.1); /* Ligero fondo Mostaza en hover */
+        cursor: pointer;
+    }
+</style>
+
+<h2><i class="bi bi-person-lines-fill"></i> Pacientes Registrados</h2>
+
+<div class="table-responsive">
+    <table class="table table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Fecha de Nacimiento</th>
+                <th>Dirección</th>
+                <th>Teléfono</th>
+                <th>Correo</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var paciente in Model)
+            {
+                <tr>
+                    <td>@paciente.IdPaciente</td>
+                    <td>@paciente.Nombre</td>
+                    <td>@(paciente.FechaNacimiento.HasValue ? paciente.FechaNacimiento.Value.ToShortDateString() : "Sin fecha")</td>
+                    <td>@paciente.Direccion</td>
+                    <td>@paciente.Telefono</td>
+                    <td>@paciente.Correo</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+@if (Model == null || !Model.Any())
+{
+    <div class="alert alert-info text-center mt-4">
+        <i class="bi bi-info-circle"></i> No hay pacientes registrados en este listado.
+    </div>
+}

@@ -312,7 +312,6 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Home\Usuarios.cshtml" />
     <Content Include="Views\Login\index.cshtml" />
     <Content Include="Views\Perfiles\Index.cshtml" />
     <Content Include="Views\Perfiles\Detalles.cshtml" />

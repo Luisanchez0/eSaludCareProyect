@@ -11,7 +11,7 @@ namespace eSaludCareAdmin.Controllers
 
         public ConsultasAgendadasController()
         {
-            string cadenaConexion = "Host=localhost;Port=5432;Database=clinica_db;Username=postgres;Password=123456";
+            string cadenaConexion = "Host=localhost;Port=5432;Database=clinica_db;Username=postgres;Password=102538";
             negocio = new CN_ConsultasCitas(cadenaConexion);
         }
 

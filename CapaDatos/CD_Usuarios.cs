@@ -75,9 +75,9 @@ namespace CapaDatos
                 }
                 return null;
 
-                }
             }
-        
+        }
+
         public void GuardarToken(int id_usuario, string token)
         {
             using (var con = conexion.Conectar())
@@ -106,7 +106,7 @@ namespace CapaDatos
                     {
                         string query = @"INSERT INTO usuarios (nombre, apellido, correo, contrasena, telefono, rol, fecha_registro, esta_activo)
                                  VALUES (@nombre, @apellido, @correo, @contrasena, @telefono, @rol, @fecha_registro, TRUE)
-                                 RETURNING id_usuario;"; 
+                                 RETURNING id_usuario;";
 
                         int idUsuario;
 
@@ -147,7 +147,7 @@ namespace CapaDatos
                             }
                         }
 
-                            transaction.Commit();
+                        transaction.Commit();
                         return true;
                     }
                     catch (Exception ex)
@@ -164,10 +164,10 @@ namespace CapaDatos
 
             try
             {
-                using (var conexion = new NpgsqlConnection("Host = localhost; Port = 5432; Username = postgres; Password = 102538; Database = clinica_db"))
+                using (var con = conexion.Conectar())
                 {
-                    conexion.Open();
-                    using (var comando = new NpgsqlCommand("SELECT * FROM usuarios", conexion))
+                    con.Open();
+                    using (var comando = new NpgsqlCommand("SELECT * FROM usuarios", con))
                     {
                         using (var reader = comando.ExecuteReader())
                         {
@@ -226,13 +226,13 @@ namespace CapaDatos
 
             try
             {
-                using (var conexion = new NpgsqlConnection("Host = localhost; Port = 5432; Username = postgres; Password = 102538; Database = clinica_db"))
+                using (var con = conexion.Conectar())
                 {
-                    conexion.Open();
+                    con.Open();
                     using (var comando = new NpgsqlCommand(@"
                 UPDATE usuarios 
                 SET nombre = @nombre, correo = @correo, contrasena = @contrasena, rol = @rol 
-                WHERE id_usuario = @id", conexion))
+                WHERE id_usuario = @id", con))
                     {
                         comando.Parameters.AddWithValue("@id", usuario.id_usuario);
                         comando.Parameters.AddWithValue("@nombre", usuario.nombre);
@@ -252,5 +252,122 @@ namespace CapaDatos
 
             return resultado;
         }
+
+        public UsuarioEntidad ObtenerUsuarioPorId(int idUsuario)
+        {
+            UsuarioEntidad usuario = null;
+            try
+            {
+                using (var con = conexion.Conectar())
+                {
+                    con.Open();
+                    string query = @"SELECT id_usuario, nombre, apellido, correo, telefono, rol, esta_activo, fecha_registro, fecha_actualizacion
+                                 FROM usuarios
+                                 WHERE id_usuario = @id";
+                    using (var cmd = new NpgsqlCommand(query, con))
+                    {
+                        cmd.Parameters.AddWithValue("@id", idUsuario);
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                usuario = new UsuarioEntidad
+                                {
+                                    IdUsuario = Convert.ToInt32(reader["id_usuario"]),
+                                    Nombre = reader["nombre"].ToString(),
+                                    Apellido = reader["apellido"].ToString(),
+                                    Correo = reader["correo"].ToString(),
+                                    Telefono = reader["telefono"] != DBNull.Value ? reader["telefono"].ToString() : null,
+                                    Rol = reader["rol"].ToString(),
+                                    FechaRegistro = Convert.ToDateTime(reader["fecha_registro"]),
+                                    fecha_actualizacion = Convert.ToDateTime(reader["fecha_actualizacion"])
+                                };
+                            }
+                        }
+
+                        return usuario;
+
+
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                // Manejo de errores si es necesario
+            }
+            return usuario;
+        }
+
+        public int ObtenerIdPorCorreo(string correo)
+        {
+            try
+            {
+                using (var conn = conexion.Conectar())
+                {
+                    conn.Open();
+                    string query = "SELECT id_usuario FROM usuarios WHERE correo = @correo AND esta_activo = TRUE";
+                    using (var cmd = new NpgsqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@correo", correo);
+                        var result = cmd.ExecuteScalar();
+                        return result != null ? Convert.ToInt32(result) : 0;
+                    }
+                }
+            }
+            catch
+            {
+                return 0;
+            }
+        }
+
+
+        public bool ActualizarClaveTemporal(int idUsuario, string nuevaClave)
+        {
+            try
+            {
+                using (var conn = conexion.Conectar())
+                {
+                    conn.Open();
+                    string query = "UPDATE usuarios SET contrasena = @clave, fecha_actualizacion = CURRENT_TIMESTAMP WHERE id_usuario = @id";
+                    using (var cmd = new NpgsqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@clave", nuevaClave);
+                        cmd.Parameters.AddWithValue("@id", idUsuario);
+                        return cmd.ExecuteNonQuery() > 0;
+                    }
+                }
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        public bool CambiarContrasena(int idUsuario, string nuevaClave)
+        {
+            try
+            {
+                using (var conn = conexion.Conectar())
+                {
+                    conn.Open();
+                    string query = "UPDATE usuarios SET contrasena = @clave, fecha_actualizacion = CURRENT_TIMESTAMP WHERE id_usuario = @id";
+                    using (var cmd = new NpgsqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@clave", nuevaClave);
+                        cmd.Parameters.AddWithValue("@id", idUsuario);
+                        return cmd.ExecuteNonQuery() > 0;
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error al cambiar contraseña: " + ex.Message);
+                return false;
+            }
+        }
+
+
+
+
     }
 }

@@ -6,11 +6,18 @@ namespace CapaNegocio
 {
     public class CN_ConsultasCitas
     {
-        private CD_ConsultasCitas datos = new CD_ConsultasCitas();
+        private readonly CD_ConsultasCitas datos;
+
+        public CN_ConsultasCitas(string cadenaConexion)
+        {
+            datos = new CD_ConsultasCitas(cadenaConexion);
+        }
 
         public List<CitaAgendadaDTO> ObtenerCitasAgendadas()
         {
             return datos.ListarCitas();
         }
+
+
     }
 }

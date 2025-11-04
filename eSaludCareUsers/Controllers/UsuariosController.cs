@@ -142,8 +142,12 @@ namespace eSaludCareUsers.Controllers
                 {
                     id_usuario = entidad.id_usuario,
                     especialidad = usuario.especialidad,
-                    numero_cedula = usuario.numero_cedula
-                };
+                    numero_cedula = usuario.numero_cedula,
+                    hora_inicio = new TimeSpan(9, 0, 0),           // 09:00 AM
+                    hora_fin = new TimeSpan(17, 0, 0),             // 05:00 PM
+                    duracion_turno_minutos = 30
+
+               };
 
                 _context.Medicos.Add(medico);
                 _context.SaveChanges();
@@ -182,6 +186,11 @@ namespace eSaludCareUsers.Controllers
                 {
                     medico.especialidad = usuario.especialidad;
                     medico.numero_cedula = usuario.numero_cedula;
+
+                    medico.hora_inicio = new TimeSpan(9, 0, 0); // 09:00 AM
+                    medico.hora_fin = new TimeSpan(17, 0, 0);   // 05:00 PM
+                    medico.duracion_turno_minutos = 30;
+
                 }
                 else
                 {
@@ -189,7 +198,11 @@ namespace eSaludCareUsers.Controllers
                     {
                         id_usuario = id,
                         especialidad = usuario.especialidad,
-                        numero_cedula = usuario.numero_cedula
+                        numero_cedula = usuario.numero_cedula,
+                        hora_inicio = new TimeSpan(9, 0, 0), // ← NUEVO
+                        hora_fin = new TimeSpan(17, 0, 0),   // ← NUEVO
+                        duracion_turno_minutos = 30         // ← NUEVO
+
                     });
                 }
             }

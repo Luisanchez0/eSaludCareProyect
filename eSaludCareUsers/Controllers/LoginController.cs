@@ -16,6 +16,13 @@ namespace eSaludCareUsers.Views.Login
         {
             return View();
         }
+        public ActionResult RecuperarClave()
+        {
+            return View();
+        }
+
+
+
         [HttpPost]
         public JsonResult GuardarSesion(string token, string nombre, string rol)
         {

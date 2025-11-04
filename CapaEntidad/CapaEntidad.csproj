@@ -93,10 +93,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CambioClave.cs" />
     <Compile Include="CitaAgendadaDTO.cs" />
     <Compile Include="CitaMedica.cs" />
     <Compile Include="CitasVista.cs" />
-    <Compile Include="ConsultaPacientesDTO.cs" />
+    <Compile Include="HistorialClinico.cs" />
+    <Compile Include="HistorialMedico.cs" />
+    <Compile Include="NotasEvolucion.cs" />
+    <Compile Include="PerfilPaciente.cs" />
+    <Compile Include="ConsultasPacientesDTO.cs" />
     <Compile Include="HorarioApi.cs" />
     <Compile Include="LoginRequest.cs" />
     <Compile Include="Medico.cs" />

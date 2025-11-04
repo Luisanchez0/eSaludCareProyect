@@ -234,14 +234,18 @@
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Controllers\ConsultasCitasApiController.cs" />
+    <Compile Include="Controllers\ConsultasAgendadasController.cs" />
     <Compile Include="Controllers\ConsultasPacientesController.cs" />
+    <Compile Include="Controllers\HistorialClinicoApiController.cs" />
+    <Compile Include="Controllers\HistorialClinicoController.cs" />
     <Compile Include="Controllers\LoginApiController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\LoginController.cs" />
     <Compile Include="Controllers\MedicoController.cs" />
     <Compile Include="Controllers\MedicosController.cs" />
+    <Compile Include="Controllers\NotasEvolucionApiController.cs" />
     <Compile Include="Controllers\PerfilesController.cs" />
+    <Compile Include="Controllers\RecuperarApiController.cs" />
     <Compile Include="Controllers\RegistroApiController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -321,6 +325,9 @@
     <Content Include="Views\ConsultasPacientes\Index.cshtml" />
     <Content Include="Views\Medicos\Index.cshtml" />
     <Content Include="Views\Login\Registro.cshtml" />
+    <Content Include="Views\ConsultasAgendadas\Index.cshtml" />
+    <Content Include="Views\HistorialClinico\Index.cshtml" />
+    <Content Include="Views\HistorialClinico\NotasEvolucion.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -328,6 +335,7 @@
     <Folder Include="Imagenes\" />
     <Folder Include="Views\Admin\" />
     <Folder Include="Views\Historial\" />
+    <Folder Include="Views\Recuperar\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />

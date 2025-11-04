@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CapaEntidad
 {
@@ -15,7 +11,5 @@ namespace CapaEntidad
         public string Hora { get; set; }
         public string Especialidad { get; set; }
         public string Estado { get; set; }
-
-
     }
 }

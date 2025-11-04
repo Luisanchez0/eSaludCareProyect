@@ -1,4 +1,4 @@
-﻿@model IEnumerable<CapaEntidad.ConsultaPacientesDTO>
+﻿@model IEnumerable<CapaEntidad.ConsultasPacientesDTO>
 
 @{
     ViewBag.Title = "Listado de Consultas de Pacientes";
@@ -24,7 +24,7 @@
             <tr>
                 <td>@paciente.IdPaciente</td>
                 <td>@paciente.Nombre</td>
-                <td>@paciente.FechaNacimiento.ToShortDateString()</td>
+                <td>@(paciente.FechaNacimiento.HasValue ? paciente.FechaNacimiento.Value.ToShortDateString() : "Sin fecha")</td> // ✅
                 <td>@paciente.Direccion</td>
                 <td>@paciente.Telefono</td>
                 <td>@paciente.Correo</td>

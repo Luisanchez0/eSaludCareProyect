@@ -1,11 +1,12 @@
-﻿using System;
+﻿using CapaDatos;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
-using System.Net.Mail;
-using System.Net;
-using System.IO;
 
 namespace CapaNegocio
 {
@@ -43,10 +44,32 @@ namespace CapaNegocio
             }
             catch (Exception ex)
             {
-                resultado = false;
+                Console.WriteLine("Error SMTP: " + ex.Message);
+                return false;
             }
             return resultado;
-
         }
+        public bool RecuperarClave(string correo)
+        {
+            CD_Usuarios datos = new CD_Usuarios();
+            int idUsuario = datos.ObtenerIdPorCorreo(correo);
+
+            if (idUsuario == 0)
+                return false;
+
+            string claveTemporal = Guid.NewGuid().ToString("N").Substring(0, 6).ToUpper();
+            string claveEncriptada = BCrypt.Net.BCrypt.HashPassword(claveTemporal);
+
+            bool actualizado = datos.ActualizarClaveTemporal(idUsuario, claveEncriptada);
+
+            if (actualizado)
+                return CN_Correos.EnviarRecuperacion(correo, claveTemporal);
+
+            return false;
+        }
+
+
+
+
     }
 }

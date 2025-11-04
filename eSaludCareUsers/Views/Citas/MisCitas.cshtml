@@ -1,6 +1,52 @@
 ﻿@{
     ViewBag.Title = "Mis Citas";
 }
+<style>
+
+    /* Tabla */
+    #citas-table {
+        border-radius: 8px;
+        overflow: hidden;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.08);
+        background-color: #fff;
+    }
+
+    #citas-table thead th {
+        background-color: #18386b;
+        color: white;
+        text-transform: uppercase;
+        font-size: 0.9rem;
+        letter-spacing: 0.5px;
+    }
+
+    #citas-table tbody tr:hover {
+        background-color: rgba(13, 110, 253, 0.05);
+        transition: 0.2s ease;
+    }
+
+    #citas-table td,
+    #citas-table th {
+        vertical-align: middle;
+        padding: 0.9rem;
+    }
+
+    /* Estados personalizados */
+    .badge.bg-pendiente {
+        background-color: #ffc107 !important;
+        color: #000;
+    }
+
+    .badge.bg-confirmada {
+        background-color: #198754 !important;
+    }
+
+    .badge.bg-cancelada {
+        background-color: #dc3545 !important;
+    }
+
+
+
+</style>
 
 <main class="main">
     <section id="hero" class="hero section">

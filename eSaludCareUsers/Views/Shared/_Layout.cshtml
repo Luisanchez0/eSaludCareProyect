@@ -38,8 +38,11 @@
                     <span id="user-name"></span>
                 </a>
                 <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                    <li><a class="dropdown-item" href="/Perfil">Perfil</a></li>
+                    <li><a class="dropdown-item" href="@Url.Action("Index","PerfilPaciente")">Perfil</a></li>
                     <li><a class="dropdown-item" href="@Url.Action("MisCitas","Citas")">Mis Citas</a></li>
+                    <li><a class="dropdown-item" href="@Url.Action("Index","HistorialMedico")">Mi Historial Médico</a></li>
+                    <li><a class="dropdown-item" href="@Url.Action("CambiaContrasena", "Home")">Cambiar Contraseña</a></li>
+
                     <li><hr class="dropdown-divider"></li>
                     <li><a class="dropdown-item text-danger" href="#" id="btnLogout">Cerrar sesión</a></li>
                 </ul>
@@ -59,7 +62,7 @@
             <div class="row gy-4">
                 <div class="col-lg-4 col-md-6 footer-about">
                     <a href="index.html" class="logo d-flex align-items-center">
-                        <span class="sitename">eHealtCare   </span>
+                        <span class="sitename">eHealtCare</span>
                     </a>
                     <div class="footer-contact pt-3">
                         <p>Fovisste II Jardin Corona</p>
@@ -85,7 +88,6 @@
                         <li><a href="#">Privacy policy</a></li>
                     </ul>
                 </div>
-
 
                 <div class="col-lg-2 col-md-3 footer-links">
                     <h4>Hic solutasetp</h4>
@@ -114,8 +116,7 @@
 
         <div class="container copyright text-center mt-4">
             <p>© <span>Copyright</span> <strong>eSaludCare</strong>&nbsp;<span>All Rights Reserved</span></p>
-            <div class="credits">
-            </div>
+            <div class="credits"></div>
         </div>
 
     </footer>
@@ -145,6 +146,7 @@
             const userName = document.getElementById("user-name");
             const logoutBtn = document.getElementById("btnLogout");
 
+            // --- Verifica expiración del token ---
             function isTokenExpired(token) {
                 try {
                     const payload = JSON.parse(atob(token.split('.')[1]));
@@ -154,13 +156,14 @@
                 }
             }
 
+            // --- Control de autenticación visual ---
             if (token && nombre && !isTokenExpired(token)) {
                 // Usuario autenticado
                 loginBtn.style.display = "none";
                 userDropdown.style.display = "inline-block";
                 userName.textContent = "Hola " + nombre;
 
-                // Redirigir si está en login
+                // Si está en la página de login, lo redirige al inicio
                 if (window.location.pathname.toLowerCase().includes("/login")) {
                     window.location.href = "/Home/Index";
                 }
@@ -172,11 +175,25 @@
                 localStorage.removeItem("nombre");
             }
 
-            // Cerrar sesión
-            logoutBtn?.addEventListener("click", function () {
-                localStorage.removeItem("token");
-                localStorage.removeItem("nombre");
-                window.location.href = "/Home/Index";
+            // --- Cerrar sesión ---
+            logoutBtn?.addEventListener("click", function (e) {
+                e.preventDefault();
+
+                // Limpieza completa del almacenamiento
+                localStorage.clear();
+                sessionStorage.clear();
+
+                // Limpieza de cookies (si las hay)
+                document.cookie.split(";").forEach(c => {
+                    document.cookie = c
+                        .replace(/^ +/, "")
+                        .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+                });
+
+                console.log("🧹 Se ha limpiado el localStorage, sessionStorage y cookies.");
+
+                // Redirigir al login
+                window.location.href = "/Login/Index";
             });
         });
     </script>
@@ -189,7 +206,10 @@
         gtag('js', new Date());
         gtag('config', 'G-P7JSYB1CSP');
     </script>
-    <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015" integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ==" data-cf-beacon='{"version":"2024.11.0","token":"68c5ca450bae485a842ff76066d69420","server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
+    <script defer src="https://static.cloudflareinsights.com/beacon.min.js/vcd15cbe7772f49c399c6a5babf22c1241717689176015"
+            integrity="sha512-ZpsOmlRQV6y907TI0dKBHq9Md29nnaEIPlkf84rnaERnq6zvWvPUqr2ft8M1aS28oN72PdrCzSjY4U6VaAw1EQ=="
+            data-cf-beacon='{"version":"2024.11.0","token":"68c5ca450bae485a842ff76066d69420"}'
+            crossorigin="anonymous"></script>
 
 </body>
 </html>

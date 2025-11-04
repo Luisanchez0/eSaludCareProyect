@@ -32,7 +32,7 @@ namespace CapaNegocio
             var usuario = objCapaDato.ObtenerUsuarioPorCorreo(correo);
 
             if (usuario == null)
-                return null;
+                return null;    
 
             bool contraseñaValid = BCrypt.Net.BCrypt.Verify(contrasena, usuario.contrasena);
 
@@ -72,6 +72,18 @@ namespace CapaNegocio
         {
             string hash = BCrypt.Net.BCrypt.HashPassword("admin123");
             Console.WriteLine("Hash generado: " + hash);
+        }
+
+        public UsuarioEntidad ObtenerUsuarioPorId(int idUsuario)
+        {
+            return objCapaDato.ObtenerUsuarioPorId(idUsuario);
+        }
+
+
+        public bool CambiarContrasena(int idUsuario, string nuevaClave)
+        {
+            string claveEncriptada = BCrypt.Net.BCrypt.HashPassword(nuevaClave);
+            return objCapaDato.CambiarContrasena(idUsuario, claveEncriptada);
         }
 
     }

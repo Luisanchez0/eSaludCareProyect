@@ -1,0 +1,45 @@
+﻿@model IEnumerable<CapaEntidad.CitaAgendadaDTO>
+
+@{
+    ViewBag.Title = "Consultas Agendadas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2 class="text-center">Consultas Agendadas</h2>
+
+<table class="table table-bordered table-striped table-hover">
+    <thead class="table-dark">
+        <tr>
+            <th>ID</th>
+            <th>Paciente</th>
+            <th>Médico</th>
+            <th>Fecha</th>
+            <th>Hora</th>
+            <th>Especialidad</th>
+            <th>Estado</th>
+        </tr>
+    </thead>
+    <tbody>
+        @if (Model != null && Model.Any())
+        {
+            foreach (var cita in Model)
+            {
+                <tr>
+                    <td>@cita.IdCita</td>
+                    <td>@cita.NombrePaciente</td>
+                    <td>@cita.NombreMedico</td>
+                    <td>@cita.Fecha.ToString("dd/MM/yyyy")</td>
+                    <td>@cita.Hora</td>
+                    <td>@cita.Especialidad</td>
+                    <td>@cita.Estado</td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr>
+                <td colspan="7" class="text-center text-muted">No hay consultas agendadas registradas.</td>
+            </tr>
+        }
+    </tbody>
+</table>

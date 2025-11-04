@@ -1,0 +1,91 @@
+﻿@{
+    ViewBag.Title = "Cambiar Contraseña | eSaludCare";
+}
+
+<main class="main">
+    <section id="hero" class="hero section">
+        <div class="container">
+            <h3 class="department-name text-primary mb-4">Cambiar Contraseña</h3>
+
+            <form id="formCambioClave" class="row g-3">
+                <div class="col-md-6">
+                    <label for="nuevaClave"><span class="text-danger">*</span> Nueva Contraseña</label>
+                    <input type="password" id="nuevaClave" class="form-control" minlength="6" required>
+                </div>
+
+                <div class="col-md-6">
+                    <label for="confirmarClave"><span class="text-danger">*</span> Confirmar Contraseña</label>
+                    <input type="password" id="confirmarClave" class="form-control" minlength="6" required>
+                </div>
+
+                <div class="col-12 mt-3">
+                    <button id="btnCambiar" type="submit" class="btn btn-getstarted">Guardar Nueva Contraseña</button>
+                </div>
+
+                <div class="col-12 mt-3">
+                    <a href="@Url.Action("Login", "Home")">Volver a Iniciar Sesión</a>
+                </div>
+            </form>
+
+            <div id="alerta" class="alert mt-4 d-none"></div>
+        </div>
+    </section>
+</main>
+
+@section Scripts {
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $("#formCambioClave").on("submit", function (e) {
+                e.preventDefault();
+
+                const idUsuario = localStorage.getItem("idUsuario");
+                const nuevaClave = $("#nuevaClave").val();
+                const confirmarClave = $("#confirmarClave").val();
+
+                if (!idUsuario) {
+                    mostrarAlerta("No se encontró sesión de usuario. Inicia sesión nuevamente.", "danger");
+                    return;
+                }
+
+                if (nuevaClave.length < 6) {
+                    mostrarAlerta("La nueva contraseña debe tener al menos 6 caracteres.", "warning");
+                    return;
+                }
+
+                if (nuevaClave !== confirmarClave) {
+                    mostrarAlerta("Las contraseñas no coinciden.", "danger");
+                    return;
+                }
+
+                $("#btnCambiar").prop("disabled", true).text("Guardando...");
+
+                $.ajax({
+                    url: "/api/v1/cambiar-contrasena",
+                    type: "POST",
+                    data: JSON.stringify({
+                        IdUsuario: parseInt(idUsuario),
+                        NuevaClave: nuevaClave
+                    }),
+                    contentType: "application/json; charset=utf-8",
+                    success: function (response) {
+                        mostrarAlerta(response.mensaje || "Contraseña actualizada correctamente.", "success");
+                        $("#btnCambiar").prop("disabled", false).text("Guardar Nueva Contraseña");
+                        $("#formCambioClave")[0].reset();
+                    },
+                    error: function (xhr) {
+                        mostrarAlerta("Error al cambiar la contraseña: " + xhr.responseText, "danger");
+                        $("#btnCambiar").prop("disabled", false).text("Guardar Nueva Contraseña");
+                    }
+                });
+            });
+
+            function mostrarAlerta(mensaje, tipo) {
+                const alerta = $("#alerta");
+                alerta.removeClass("d-none alert-success alert-danger alert-warning");
+                alerta.addClass(`alert alert-${tipo}`);
+                alerta.text(mensaje);
+            }
+        });
+    </script>
+}

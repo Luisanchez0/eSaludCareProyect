@@ -39,8 +39,11 @@ namespace eSaludCareUsers.Controllers
             {
                 bool registrado = _usuarioNegocio.RegistrarUsuario(nuevoUsuario);
 
-                if (registrado)
+                if (registrado) { 
+                    CN_Correos.EnviarBienvenida(nuevoUsuario.Nombre, nuevoUsuario.Correo);
                     return Ok(new { mensaje = "Usuario registrado correctamente." });
+
+                }
                 else
                     return BadRequest("No se pudo registrar el usuario. El correo podría estar en uso.");
             }

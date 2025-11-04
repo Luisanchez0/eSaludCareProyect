@@ -106,10 +106,6 @@
                             <div class="sb-nav-link-icon"><i class="fas fa-tachometer-alt"></i></div>
                             Dashboard
                         </a>
-                        <a class="nav-link" href="@Url.Action("Usuarios", "Home")">
-                            <div class="sb-nav-link-icon"><i class="fas fa-user"></i></div>
-                            Usuarios
-                        </a>
                         @if (Session["Rol"]?.ToString() == "admin")
                         {
                             <a class="nav-link" href="@Url.Action("Index", "Perfiles")">
@@ -135,6 +131,24 @@
                             <a class="nav-link" href="@Url.Action("Index", "ConsultasPacientes")">
                                 <div class="sb-nav-link-icon"><i class="fas fa-notes-medical"></i></div>
                                 Consultar pacientes
+                            </a>
+
+                            <a class="nav-link" href="@Url.Action("Index", "ConsultasAgendadas")">
+                                <div class="sb-nav-link-icon"><i class="fas fa-calendar-check"></i></div>
+                                Consultas agendadas
+                            </a>
+
+                        }
+                        @if (Session["Rol"]?.ToString() == "medico")
+                        {
+                            <a class="nav-link" href="@Url.Action("Index", "HistorialClinico")">
+                                <div class="sb-nav-link-icon"><i class="fas fa-file-medical-alt"></i></div>
+                                Historial Clínico
+                            </a>
+
+                            <a class="nav-link" href="@Url.Action("NotasEvolucion", "HistorialClinico")">
+                                <div class="sb-nav-link-icon"><i class="fas fa-file-medical-alt"></i></div>
+                                Notas Evolucion
                             </a>
                         }
 

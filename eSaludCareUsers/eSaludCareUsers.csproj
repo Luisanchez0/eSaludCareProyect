@@ -289,13 +289,50 @@
     <Content Include="Content\bootstrap.rtl.min.css" />
     <Content Include="Content\font-awesome.css" />
     <Content Include="Content\font-awesome.min.css" />
+    <Content Include="Content\img\health\dermatologia.jpg" />
+    <Content Include="Content\img\health\gine.jpg" />
     <Content Include="Content\img\health\index-ocelote.jpeg" />
+    <Content Include="Content\img\health\nutricion.jpg" />
+    <Content Include="Content\img\health\odontologia_general.jpg" />
+    <Content Include="Content\img\health\psiquiatra.jpg" />
+    <Content Include="Content\img\health\traumatologia.jpg" />
+    <Content Include="Content\img\health\Traumatología.jpg" />
     <Content Include="Content\main.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\fontawesome-webfont.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\img\health\staff-8.webp" />
+    <Content Include="Content\img\health\cardiology-2.webp" />
+    <Content Include="Content\img\health\cardiology-3.webp" />
+    <Content Include="Content\img\health\consultation-3.webp" />
+    <Content Include="Content\img\health\consultation-4.webp" />
+    <Content Include="Content\img\health\emergency-3.webp" />
+    <Content Include="Content\img\health\emergency-4.webp" />
+    <Content Include="Content\img\health\facilities-3.webp" />
+    <Content Include="Content\img\health\facilities-6.webp" />
+    <Content Include="Content\img\health\laboratory-3.webp" />
+    <Content Include="Content\img\health\neurology-3.webp" />
+    <Content Include="Content\img\health\oncology-2.webp" />
+    <Content Include="Content\img\health\orthopedics-1.webp" />
+    <Content Include="Content\img\health\orthopedics-4.webp" />
+    <Content Include="Content\img\health\pediatrics-2.webp" />
+    <Content Include="Content\img\health\pediatrics-4.webp" />
+    <Content Include="Content\img\health\showcase-2.webp" />
+    <Content Include="Content\img\health\staff-1.webp" />
+    <Content Include="Content\img\health\staff-10.webp" />
+    <Content Include="Content\img\health\staff-11.webp" />
+    <Content Include="Content\img\health\staff-12.webp" />
+    <Content Include="Content\img\health\staff-2.webp" />
+    <Content Include="Content\img\health\staff-3.webp" />
+    <Content Include="Content\img\health\staff-4.webp" />
+    <Content Include="Content\img\health\staff-5.webp" />
+    <Content Include="Content\img\health\staff-6.webp" />
+    <Content Include="Content\img\health\staff-7.webp" />
+    <Content Include="Content\img\health\staff-9.webp" />
+    <Content Include="Content\img\health\surgery-2.webp" />
+    <Content Include="Content\img\health\Psicologia.webp" />
+    <Content Include="Content\img\health\oftalmologia.webp" />
     <None Include="EntityFramework6.Npgsql.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -435,6 +472,7 @@
     <Content Include="Views\Home\Departamentos.cshtml" />
     <Content Include="Views\Citas\MisCitas.cshtml" />
     <Content Include="Views\Home\Servicios.cshtml" />
+    <Content Include="Views\Home\Contacto.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

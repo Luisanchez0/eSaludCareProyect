@@ -39,5 +39,12 @@ namespace eSaludCareUsers.Controllers
             ViewBag.Message = "Nuestros servicios";
             return View();
         }
+
+        public ActionResult Contacto()
+        {
+            ViewBag.Message = "Contacto";
+            return View();
+        }
     }
+
 }

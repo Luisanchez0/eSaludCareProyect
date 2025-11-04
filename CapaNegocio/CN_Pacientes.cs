@@ -21,5 +21,11 @@ namespace CapaNegocio
         {
             return _pacienteDatos.ActualizarPerfilPaciente(perfil);
         }
+        public List<Paciente> Listar()
+        {
+            return _pacienteDatos.Listar();
+        }
+
+
     }
 }

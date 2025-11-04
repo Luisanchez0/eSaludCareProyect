@@ -1,4 +1,5 @@
-﻿using CapaEntidad;
+﻿using CapaDatos;
+using CapaEntidad;
 using CapaNegocio;
 using Microsoft.IdentityModel.Tokens;
 using System;
@@ -54,13 +55,25 @@ namespace eSaludCareAdmin.Controllers
 
             cnUsuarios.GuardarToken(user.id_usuario, jwt);
 
+
+            int? idMedico = null;
+            if (user.rol == "doctor" || user.rol == "medico")
+            {
+                CN_Medicos cnMedico = new CN_Medicos();
+                var medico = cnMedico.AsignarMedico(user.id_usuario); // método que debes crear
+                if (medico != null)
+                    idMedico = medico.IdMedico;
+            }
+
+
             return Ok(new
             {
 
                 success = true,
                 token = jwt,
                 role = user.rol,
-                nombre = user.nombre
+                nombre = user.nombre,
+                idMedico = idMedico
             });
 
         }

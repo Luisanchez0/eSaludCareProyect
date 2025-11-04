@@ -15,5 +15,10 @@ namespace CapaNegocio
         {
             return objetoCD.ListarMedicos();
         }
+
+        public Medico AsignarMedico(int idUsuario)
+        {
+            return objetoCD.ObtenerPorUsuario(idUsuario);
+        }
     }
 }

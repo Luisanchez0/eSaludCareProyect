@@ -77,17 +77,66 @@ namespace eSaludCareUsers.Controllers
 
                 // Registrar cita
                 bool resultado = _citaNegocio.RegistrarCita(nuevaCita);
-                if (resultado)
-                    return Ok(new { mensaje = "Cita registrada correctamente." });
-                else
+
+                if (!resultado)
                     return BadRequest("No se pudo registrar la cita.");
+
+                // Obtener datos del paciente y médico para el correo
+                string correoPaciente = "";
+                string nombrePaciente = "";
+                string nombreDoctor = "";
+
+                using (var con = new NpgsqlConnection(ConfigurationManager.ConnectionStrings["BDpsql"].ToString()))
+                {
+                    con.Open();
+
+                    string query = @"
+                SELECT 
+                    u.correo AS correo_paciente,
+                    CONCAT(u.nombre, ' ', u.apellido) AS nombre_paciente,
+                    CONCAT(m.especialidad, ' ', um.nombre, ' ', um.apellido) AS nombre_doctor
+                FROM pacientes p
+                INNER JOIN usuarios u ON p.id_usuario = u.id_usuario
+                INNER JOIN medicos m ON m.id_medico = @idMedico
+                INNER JOIN usuarios um ON m.id_usuario = um.id_usuario
+                WHERE p.id_paciente = @idPaciente";
+
+                    using (var cmd = new NpgsqlCommand(query, con))
+                    {
+                        cmd.Parameters.AddWithValue("@idMedico", nuevaCita.IdMedico);
+                        cmd.Parameters.AddWithValue("@idPaciente", nuevaCita.IdPaciente);
+
+                        using (var reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                correoPaciente = reader["correo_paciente"].ToString();
+                                nombrePaciente = reader["nombre_paciente"].ToString();
+                                nombreDoctor = reader["nombre_doctor"].ToString();
+                            }
+                        }
+                    }
+                }
+
+                // 🔹 Enviar correo de confirmación
+                CN_Correos.EnviarConfirmacionCita(
+                    correoPaciente,
+                    nombrePaciente,
+                    nombreDoctor,
+                    fechaCita,
+                    hora,
+                    nuevaCita.Motivo
+                );
+
+                return Ok(new { mensaje = "Cita registrada correctamente y correo enviado al paciente." });
             }
             catch (Exception ex)
             {
-                // Retornar error con excepción real
                 return InternalServerError(ex);
             }
         }
+
+
 
         [HttpGet]
         [Route("obtenerIdPaciente")]

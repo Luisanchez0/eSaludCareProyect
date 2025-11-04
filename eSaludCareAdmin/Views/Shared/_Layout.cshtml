@@ -113,7 +113,7 @@
                                 Perfiles
                             </a>
                         }
-                        <div class="sb-sidenav-menu-heading">Mantenimiento</div>
+                        <div class="sb-sidenav-menu-heading">Opciones</div>
                         @if (Session["Rol"]?.ToString() == "admin")
                         {
                             <a class="nav-link" href="@Url.Action("Index", "Medicos")">
@@ -139,9 +139,15 @@
                             </a>
 
                         }
-                        @if (Session["Rol"]?.ToString() == "medico")
+                        @if (Session["Rol"]?.ToString() == "medico" || Session["Rol"]?.ToString() == "admin")
                         {
-                            <a class="nav-link" href="@Url.Action("Index", "HistorialClinico")">
+                            <a class="nav-link" href="@Url.Action("AtenderPacientes", "Home")">
+                                <div class="sb-nav-link-icon"><i class="fas fa-file-medical-alt"></i></div>
+                                Atender Pacientes
+                            </a>
+
+
+                            <a class="nav-link" href="@Url.Action("HistorialClínico", "HistorialClinico")">
                                 <div class="sb-nav-link-icon"><i class="fas fa-file-medical-alt"></i></div>
                                 Historial Clínico
                             </a>
@@ -150,6 +156,7 @@
                                 <div class="sb-nav-link-icon"><i class="fas fa-file-medical-alt"></i></div>
                                 Notas Evolucion
                             </a>
+
                         }
 
                     </div>

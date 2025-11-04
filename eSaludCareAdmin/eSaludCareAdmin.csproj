@@ -244,6 +244,7 @@
     <Compile Include="Controllers\MedicoController.cs" />
     <Compile Include="Controllers\MedicosController.cs" />
     <Compile Include="Controllers\NotasEvolucionApiController.cs" />
+    <Compile Include="Controllers\PacientesApiController.cs" />
     <Compile Include="Controllers\PerfilesController.cs" />
     <Compile Include="Controllers\RecuperarApiController.cs" />
     <Compile Include="Controllers\RegistroApiController.cs" />
@@ -325,8 +326,9 @@
     <Content Include="Views\Medicos\Index.cshtml" />
     <Content Include="Views\Login\Registro.cshtml" />
     <Content Include="Views\ConsultasAgendadas\Index.cshtml" />
-    <Content Include="Views\HistorialClinico\Index.cshtml" />
+    <Content Include="Views\HistorialClinico\HistorialClínico.cshtml" />
     <Content Include="Views\HistorialClinico\NotasEvolucion.cshtml" />
+    <Content Include="Views\Home\AtenderPacientes.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

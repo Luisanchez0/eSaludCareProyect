@@ -30,6 +30,11 @@ namespace eSaludCareAdmin.Controllers
             return RedirectToAction("Index", "Home"); 
         }
 
+        public ActionResult AtenderPacientes()
+        {
+            return View();
+        }
+
 
         [HttpPost]
         public JsonResult RegistrarSesion(string token, string nombre, string rol)

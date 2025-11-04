@@ -9,7 +9,8 @@ namespace CapaEntidad
         public string NombrePaciente { get; set; }
         public int IdMedico { get; set; }
         public string NombreMedico { get; set; }
-        public DateTime Fecha { get; set; }
-        public TimeSpan Hora { get; set; }
+        public DateTime? Fecha { get; set; }       // Nullable por si hay registros incompletos
+        public TimeSpan? Hora { get; set; }        // Nullable por si hay registros incompletos
+        public string Estado { get; set; }
     }
 }

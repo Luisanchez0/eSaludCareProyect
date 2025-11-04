@@ -15,7 +15,6 @@
             <th>Médico</th>
             <th>Fecha</th>
             <th>Hora</th>
-            <th>Especialidad</th>
             <th>Estado</th>
         </tr>
     </thead>
@@ -28,9 +27,16 @@
                     <td>@cita.IdCita</td>
                     <td>@cita.NombrePaciente</td>
                     <td>@cita.NombreMedico</td>
-                    <td>@cita.Fecha.ToString("dd/MM/yyyy")</td>
-                    <td>@cita.Hora</td>
-                    <td>@cita.Especialidad</td>
+                    <td>
+                        @(cita.Fecha.HasValue
+                            ? cita.Fecha.Value.ToString("dd/MM/yyyy")
+                            : "<span class=\"text-muted\">Sin fecha</span>")
+                    </td>
+                    <td>
+                        @(cita.Hora.HasValue
+                            ? cita.Hora.Value.ToString(@"hh\:mm")
+                            : "<span class=\"text-muted\">Sin hora</span>")
+                    </td>
                     <td>@cita.Estado</td>
                 </tr>
             }
@@ -38,7 +44,7 @@
         else
         {
             <tr>
-                <td colspan="7" class="text-center text-muted">No hay consultas agendadas registradas.</td>
+                <td colspan="6" class="text-center text-muted">No hay consultas agendadas registradas.</td>
             </tr>
         }
     </tbody>

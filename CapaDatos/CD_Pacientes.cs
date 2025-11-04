@@ -71,5 +71,49 @@ namespace CapaDatos
             }
         }
 
+        public List<Paciente> Listar()
+        {
+            var lista = new List<Paciente>();
+
+            using (var conn = conexion.Conectar())
+            {
+                conn.Open();
+
+                string query = @"
+                    SELECT 
+                        p.id_paciente, u.id_usuario, 
+                        u.nombre, u.apellido, u.correo, u.telefono,
+                        p.fecha_nacimiento, p.genero, p.direccion
+                    FROM pacientes p
+                    INNER JOIN usuarios u ON p.id_usuario = u.id_usuario
+                    WHERE u.rol = 'paciente'
+                    ORDER BY u.nombre ASC;";
+
+                using (var cmd = new NpgsqlCommand(query, conn))
+                using (var dr = cmd.ExecuteReader())
+                {
+                    while (dr.Read())
+                    {
+                        lista.Add(new Paciente
+                        {
+                            IdPaciente = Convert.ToInt32(dr["id_paciente"]),
+                            IdUsuario = Convert.ToInt32(dr["id_usuario"]),
+                            nombre = dr["nombre"].ToString(),
+                            apellido = dr["apellido"].ToString(),
+                            correo = dr["correo"].ToString(),
+                            telefono = dr["telefono"] == DBNull.Value ? "" : dr["telefono"].ToString(),
+                            fecha_nacimiento = dr["fecha_nacimiento"] == DBNull.Value ? (DateTime?)null : (DateTime?)Convert.ToDateTime(dr["fecha_nacimiento"]),
+                            genero = dr["genero"] == DBNull.Value ? "" : dr["genero"].ToString(),
+                            direccion = dr["direccion"] == DBNull.Value ? "" : dr["direccion"].ToString()
+                        });
+                    }
+                }
+            }
+
+            return lista;
+        }
+
+
+
     }
 }

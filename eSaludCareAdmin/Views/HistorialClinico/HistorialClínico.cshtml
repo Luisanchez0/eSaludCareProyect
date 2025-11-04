@@ -5,12 +5,19 @@
 <div class="container mt-4">
     <h3 class="text-primary mb-4">🩺 Historial Clínico del Paciente (NOM-004-SSA3-2012)</h3>
 
+    <!-- Mostrar paciente activo -->
+    <h5 class="text-secondary mb-3">
+        <strong>Paciente atendido:</strong>
+        <span id="nombrePacienteActivo" class="text-primary"></span>
+    </h5>
+
     <div id="alerta" class="alert d-none"></div>
 
     <form id="formHistorialClinico">
-        <input type="hidden" id="id_paciente" value="@ViewBag.IdPaciente" />
-        <input type="hidden" id="id_medico" value="@ViewBag.IdMedico" />
-        <input type="hidden" id="id_cita" value="@ViewBag.IdCita" />
+        <!-- Campos ocultos -->
+        <input type="hidden" id="id_paciente" />
+        <input type="hidden" id="id_medico" />
+        <input type="hidden" id="id_cita" />
 
         <!-- MOTIVO Y ANTECEDENTES -->
         <div class="card mb-4 shadow-sm border-0">
@@ -70,7 +77,7 @@
             </div>
         </div>
 
-        <!-- DIAGNÓSTICO -->
+        <!-- DIAGNÓSTICO Y TRATAMIENTO -->
         <div class="card mb-4 shadow-sm border-0">
             <div class="card-header bg-primary text-white fw-bold">Diagnóstico y Tratamiento</div>
             <div class="card-body">
@@ -89,17 +96,87 @@
             </div>
         </div>
 
-        <button type="submit" class="btn btn-success w-100">
+        <!-- Botones -->
+        <button type="submit" class="btn btn-success w-100 mb-2">
             <i class="bi bi-save me-2"></i> Guardar Historial Clínico
         </button>
+
+        <button type="button" class="btn btn-primary w-100 mb-2" onclick="exportarPDF()">
+            <i class="bi bi-file-earmark-pdf me-2"></i> Exportar a PDF
+        </button>
+
+        <button type="button" class="btn btn-outline-danger w-100" onclick="finalizarAtencion()">
+            <i class="bi bi-x-circle me-2"></i> Finalizar Atención
+        </button>
     </form>
+
+    <hr class="my-4" />
+
+    <h5 class="text-secondary mb-3">Historiales Clínicos Previos</h5>
+    <table class="table table-striped shadow-sm" id="tablaHistoriales">
+        <thead class="table-primary">
+            <tr>
+                <th>Fecha</th>
+                <th>Motivo</th>
+                <th>Diagnóstico</th>
+                <th>Tratamiento</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
 </div>
 
 @section Scripts {
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
     <script>
         const apiBase = "/api/v1/historial_clinico";
 
+        // Obtener paciente activo
+        const idPaciente = localStorage.getItem("id_paciente");
+        const nombrePaciente = localStorage.getItem("nombre_paciente");
+        if (!idPaciente) {
+            alert("No hay paciente seleccionado. Regrese a la lista de pacientes.");
+            window.location.href = "/Home/AtenderPacientes";
+        }
+        $("#nombrePacienteActivo").text(nombrePaciente);
+        $("#id_paciente").val(idPaciente);
+
+        // Obtener médico activo
+        const idMedico = localStorage.getItem("id_medico");
+        if (idMedico) $("#id_medico").val(idMedico);
+
+        // Cargar historiales previos
+        cargarHistoriales();
+
+        function cargarHistoriales() {
+            fetch(`${apiBase}/paciente/${idPaciente}`)
+                .then(res => res.json())
+                .then(data => {
+                    const tbody = $("#tablaHistoriales tbody");
+                    tbody.empty();
+                    if (data.length === 0) {
+                        tbody.append(`<tr><td colspan="4" class="text-center text-muted">No hay historiales previos</td></tr>`);
+                        return;
+                    }
+                    data.forEach(h => {
+                        tbody.append(`
+                                <tr>
+                                    <td>${new Date(h.fecha_registro).toLocaleString()}</td>
+                                    <td>${h.motivo_consulta}</td>
+                                    <td>${h.diagnostico}</td>
+                                    <td>${h.tratamiento || '-'}</td>
+                                </tr>
+                            `);
+                    });
+                })
+                .catch(() => {
+                    $("#tablaHistoriales tbody").html(`<tr><td colspan="4" class="text-center text-danger">Error al cargar historiales previos</td></tr>`);
+                });
+        }
+
+        // Guardar nuevo historial clínico
         $("#formHistorialClinico").on("submit", function (e) {
             e.preventDefault();
             guardarHistorialClinico();
@@ -135,6 +212,7 @@
                     if (resp.success) {
                         mostrarAlerta("success", "Historial clínico guardado correctamente.");
                         $("#formHistorialClinico")[0].reset();
+                        cargarHistoriales();
                     } else {
                         mostrarAlerta("error", "Error al guardar el historial clínico.");
                     }
@@ -148,12 +226,82 @@
         function mostrarAlerta(tipo, mensaje) {
             const alerta = $("#alerta");
             alerta.removeClass("d-none alert-success alert-danger");
-
-            if (tipo === "success") alerta.addClass("alert-success");
-            else alerta.addClass("alert-danger");
-
+            alerta.addClass(tipo === "success" ? "alert-success" : "alert-danger");
             alerta.text(mensaje).fadeIn();
             setTimeout(() => alerta.fadeOut(), 3000);
+        }
+
+        function finalizarAtencion() {
+            localStorage.removeItem("id_paciente");
+            localStorage.removeItem("nombre_paciente");
+            alert("Atención finalizada. Regresando a la lista de pacientes.");
+            window.location.href = "/Home/AtenderPacientes";
+        }
+
+        // --- Exportar PDF profesional ---
+        function exportarPDF() {
+            const { jsPDF } = window.jspdf;
+            const doc = new jsPDF('p', 'mm', 'a4');
+
+            // --- Encabezado ---
+            doc.setFont("helvetica", "bold");
+            doc.setFontSize(16);
+            doc.text("Historial Clínico del Paciente", 105, 15, { align: "center" });
+
+            doc.setFont("helvetica", "normal");
+            doc.setFontSize(12);
+            doc.text(`Paciente: ${$("#nombrePacienteActivo").text()}`, 20, 25);
+            doc.text(`Fecha: ${new Date().toLocaleDateString()}`, 150, 25);
+
+            // --- Firma y logo opcional ---
+            // Puedes poner la ruta de tu logo aquí
+            // doc.addImage("/images/logo.png", "PNG", 170, 10, 30, 15);
+
+            let y = 35;
+
+            function agregarSeccion(titulo, contenido) {
+                doc.setFont("helvetica", "bold");
+                doc.setFontSize(12);
+                doc.text(titulo, 20, y);
+                y += 6;
+
+                doc.setFont("helvetica", "normal");
+                let lines = doc.splitTextToSize(contenido || "-", 170);
+                doc.text(lines, 20, y);
+                y += lines.length * 6 + 4;
+
+                if (y > 270) { doc.addPage(); y = 20; }
+            }
+
+            // --- Secciones ---
+            agregarSeccion("Motivo de consulta", $("#motivo_consulta").val());
+            agregarSeccion("Padecimiento actual", $("#padecimiento_actual").val());
+            agregarSeccion("Antecedentes personales", $("#antecedentes_personales").val());
+            agregarSeccion("Antecedentes familiares", $("#antecedentes_familiares").val());
+
+            // Signos vitales en tabla
+            agregarSeccion("Signos Vitales", `
+Peso: ${$("#peso").val()} kg
+Talla: ${$("#talla").val()} m
+Presión arterial: ${$("#presion_arterial").val()}
+Frec. cardiaca: ${$("#frecuencia_cardiaca").val()} lpm
+Frec. respiratoria: ${$("#frecuencia_respiratoria").val()} rpm
+Temperatura: ${$("#temperatura").val()} °C
+Exploración general: ${$("#exploracion_general").val()}
+`);
+
+            agregarSeccion("Diagnóstico", $("#diagnostico").val());
+            agregarSeccion("Pronóstico", $("#pronostico").val());
+            agregarSeccion("Tratamiento", $("#tratamiento").val());
+
+            // Espacio para firma
+            y += 20;
+            doc.setFont("helvetica", "bold");
+            doc.text("Firma del médico:", 20, y);
+            doc.line(50, y + 2, 120, y + 2); // línea para firma
+
+            const nombrePDF = `Historial_${$("#nombrePacienteActivo").text().replace(/\s/g, "_")}.pdf`;
+            doc.save(nombrePDF);
         }
     </script>
 }

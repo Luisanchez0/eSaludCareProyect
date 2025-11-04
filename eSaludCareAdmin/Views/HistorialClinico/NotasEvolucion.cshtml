@@ -3,9 +3,19 @@
 }
 
 <div class="container mt-4">
-    <h3 class="text-primary mb-4">Notas de Evolución del Paciente</h3>
+    <h3 class="text-primary mb-3">🩺 Notas de Evolución del Paciente (NOM-004-SSA3-2012)</h3>
 
-    <form id="formNotaEvolucion" class="border rounded p-3 shadow-sm">
+    <h5 class="text-secondary mb-4">
+        <strong>Paciente atendido:</strong>
+        <span id="nombrePacienteActivo" class="text-primary"></span>
+    </h5>
+
+    <div id="alerta" class="alert d-none"></div>
+
+    <form id="formNotaEvolucion" class="border rounded p-3 shadow-sm bg-light">
+        <input type="hidden" id="id_historial" />
+        <input type="hidden" id="id_medico" />
+
         <div class="mb-3">
             <label class="form-label fw-bold">Diagnóstico</label>
             <textarea class="form-control" id="diagnostico" required></textarea>
@@ -36,35 +46,70 @@
             <textarea class="form-control" id="observaciones"></textarea>
         </div>
 
-        <button type="button" id="btnGuardarNota" class="btn btn-success w-100">Guardar Nota</button>
+        <button type="button" id="btnGuardarNota" class="btn btn-success w-100 mb-2">
+            <i class="bi bi-save me-2"></i> Guardar Nota de Evolución
+        </button>
+
+        <button type="button" class="btn btn-outline-danger w-100" onclick="finalizarAtencion()">
+            <i class="bi bi-x-circle me-2"></i> Finalizar Atención
+        </button>
     </form>
 
     <hr class="my-4" />
 
-    <h5 class="text-secondary">Historial de Notas de Evolución</h5>
-    <table class="table table-striped mt-3" id="tablaNotas">
-        <thead class="table-primary">
-            <tr>
-                <th>Fecha</th>
-                <th>Diagnóstico</th>
-                <th>Tratamiento</th>
-                <th>Observaciones</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
+    <h5 class="text-secondary">📋 Historial de Notas de Evolución</h5>
+    <div class="table-responsive">
+        <table class="table table-striped mt-3 shadow-sm" id="tablaNotas">
+            <thead class="table-primary">
+                <tr>
+                    <th>Fecha</th>
+                    <th>Diagnóstico</th>
+                    <th>Tratamiento</th>
+                    <th>Observaciones</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
-    const idHistorial = localStorage.getItem("id_historial"); // Se obtiene del historial clínico
+    // 🚀 Cargar datos de paciente y médico desde localStorage
+    const idHistorial = localStorage.getItem("id_historial");
     const idMedico = localStorage.getItem("id_medico");
+    const nombrePaciente = localStorage.getItem("nombre_paciente");
 
+    // Verificar si hay paciente seleccionado
+    if (!idHistorial || !nombrePaciente) {
+        alert("No hay paciente seleccionado. Redirigiendo a la lista de pacientes.");
+        window.location.href = "/Home/AtenderPacientes";
+    } else {
+        document.getElementById("nombrePacienteActivo").textContent = nombrePaciente;
+        document.getElementById("id_historial").value = idHistorial;
+        if (idMedico) document.getElementById("id_medico").value = idMedico;
+    }
+
+    // Función para mostrar alertas
+    function mostrarAlerta(tipo, mensaje) {
+        const alerta = $("#alerta");
+        alerta.removeClass("d-none alert-success alert-danger");
+        alerta.addClass(tipo === "success" ? "alert-success" : "alert-danger");
+        alerta.text(mensaje).fadeIn();
+        setTimeout(() => alerta.fadeOut(), 3000);
+    }
+
+    // Cargar notas previas
     function cargarNotas() {
         fetch(`/api/v1/notas_evolucion/historial/${idHistorial}`)
             .then(res => res.json())
             .then(data => {
                 const tbody = document.querySelector("#tablaNotas tbody");
                 tbody.innerHTML = "";
+                if (!data || data.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="4" class="text-center text-muted">No hay notas previas</td></tr>`;
+                    return;
+                }
                 data.forEach(n => {
                     tbody.innerHTML += `
                         <tr>
@@ -74,14 +119,24 @@
                             <td>${n.observaciones || "-"}</td>
                         </tr>`;
                 });
+            })
+            .catch(() => {
+                mostrarAlerta("error", "Error al cargar las notas previas.");
             });
     }
 
+    // Guardar nueva nota
     document.querySelector("#btnGuardarNota").addEventListener("click", () => {
+        const diagnostico = document.getElementById("diagnostico").value.trim();
+        if (!diagnostico) {
+            mostrarAlerta("error", "El campo Diagnóstico es obligatorio.");
+            return;
+        }
+
         const nota = {
             id_historial: parseInt(idHistorial),
-            id_medico: parseInt(idMedico),
-            diagnostico: document.getElementById("diagnostico").value,
+            id_medico: idMedico ? parseInt(idMedico) : null,
+            diagnostico,
             signos_vitales: document.getElementById("signos_vitales").value,
             resultados_estudios: document.getElementById("resultados_estudios").value,
             tratamiento_actual: document.getElementById("tratamiento_actual").value,
@@ -97,14 +152,27 @@
             .then(res => res.json())
             .then(r => {
                 if (r.success) {
-                    alert("Nota guardada correctamente");
-                    cargarNotas();
+                    mostrarAlerta("success", "Nota de evolución guardada correctamente.");
                     document.getElementById("formNotaEvolucion").reset();
+                    cargarNotas();
                 } else {
-                    alert("Error al guardar la nota");
+                    mostrarAlerta("error", r.message || "Error al guardar la nota.");
                 }
+            })
+            .catch(() => {
+                mostrarAlerta("error", "Error de conexión con el servidor.");
             });
     });
 
+    // Finalizar atención
+    function finalizarAtencion() {
+        localStorage.removeItem("id_paciente");
+        localStorage.removeItem("nombre_paciente");
+        localStorage.removeItem("id_historial");
+        alert("Atención finalizada. Redirigiendo a la lista de pacientes.");
+        window.location.href = "/Home/AtenderPacientes";
+    }
+
+    // Inicializar
     cargarNotas();
 </script>

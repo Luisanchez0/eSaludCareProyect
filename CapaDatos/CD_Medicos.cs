@@ -1,9 +1,10 @@
-﻿using System;
+﻿using CapaEntidad;
+using Npgsql;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using CapaEntidad;
 
 namespace CapaDatos
 {
@@ -49,5 +50,37 @@ namespace CapaDatos
             }
             return lista;
         }
+
+
+        public Medico ObtenerPorUsuario(int idUsuario)
+        {
+            using (var conn = conexion.Conectar())
+            {
+                conn.Open();
+                string query = "SELECT id_medico, id_usuario, especialidad FROM medicos WHERE id_usuario = @id_usuario LIMIT 1;";
+
+//                string query = "SELECT id_medico, id_usuario, nombre, especialidad FROM medico WHERE id_usuario = @id_usuario LIMIT 1;";
+                using (var cmd = new NpgsqlCommand(query, conn))
+                {
+                    cmd.Parameters.AddWithValue("@id_usuario", idUsuario);
+                    using (var reader = cmd.ExecuteReader())
+                    {
+                        if (reader.Read())
+                        {
+                            return new Medico
+                            {
+                                IdMedico = reader.GetInt32(0),
+                                IdUsuario = reader.GetInt32(1),
+                                //nombre = reader.GetString(2),
+                                Especialidad = reader.GetString(2)
+                            };
+                        }
+                    }
+                }
+            }
+            return null;
+        }
+
+
     }
 }

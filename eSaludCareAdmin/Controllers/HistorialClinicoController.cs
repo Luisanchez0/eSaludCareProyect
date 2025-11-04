@@ -9,7 +9,7 @@ namespace eSaludCareAdmin.Controllers
     public class HistorialClinicoController : Controller
     {
         // GET: HistorialClinico
-        public ActionResult Index()
+        public ActionResult HistorialClínico()
         {
             return View();
         }

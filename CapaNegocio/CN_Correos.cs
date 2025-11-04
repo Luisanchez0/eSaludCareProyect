@@ -104,5 +104,32 @@ namespace CapaNegocio
             </body>
             </html>";
         }
+        public static bool EnviarConfirmacionCita(string correoPaciente, string nombrePaciente, string nombreDoctor, DateTime fecha, TimeSpan hora, string motivo)
+        {
+            string fechaFormateada = fecha.ToString("dd/MM/yyyy");
+            string horaFormateada = hora.ToString(@"hh\:mm");
+
+            string html = ObtenerPlantillaBase(
+                titulo: "Confirmación de Cita Médica",
+                contenido: $@"
+            <p>Hola <b>{nombrePaciente}</b>,</p>
+            <p>Tu cita médica ha sido registrada correctamente en <b>eSaludCare</b>.</p>
+            <table style='border-collapse:collapse;width:100%;margin:15px 0;'>
+                <tr><td style='padding:8px;border:1px solid #ddd;'><b>Médico:</b></td><td style='padding:8px;border:1px solid #ddd;'>{nombreDoctor}</td></tr>
+                <tr><td style='padding:8px;border:1px solid #ddd;'><b>Fecha:</b></td><td style='padding:8px;border:1px solid #ddd;'>{fechaFormateada}</td></tr>
+                <tr><td style='padding:8px;border:1px solid #ddd;'><b>Hora:</b></td><td style='padding:8px;border:1px solid #ddd;'>{horaFormateada}</td></tr>
+                <tr><td style='padding:8px;border:1px solid #ddd;'><b>Motivo:</b></td><td style='padding:8px;border:1px solid #ddd;'>{motivo}</td></tr>
+            </table>
+            <p>Por favor, preséntate 10 minutos antes de la hora indicada.</p>
+            <p>Gracias por confiar en <b>eSaludCare</b>.</p>
+        ",
+                pie: "Tu bienestar es nuestra prioridad."
+            );
+
+            return Enviar(correoPaciente, "Confirmación de Cita Médica - eSaludCare", html);
+        }
+
+
+
     }
 }

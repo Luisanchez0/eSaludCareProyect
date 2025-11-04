@@ -40,16 +40,11 @@ namespace eSaludCareUsers.Controllers
             return View();
         }
 
-        public ActionResult MiPerfil() 
+        public ActionResult Contacto()
         {
-            ViewBag.Message = "Tu Perfil de Uusuario";
+            ViewBag.Message = "Contacto";
             return View();
         }
-
-        public ActionResult CambiaContrasena()
-        {
-            return View();
-        }
-
     }
+
 }

@@ -20,7 +20,7 @@ namespace eSaludCareAdmin.Controllers
             var token = Session["Token"]?.ToString();
             using (var client = new HttpClient())
             {
-                client.BaseAddress = new Uri("https://localhost:44325/");//cambiar puerto
+                client.BaseAddress = new Uri("https://localhost:44301/");//cambiar puerto
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
 
                 var url = "api/medicos";

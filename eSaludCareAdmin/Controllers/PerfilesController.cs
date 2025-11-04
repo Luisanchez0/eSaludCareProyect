@@ -18,7 +18,7 @@ namespace eSaludCareAdmin.Controllers
     [RoutePrefix("Perfiles")]
     public class PerfilesController : Controller
     {
-        private readonly string baseUrl = "https://localhost:44325/";
+        private readonly string baseUrl = "https://localhost:44301/";
 
         [Route("")]
         public async Task<ActionResult> Index()

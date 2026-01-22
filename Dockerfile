@@ -17,7 +17,8 @@ COPY ["CapaEntidad/CapaEntidad.csproj", "CapaEntidad/"]
 COPY ["CapaComun/CapaComun.csproj", "CapaComun/"]
 COPY ["eSaludCareUsers/eSaludCareUsers.csproj", "eSaludCareUsers/"]
 COPY ["eSaludCareAdmin/eSaludCareAdmin.csproj", "eSaludCareAdmin/"]
-COPY ["Apis/Apis.csproj", "Apis/"]
+# Cambia esta línea:
+COPY ["Apis/CapaApis.csproj", "Apis/"]
 
 # Restauramos las dependencias de toda la solución
 RUN dotnet restore "eSaludCareProyect.sln"

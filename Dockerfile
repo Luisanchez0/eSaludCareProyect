@@ -32,3 +32,14 @@ WORKDIR /app
 COPY --from=publish /app/publish .
 # REEMPLAZA 'eSaludCareUsers.dll' por el nombre real de tu ejecutable
 ENTRYPOINT ["dotnet", "eSaludCareUsers.dll"]
+
+# ... (lo anterior se queda igual)
+COPY ["CapaEntidad/CapaEntidad.csproj", "CapaEntidad/"]
+COPY ["CapaComun/CapaComun.csproj", "CapaComun/"]
+COPY ["eSaludCareUsers/eSaludCareUsers.csproj", "eSaludCareUsers/"] 
+
+# ESTA ES LA LÍNEA QUE FALTA:
+COPY ["eSaludCareAdmin/eSaludCareAdmin.csproj", "eSaludCareAdmin/"] 
+
+RUN dotnet restore "eSaludCareProyect.sln"
+# ... (el resto se queda igual)

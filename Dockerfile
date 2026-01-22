@@ -1,45 +1,41 @@
-# Usa la imagen de .NET Runtime para ejecutar la app
+# 1. Etapa de ejecución (Runtime)
 FROM mcr.microsoft.com/dotnet/aspnet:6.0 AS base
 WORKDIR /app
 EXPOSE 80
 
-# Usa el SDK de .NET para compilar
+# 2. Etapa de compilación (SDK)
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
 
-# Copia los archivos de proyecto para restaurar dependencias
+# Copiamos el archivo de solución
 COPY ["eSaludCareProyect.sln", "./"]
+
+# Copiamos TODOS los archivos de proyecto (.csproj) de cada carpeta
 COPY ["CapaDatos/CapaDatos.csproj", "CapaDatos/"]
 COPY ["CapaNegocio/CapaNegocio.csproj", "CapaNegocio/"]
 COPY ["CapaEntidad/CapaEntidad.csproj", "CapaEntidad/"]
 COPY ["CapaComun/CapaComun.csproj", "CapaComun/"]
-# Agrega aquí la capa que sea tu Interfaz de Usuario (UI) o API
-COPY ["eSaludCareUsers/eSaludCareUsers.csproj", "eSaludCareUsers/"] 
+COPY ["eSaludCareUsers/eSaludCareUsers.csproj", "eSaludCareUsers/"]
+COPY ["eSaludCareAdmin/eSaludCareAdmin.csproj", "eSaludCareAdmin/"]
+COPY ["Apis/Apis.csproj", "Apis/"]
 
+# Restauramos las dependencias de toda la solución
 RUN dotnet restore "eSaludCareProyect.sln"
 
-# Copia todo el código y compila
+# Copiamos el resto del código fuente de todas las carpetas
 COPY . .
-WORKDIR "/src/."
+
+# Compilamos el proyecto
 RUN dotnet build "eSaludCareProyect.sln" -c Release -o /app/build
 
+# 3. Etapa de publicación
 FROM build AS publish
 RUN dotnet publish "eSaludCareProyect.sln" -c Release -o /app/publish
 
-# Configuración final
+# 4. Configuración final para Docker Desktop
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
-# REEMPLAZA 'eSaludCareUsers.dll' por el nombre real de tu ejecutable
+
+# IMPORTANTE: Asegúrate de que eSaludCareUsers.dll sea tu proyecto de inicio
 ENTRYPOINT ["dotnet", "eSaludCareUsers.dll"]
-
-# ... (lo anterior se queda igual)
-COPY ["CapaEntidad/CapaEntidad.csproj", "CapaEntidad/"]
-COPY ["CapaComun/CapaComun.csproj", "CapaComun/"]
-COPY ["eSaludCareUsers/eSaludCareUsers.csproj", "eSaludCareUsers/"] 
-
-# ESTA ES LA LÍNEA QUE FALTA:
-COPY ["eSaludCareAdmin/eSaludCareAdmin.csproj", "eSaludCareAdmin/"] 
-
-RUN dotnet restore "eSaludCareProyect.sln"
-# ... (el resto se queda igual)
